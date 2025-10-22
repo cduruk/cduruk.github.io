@@ -28,15 +28,15 @@ export const NAV_LINKS: SocialLink[] = [
 
 export const SOCIAL_LINKS: SocialLink[] = [
   {
-    href: 'https://github.com/jktrn',
-    label: 'GitHub',
+    href: 'https://https://linkedin.com/cduruk',
+    label: 'LinkedIn',
   },
   {
-    href: 'https://twitter.com/enscry',
+    href: 'https://twitter.com/can',
     label: 'Twitter',
   },
   {
-    href: 'mailto:jason@enscribe.dev',
+    href: 'mailto:can@duruk.net',
     label: 'Email',
   },
   {
