@@ -43,27 +43,29 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  /* Flexoki Light Theme */
+  --background: oklch(0.984 0.007 88); /* paper #FFFCF0 */
+  --foreground: oklch(0.145 0.004 60); /* black #100F0F */
+  --primary: oklch(0.665 0.215 27); /* brightest red #F26257 */
+  --primary-foreground: oklch(0.984 0.007 88); /* paper */
+  --muted: oklch(0.933 0.009 88); /* base-50 #F2F0E5 */
+  --muted-foreground: oklch(0.556 0.006 70); /* base-600 #6F6E69 */
+  --destructive: oklch(0.665 0.215 27); /* brightest red */
+  --border: oklch(0.851 0.010 88); /* base-200 #CECDC3 */
+  --ring: oklch(0.665 0.215 27); /* brightest red accent */
 }
 
 [data-theme='dark'] {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --ring: oklch(0.556 0 0);
+  /* Flexoki Dark Theme */
+  --background: oklch(0.145 0.004 60); /* black #100F0F */
+  --foreground: oklch(0.933 0.009 88); /* base-50 #F2F0E5 */
+  --primary: oklch(0.780 0.190 27); /* brightest red lighter #F89C91 */
+  --primary-foreground: oklch(0.145 0.004 60); /* black */
+  --muted: oklch(0.205 0.006 60); /* base-900 #282726 */
+  --muted-foreground: oklch(0.708 0.008 75); /* base-500 #878580 */
+  --destructive: oklch(0.780 0.190 27); /* brightest red */
+  --border: oklch(0.269 0.006 60); /* base-850 #343331 */
+  --ring: oklch(0.780 0.190 27); /* brightest red accent */
 }
 
 @layer base {
@@ -73,5 +75,16 @@
   ::backdrop,
   ::file-selector-button {
     @apply border-border outline-ring/50 tracking-tight;
+  }
+
+  /* Navigation link accent on hover */
+  nav a[href]:hover {
+    @apply text-primary;
+  }
+
+  /* Blog/Project/Author card accent border on hover */
+  .hover\:bg-muted\/50:hover,
+  .has-\[a\:hover\]\:bg-muted\/50:has(a:hover) {
+    @apply border-primary;
   }
 }
