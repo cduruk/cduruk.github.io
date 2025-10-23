@@ -8,6 +8,8 @@ authors: ['cduruk']
 draft: false
 ---
 
+import Callout from '@/components/Callout.astro'
+
 Engineers love to measure things: latency, throughput, error rates. But try to measure their own work? Then metrics become the enemy.
 
 I get it. I've seen enough terrible systems to understand the resistance. Most systems fail, thanks to [Goodhart's Law](https://en.wikipedia.org/wiki/Goodhart%27s_law). Measure the lines of code written, and people jack up verbosity. Measure the number of PRs, and people start dividing up their PRs.
@@ -16,19 +18,28 @@ Yet, it all feels like you have to measure _something_. Every manager knows that
 
 ## Why Measure Things?
 
+<Callout variant="theorem">
+  $$
+    f(\text{output}) = \text{outcome}
+  $$
+</Callout>
+
+
 Here's the uncomfortable truth: you can measure engineering productivity. The goal is not to have a purely objective system where you stack rank people but rather to make it obvious to everyone, including the people being measured, the level of their output, especially compared to people around them.
 
 Yes, outcomes matter most. I want to ship features that users love, fix bugs that matter, and build systems that scale. **But outcomes are often a function of output**. You can't improve what you can't see, and you can't see what you don't measure.
 
 People repeatedly asked me how I measured productivity at [Felt](https://felt.com). Over the course of 4.5 years, I arrived at a system that _seemed_ to work. It encouraged and motivated the team to release products at an incredible pace. It allowed me to see where everyone stood and helped make adjustments where needed.
 
-$$f(\text{output}) = \text{outcome}$$
-
 ## The North Star: Don't Burden Your Engineers
 
 **The most important principle that guided everything: the bulk of the "paperwork" should fall on management, not individual contributors.** Of course, it's important to keep the [busywork](https://www.paulgraham.com/makersschedule.html) to a minimum for productivity's sake. But more importantly, if you want a system that people won't try to game, overtly or covertly, you want a system people won't hate.
 
-$$\frac{\text{Manager Time}}{\text{Engineer Time}} \gg 1$$
+<Callout variant="tip">
+  $$
+    \frac{\text{Manager Time}}{\text{Engineer Time}} \gg 1
+  $$
+</Callout>
 
 ## The System
 
@@ -175,11 +186,16 @@ And yes, there were also times the numbers told me that someone was falling behi
 
 ## Measurement as a Tool, Not a Weapon
 
+<Callout variant="tip">
+  $$
+    \text{Trust} = \frac{\text{Transparency} \times \text{Fairness}}{\text{Surveillance}}
+  $$
+</Callout>
+
 Here's what I want you to take away from this: measurement isn't the enemy. Bad measurement is the enemy.
 
 When you measure the wrong things—lines of code, number of commits, hours logged—you create dysfunction. **When you burden engineers with measurement overhead, you reduce productivity instead of improving it and create enemies.** When you use metrics as a weapon to punish people, you destroy trust.
 
-$$\text{Trust} = \frac{\text{Transparency} \times \text{Fairness}}{\text{Surveillance}}$$
 
 But when you measure thoughtfully, with respect for people's time and a focus on visibility rather than control, measurement becomes valuable. It helps you see what's actually happening. It helps you identify problems early. It helps you understand patterns and improve over time. It helps you, as well as the people being measured.
 
