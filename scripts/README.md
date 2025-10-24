@@ -1,15 +1,16 @@
 # Hero Image Generation
 
-This directory contains a script to automatically generate hero/banner images for blog posts.
+This directory contains a TypeScript script to automatically generate hero/banner images for blog posts.
 
 ## How It Works
 
-The script ([generate-hero-images.js](./generate-hero-images.js)) scans all blog posts in `src/content/blog/` and generates banner images for any posts that don't already have one.
+The script ([generate-hero-images.ts](./generate-hero-images.ts)) scans all blog posts in `src/content/blog/` and generates banner images for any posts that don't already have one.
 
 It uses:
-- **Satori**: Converts React-like components to SVG
+- **Satori**: Converts React/TSX components to SVG
 - **Resvg**: Converts SVG to PNG
 - **Sharp**: Optimizes the final PNG
+- **tsx**: TypeScript execution for Node.js
 
 ## Usage
 
@@ -48,7 +49,13 @@ The script:
 
 ## Customization
 
-You can customize the hero image template by editing the `generateHeroTemplate()` function in [generate-hero-images.js](./generate-hero-images.js:86).
+The hero image template is a React component defined in **[src/components/hero-template.tsx](../src/components/hero-template.tsx)**. This file is separate from the generation script to make customization easier.
+
+Since it's a real TSX file, you can:
+- Use JSX syntax for layout
+- Add TypeScript types for props
+- Use React patterns you're familiar with
+- Get full IDE autocompletion and type checking
 
 ### Changing Colors
 

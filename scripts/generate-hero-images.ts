@@ -1,9 +1,11 @@
-import { readdir, readFile, writeFile, mkdir } from 'fs/promises'
+import { readdir, readFile, writeFile } from 'fs/promises'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import satori from 'satori'
 import sharp from 'sharp'
 import { Resvg } from '@resvg/resvg-js'
+import { createElement } from 'react'
+import { HeroTemplate } from '../src/components/hero-template.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -12,14 +14,29 @@ const BLOG_DIR = join(__dirname, '../src/content/blog')
 const OUTPUT_WIDTH = 1200
 const OUTPUT_HEIGHT = 630
 
+interface Frontmatter {
+  [key: string]: string
+}
+
+interface BlogPost {
+  slug: string
+  dir: string
+  hasBanner: boolean
+  title?: string
+  description?: string
+  date?: string
+  tags?: string
+  draft?: string
+}
+
 // Simple frontmatter parser
-function parseFrontmatter(content) {
+function parseFrontmatter(content: string): Frontmatter | null {
   const frontmatterRegex = /^---\s*\n([\s\S]*?)\n---/
   const match = content.match(frontmatterRegex)
 
   if (!match) return null
 
-  const frontmatter = {}
+  const frontmatter: Frontmatter = {}
   const lines = match[1].split('\n')
 
   for (const line of lines) {
@@ -42,9 +59,9 @@ function parseFrontmatter(content) {
 }
 
 // Get all blog posts
-async function getBlogPosts() {
+async function getBlogPosts(): Promise<BlogPost[]> {
   const entries = await readdir(BLOG_DIR, { withFileTypes: true })
-  const posts = []
+  const posts: BlogPost[] = []
 
   for (const entry of entries) {
     if (!entry.isDirectory()) continue
@@ -75,121 +92,12 @@ async function getBlogPosts() {
   return posts
 }
 
-// Generate hero image template
-function generateHeroTemplate(title, description, date, tags = []) {
-  // Format date
-  const dateObj = new Date(date)
-  const formattedDate = dateObj.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  })
-
-  return {
-    type: 'div',
-    props: {
-      style: {
-        display: 'flex',
-        flexDirection: 'column',
-        width: '100%',
-        height: '100%',
-        padding: '80px',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white',
-        fontFamily: 'system-ui, -apple-system, sans-serif',
-        justifyContent: 'space-between',
-      },
-      children: [
-        // Main content
-        {
-          type: 'div',
-          props: {
-            style: {
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '24px',
-            },
-            children: [
-              // Title
-              {
-                type: 'div',
-                props: {
-                  style: {
-                    fontSize: '72px',
-                    fontWeight: 'bold',
-                    lineHeight: '1.1',
-                    letterSpacing: '-0.02em',
-                  },
-                  children: title,
-                },
-              },
-              // Description (if provided)
-              description ? {
-                type: 'div',
-                props: {
-                  style: {
-                    fontSize: '32px',
-                    opacity: 0.9,
-                    lineHeight: '1.4',
-                  },
-                  children: description,
-                },
-              } : null,
-            ].filter(Boolean),
-          },
-        },
-        // Footer with date and tags
-        {
-          type: 'div',
-          props: {
-            style: {
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              fontSize: '24px',
-              opacity: 0.8,
-            },
-            children: [
-              {
-                type: 'div',
-                props: {
-                  children: formattedDate,
-                },
-              },
-              tags && tags.length > 0 ? {
-                type: 'div',
-                props: {
-                  style: {
-                    display: 'flex',
-                    gap: '12px',
-                  },
-                  children: tags.slice(0, 3).map(tag => ({
-                    type: 'div',
-                    props: {
-                      style: {
-                        padding: '8px 16px',
-                        background: 'rgba(255, 255, 255, 0.2)',
-                        borderRadius: '8px',
-                      },
-                      children: tag,
-                    },
-                  })),
-                },
-              } : null,
-            ].filter(Boolean),
-          },
-        },
-      ],
-    },
-  }
-}
-
 // Generate image for a post
-async function generateImage(post) {
+async function generateImage(post: BlogPost): Promise<void> {
   console.log(`Generating image for: ${post.title}`)
 
   // Parse tags if they exist
-  let tags = []
+  let tags: string[] = []
   if (post.tags) {
     try {
       // Handle array format: ['tag1', 'tag2']
@@ -199,15 +107,16 @@ async function generateImage(post) {
     }
   }
 
-  const template = generateHeroTemplate(
-    post.title,
-    post.description,
-    post.date,
-    tags
-  )
+  // Create React element using the TSX component
+  const element = createElement(HeroTemplate, {
+    title: post.title || 'Untitled',
+    description: post.description,
+    date: post.date || new Date().toISOString(),
+    tags,
+  })
 
   // Generate SVG using Satori
-  const svg = await satori(template, {
+  const svg = await satori(element, {
     width: OUTPUT_WIDTH,
     height: OUTPUT_HEIGHT,
     fonts: [
@@ -250,11 +159,11 @@ async function generateImage(post) {
 }
 
 // Main function
-async function main() {
+async function main(): Promise<void> {
   console.log('🎨 Generating hero images for blog posts...\n')
 
   const posts = await getBlogPosts()
-  const postsWithoutBanner = posts.filter(p => !p.hasBanner && !p.draft)
+  const postsWithoutBanner = posts.filter(p => !p.hasBanner && p.draft !== 'true')
 
   if (postsWithoutBanner.length === 0) {
     console.log('✨ All posts already have banner images!')
@@ -267,7 +176,7 @@ async function main() {
     try {
       await generateImage(post)
     } catch (error) {
-      console.error(`✗ Failed to generate image for ${post.slug}:`, error.message)
+      console.error(`✗ Failed to generate image for ${post.slug}:`, (error as Error).message)
     }
   }
 
