@@ -10,6 +10,7 @@ const blog = defineCollection({
       date: z.coerce.date(),
       order: z.number().optional(),
       image: image().optional(),
+      ogImage: image().optional(), // Open Graph / social media preview image
       tags: z.array(z.string()).optional(),
       authors: z.array(z.string()).optional(),
       draft: z.boolean().optional(),
