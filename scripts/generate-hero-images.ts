@@ -5,7 +5,7 @@ import satori from 'satori'
 import sharp from 'sharp'
 import { Resvg } from '@resvg/resvg-js'
 import { createElement } from 'react'
-import { HeroTemplate } from '../src/components/hero-template.js'
+import { HeroTemplate } from '../src/components/ui/hero-template.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -96,23 +96,10 @@ async function getBlogPosts(): Promise<BlogPost[]> {
 async function generateImage(post: BlogPost): Promise<void> {
   console.log(`Generating image for: ${post.title}`)
 
-  // Parse tags if they exist
-  let tags: string[] = []
-  if (post.tags) {
-    try {
-      // Handle array format: ['tag1', 'tag2']
-      tags = JSON.parse(post.tags.replace(/'/g, '"'))
-    } catch {
-      tags = []
-    }
-  }
-
   // Create React element using the TSX component
   const element = createElement(HeroTemplate, {
     title: post.title || 'Untitled',
     description: post.description,
-    date: post.date || new Date().toISOString(),
-    tags,
   })
 
   // Generate SVG using Satori

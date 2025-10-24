@@ -49,7 +49,7 @@ The script:
 
 ## Customization
 
-The hero image template is a React component defined in **[src/components/hero-template.tsx](../src/components/hero-template.tsx)**. This file is separate from the generation script to make customization easier.
+The hero image template is a React component defined in **[src/components/ui/hero-template.tsx](../src/components/ui/hero-template.tsx)**. This file is separate from the generation script to make customization easier.
 
 Since it's a real TSX file, you can:
 - Use JSX syntax for layout
