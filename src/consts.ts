@@ -4,7 +4,7 @@ export const SITE: Site = {
   title: 'Off by One',
   description:
     'astro-erudite is a opinionated, unstyled blogging template—built with Astro, Tailwind, and shadcn/ui.',
-  href: 'https://astro-erudite.vercel.app',
+  href: 'https://justoffbyone.com',
   author: 'cduruk',
   locale: 'en-US',
   featuredPostCount: 2,
