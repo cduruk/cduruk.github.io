@@ -3,7 +3,7 @@ import type { IconMap, SocialLink, Site } from '@/types'
 export const SITE: Site = {
   title: 'Off by One',
   description:
-    'astro-erudite is a opinionated, unstyled blogging template—built with Astro, Tailwind, and shadcn/ui.',
+    'Off by One is where Can Duruk writes about engineering, management, and engineering management.',
   href: 'https://justoffbyone.com',
   author: 'cduruk',
   locale: 'en-US',
