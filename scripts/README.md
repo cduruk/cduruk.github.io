@@ -1,10 +1,10 @@
-# Hero Image Generation
+# Open Graph Image Generation
 
-This directory contains a TypeScript script to automatically generate hero/banner images for blog posts.
+This directory contains a TypeScript script to automatically generate Open Graph (social media preview) images for blog posts.
 
 ## How It Works
 
-The script ([generate-hero-images.ts](./generate-hero-images.ts)) scans all blog posts in `src/content/blog/` and generates banner images for any posts that don't already have one.
+The script ([generate-og-images.ts](./generate-og-images.ts)) scans all blog posts in `src/content/blog/` and generates `og-image.png` files for any posts that don't already have one.
 
 It uses:
 - **Satori**: Converts React/TSX components to SVG
@@ -16,40 +16,40 @@ It uses:
 
 ### Manual Generation
 
-To generate images manually:
+To generate OG images manually:
 
 ```bash
-npm run generate-images
+npm run generate-og-images
 ```
 
 ### Automatic Generation
 
-Images are automatically generated during the build process:
+OG images are automatically generated during the build process:
 
 ```bash
 npm run build
 ```
 
-The build script runs `generate-images` before building the site.
+The build script runs `generate-og-images` before building the site.
 
 ## How Images Are Generated
 
 The script:
 
 1. Reads all blog post directories
-2. Checks for existing `banner.png`, `banner.jpg`, etc.
-3. For posts without banners (and not marked as draft), it:
-   - Extracts frontmatter (title, description, date, tags)
+2. Checks for existing `og-image.png`, `og-image.jpg`, etc.
+3. For posts without OG images (and not marked as draft), it:
+   - Extracts frontmatter (title, description)
    - Generates a 1200x630 PNG image with:
-     - Purple gradient background
+     - Flexoki dark theme background
      - Title in large, bold text
      - Description (if provided)
-     - Date and tags in the footer
-4. Saves the image as `banner.png` in the post's directory
+     - "Off by One" branding in the footer
+4. Saves the image as `og-image.png` in the post's directory
 
 ## Customization
 
-The hero image template is a React component defined in **[src/components/ui/hero-template.tsx](../src/components/ui/hero-template.tsx)**. This file is separate from the generation script to make customization easier.
+The OG image template is a React component defined in **[src/components/ui/hero-template.tsx](../src/components/ui/hero-template.tsx)**. This file is separate from the generation script to make customization easier.
 
 Since it's a real TSX file, you can:
 - Use JSX syntax for layout
@@ -101,7 +101,7 @@ Currently uses Inter font. To use a different font:
 - **Compression**: Level 9, Quality 90
 - **Average size**: ~60-80 KB
 
-## Adding Images to Posts
+## Adding OG Images to Posts
 
 Once generated, add the image to your post's frontmatter:
 
@@ -110,17 +110,21 @@ Once generated, add the image to your post's frontmatter:
 title: 'My Post Title'
 description: 'My post description'
 date: 2025-10-24
-image: './banner.png'
+ogImage: './og-image.png'
 ---
 ```
+
+**Note:** The `ogImage` field is separate from the `image` field:
+- `ogImage`: Used for Open Graph/social media previews only
+- `image`: Used for page banners and listing thumbnails
 
 ## Skipping Auto-Generation
 
 If you want to skip auto-generation for a specific post:
 
-1. Create an empty `banner.png` file in the post directory, OR
+1. Create an empty `og-image.png` file in the post directory, OR
 2. Mark the post as `draft: true`, OR
-3. Manually create your own banner image
+3. Manually create your own OG image
 
 ## Troubleshooting
 
@@ -132,11 +136,12 @@ Make sure `@fontsource/inter` is installed:
 npm install --save-dev @fontsource/inter
 ```
 
-### Images not appearing
+### OG images not appearing in social previews
 
-1. Check the post's frontmatter has `image: './banner.png'`
-2. Verify the banner file exists in the post directory
-3. Check file permissions
+1. Check the post's frontmatter has `ogImage: './og-image.png'`
+2. Verify the og-image file exists in the post directory
+3. Test with social media preview tools (Facebook Debugger, Twitter Card Validator)
+4. Check file permissions
 
 ### Image quality issues
 

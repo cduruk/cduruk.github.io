@@ -6,10 +6,10 @@
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
-    "build": "npm run generate-images && astro check && astro build",
+    "build": "npm run generate-og-images && astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "generate-images": "tsx scripts/generate-hero-images.ts",
+    "generate-og-images": "tsx scripts/generate-og-images.ts",
     "prettier": "prettier --write **/*.{ts,tsx,css,astro} --ignore-path .gitignore",
     "postinstall": "patch-package"
   },
