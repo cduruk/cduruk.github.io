@@ -2,6 +2,9 @@
 @import '@fontsource/fira-sans/400.css';
 @import '@fontsource/fira-sans/500.css';
 @import '@fontsource/fira-sans/600.css';
+@import '@fontsource/inconsolata/400.css';
+@import '@fontsource/inconsolata/500.css';
+@import '@fontsource/inconsolata/600.css';
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
@@ -10,7 +13,7 @@
     'Fira Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --font-mono:
-    Geist Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Inconsolata', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     'Liberation Mono', 'Courier New', monospace;
 
   --color-background: var(--background);
