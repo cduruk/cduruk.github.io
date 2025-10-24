@@ -43,7 +43,7 @@
 
     /* Don't use an <h1> in your posts, one is already generated in blog/[...id].astro */
     :where(h1):not(:where(.not-prose, .not-prose *)) {
-      @apply mt-8 mb-6 text-4xl tracking-normal;
+      @apply mt-6 mb-3 text-4xl tracking-tight;
     }
 
     :where(h1):not(:where(.not-prose, .not-prose *))::before {
@@ -52,7 +52,7 @@
     }
 
     :where(h2):not(:where(.not-prose, .not-prose *)) {
-      @apply mt-8 mb-4 text-2xl tracking-normal;
+      @apply mt-6 mb-3 text-2xl tracking-tight;
     }
 
     :where(h2):not(:where(.not-prose, .not-prose *))::before {
@@ -61,7 +61,7 @@
     }
 
     :where(h3):not(:where(.not-prose, .not-prose *)) {
-      @apply mt-8 mb-4 text-xl tracking-normal;
+      @apply mt-6 mb-2 text-xl tracking-tight;
     }
 
     :where(h3):not(:where(.not-prose, .not-prose *))::before {
@@ -70,7 +70,7 @@
     }
 
     :where(h4):not(:where(.not-prose, .not-prose *)) {
-      @apply mt-7 mb-3 text-lg tracking-normal;
+      @apply mt-5 mb-2 text-lg tracking-tight;
     }
 
     :where(h4):not(:where(.not-prose, .not-prose *))::before {
@@ -79,7 +79,7 @@
     }
 
     :where(h5, h6):not(:where(.not-prose, .not-prose *)) {
-      @apply mt-5 mb-3 tracking-normal;
+      @apply mt-4 mb-2 tracking-tight;
     }
 
     :where(h5):not(:where(.not-prose, .not-prose *))::before {
