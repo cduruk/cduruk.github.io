@@ -21,11 +21,9 @@ interface Frontmatter {
 interface BlogPost {
   slug: string
   dir: string
-  hasBanner: boolean
+  hasOgImage: boolean
   title?: string
   description?: string
-  date?: string
-  tags?: string
   draft?: string
 }
 
@@ -73,8 +71,8 @@ async function getBlogPosts(): Promise<BlogPost[]> {
     const indexFile = files.find(f => f === 'index.mdx' || f === 'index.md')
     if (!indexFile) continue
 
-    // Check if banner already exists
-    const hasBanner = files.some(f => f.startsWith('banner.'))
+    // Check if OG image already exists
+    const hasOgImage = files.some(f => f.startsWith('og-image.'))
 
     const content = await readFile(join(postDir, indexFile), 'utf-8')
     const frontmatter = parseFrontmatter(content)
@@ -84,7 +82,7 @@ async function getBlogPosts(): Promise<BlogPost[]> {
     posts.push({
       slug: entry.name,
       dir: postDir,
-      hasBanner,
+      hasOgImage,
       ...frontmatter
     })
   }
@@ -138,8 +136,8 @@ async function generateImage(post: BlogPost): Promise<void> {
     .png({ quality: 90, compressionLevel: 9 })
     .toBuffer()
 
-  // Write to post directory
-  const outputPath = join(post.dir, 'banner.png')
+  // Write to post directory as OG image
+  const outputPath = join(post.dir, 'og-image.png')
   await writeFile(outputPath, optimizedBuffer)
 
   console.log(`✓ Generated: ${outputPath}`)
@@ -147,23 +145,23 @@ async function generateImage(post: BlogPost): Promise<void> {
 
 // Main function
 async function main(): Promise<void> {
-  console.log('🎨 Generating hero images for blog posts...\n')
+  console.log('🎨 Generating OG images for blog posts...\n')
 
   const posts = await getBlogPosts()
-  const postsWithoutBanner = posts.filter(p => !p.hasBanner && p.draft !== 'true')
+  const postsWithoutOgImage = posts.filter(p => !p.hasOgImage && p.draft !== 'true')
 
-  if (postsWithoutBanner.length === 0) {
-    console.log('✨ All posts already have banner images!')
+  if (postsWithoutOgImage.length === 0) {
+    console.log('✨ All posts already have OG images!')
     return
   }
 
-  console.log(`Found ${postsWithoutBanner.length} posts without banners:\n`)
+  console.log(`Found ${postsWithoutOgImage.length} posts without OG images:\n`)
 
-  for (const post of postsWithoutBanner) {
+  for (const post of postsWithoutOgImage) {
     try {
       await generateImage(post)
     } catch (error) {
-      console.error(`✗ Failed to generate image for ${post.slug}:`, (error as Error).message)
+      console.error(`✗ Failed to generate OG image for ${post.slug}:`, (error as Error).message)
     }
   }
 
