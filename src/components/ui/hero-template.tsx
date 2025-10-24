@@ -126,6 +126,15 @@ export function HeroTemplate({ title, description }: HeroTemplateProps) {
                 color: colors.mutedForeground,
               }}
             >
+              by Can Duruk
+            </div>
+            <div
+              style={{
+                fontSize: '20px',
+                color: colors.primary,
+                textDecoration: 'underline',
+              }}
+            >
               justoffbyone.com
             </div>
           </div>
