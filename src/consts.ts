@@ -28,7 +28,7 @@ export const SOCIAL_LINKS: SocialLink[] = [
     label: 'LinkedIn',
   },
   {
-    href: 'https://twitter.com/can',
+    href: 'https://x.com/can',
     label: 'Twitter',
   },
   {
