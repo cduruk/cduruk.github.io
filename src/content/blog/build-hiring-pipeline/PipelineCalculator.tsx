@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calculator, ArrowDown } from 'lucide-react';
+import { ArrowDown } from 'lucide-react';
 
 export default function PipelineCalculator() {
   const [coldWeeksToHire, setColdWeeksToHire] = useState(10);
@@ -94,20 +94,20 @@ export default function PipelineCalculator() {
               <tr className="border-b border-border">
                 <th className="w-8"></th>
                 <th className="text-left p-4 font-bold text-foreground sticky left-0 bg-background">Pipeline Stage</th>
-                <th className="text-left p-4 font-bold text-foreground border-l border-border" colSpan={2}>
+                <th className="text-center p-4 font-bold text-foreground border-l border-border" colSpan={2}>
                   Cold Outreach
                 </th>
-                <th className="text-left p-4 font-bold text-foreground border-l border-border" colSpan={2}>
+                <th className="text-center p-4 font-bold text-foreground border-l border-border" colSpan={2}>
                   Referrals
                 </th>
               </tr>
               <tr className="border-b border-border">
                 <th className="w-8"></th>
                 <th className="text-left p-3 text-sm font-medium text-foreground sticky left-0 bg-background"></th>
-                <th className="text-left p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
-                <th className="text-left p-3 text-sm font-medium text-foreground">Volume</th>
-                <th className="text-left p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
-                <th className="text-left p-3 text-sm font-medium text-foreground">Volume</th>
+                <th className="text-center p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
+                <th className="text-center p-3 text-sm font-medium text-foreground">Volume</th>
+                <th className="text-center p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
+                <th className="text-center p-3 text-sm font-medium text-foreground">Volume</th>
               </tr>
             </thead>
             <tbody>
@@ -133,9 +133,9 @@ export default function PipelineCalculator() {
                     </td>
 
                     {/* Cold Outreach - Rate */}
-                    <td className="p-3 text-left border-l border-border">
+                    <td className="p-3 text-center border-l border-border">
                       {stage.rate ? (
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center justify-center gap-1">
                           <input
                             type="number"
                             value={rates.cold[stage.rate]}
@@ -154,7 +154,7 @@ export default function PipelineCalculator() {
 
                     {/* Cold Outreach - Volume */}
                     <td
-                      className={`p-3 text-left align-middle transition-all ${isOutreach ? 'cursor-pointer' : ''} ${hoveredOutreach === 'cold' && isOutreach ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
+                      className={`p-3 text-center align-middle transition-all ${isOutreach ? 'cursor-pointer' : ''} ${hoveredOutreach === 'cold' && isOutreach ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
                       onMouseEnter={isOutreach ? () => setHoveredOutreach('cold') : undefined}
                       onMouseLeave={isOutreach ? () => setHoveredOutreach(null) : undefined}
                     >
@@ -164,9 +164,9 @@ export default function PipelineCalculator() {
                     </td>
 
                     {/* Referral - Rate */}
-                    <td className="p-3 text-left border-l border-border">
+                    <td className="p-3 text-center border-l border-border">
                       {stage.rate ? (
-                        <div className="flex items-center gap-1">
+                        <div className="flex items-center justify-center gap-1">
                           <input
                             type="number"
                             value={rates.referral[stage.rate]}
@@ -185,7 +185,7 @@ export default function PipelineCalculator() {
 
                     {/* Referral - Volume */}
                     <td
-                      className={`p-3 text-left align-middle transition-all ${isOutreach ? 'cursor-pointer' : ''} ${hoveredOutreach === 'referral' && isOutreach ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
+                      className={`p-3 text-center align-middle transition-all ${isOutreach ? 'cursor-pointer' : ''} ${hoveredOutreach === 'referral' && isOutreach ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
                       onMouseEnter={isOutreach ? () => setHoveredOutreach('referral') : undefined}
                       onMouseLeave={isOutreach ? () => setHoveredOutreach(null) : undefined}
                     >
