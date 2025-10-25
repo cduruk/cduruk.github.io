@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Calculator, ArrowDown } from 'lucide-react';
 
 export default function PipelineCalculator() {
-  const [weeksToHire, setWeeksToHire] = useState(10);
+  const [coldWeeksToHire, setColdWeeksToHire] = useState(10);
+  const [referralWeeksToHire, setReferralWeeksToHire] = useState(10);
 
   // Conversion rates (as percentages for easier editing)
   const [rates, setRates] = useState({
@@ -51,8 +52,8 @@ export default function PipelineCalculator() {
   const coldVolumes = calculatePipeline(rates.cold);
   const referralVolumes = calculatePipeline(rates.referral);
 
-  const coldWeeklyOutreach = Math.ceil(coldVolumes.outreach / weeksToHire);
-  const referralWeeklyOutreach = Math.ceil(referralVolumes.outreach / weeksToHire);
+  const coldWeeklyOutreach = Math.ceil(coldVolumes.outreach / coldWeeksToHire);
+  const referralWeeklyOutreach = Math.ceil(referralVolumes.outreach / referralWeeksToHire);
   const efficiency = coldVolumes.outreach / referralVolumes.outreach;
 
   const updateRate = (pipelineType: 'cold' | 'referral', stage: string, value: string) => {
@@ -92,20 +93,20 @@ export default function PipelineCalculator() {
               <tr className="bg-muted border-b-2 border-border">
                 <th className="w-8"></th>
                 <th className="text-left p-4 font-bold text-foreground sticky left-0 bg-muted">Pipeline Stage</th>
-                <th className="text-center p-4 font-bold text-primary border-l border-border" colSpan={2}>
+                <th className="text-center p-4 font-bold text-foreground border-l border-border" colSpan={2}>
                   Cold Outreach
                 </th>
-                <th className="text-center p-4 font-bold text-primary border-l border-border" colSpan={2}>
+                <th className="text-center p-4 font-bold text-foreground border-l border-border" colSpan={2}>
                   Referrals
                 </th>
               </tr>
               <tr className="bg-muted border-b-2 border-border">
                 <th className="w-8"></th>
-                <th className="text-left p-3 text-sm font-medium text-muted-foreground sticky left-0 bg-muted"></th>
-                <th className="text-center p-3 text-sm font-medium text-muted-foreground border-l border-border">Rate</th>
-                <th className="text-center p-3 text-sm font-medium text-muted-foreground">Volume</th>
-                <th className="text-center p-3 text-sm font-medium text-muted-foreground border-l border-border">Rate</th>
-                <th className="text-center p-3 text-sm font-medium text-muted-foreground">Volume</th>
+                <th className="text-left p-3 text-sm font-medium text-foreground sticky left-0 bg-muted"></th>
+                <th className="text-center p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
+                <th className="text-center p-3 text-sm font-medium text-foreground">Volume</th>
+                <th className="text-center p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
+                <th className="text-center p-3 text-sm font-medium text-foreground">Volume</th>
               </tr>
             </thead>
             <tbody>
@@ -151,7 +152,7 @@ export default function PipelineCalculator() {
 
                     {/* Cold Outreach - Volume */}
                     <td className="p-3 text-center align-middle">
-                      <span className={`text-xl font-bold ${isLast ? 'text-emerald-700 dark:text-emerald-400' : 'text-primary/80'}`}>
+                      <span className={`text-xl font-bold ${isLast ? 'text-emerald-700 dark:text-emerald-400' : 'text-foreground'}`}>
                         {Math.ceil(coldVolume)}
                       </span>
                     </td>
@@ -178,7 +179,7 @@ export default function PipelineCalculator() {
 
                     {/* Referral - Volume */}
                     <td className="p-3 text-center align-middle">
-                      <span className={`text-xl font-bold ${isLast ? 'text-emerald-700 dark:text-emerald-400' : 'text-primary/80'}`}>
+                      <span className={`text-xl font-bold ${isLast ? 'text-emerald-700 dark:text-emerald-400' : 'text-foreground'}`}>
                         {Math.ceil(referralVolume)}
                       </span>
                     </td>
@@ -195,42 +196,51 @@ export default function PipelineCalculator() {
         <table className="w-full min-w-full table-fixed">
           <thead>
             <tr className="bg-muted border-b border-border">
-              <th className="text-left p-4 font-bold text-foreground w-1/3">Metric</th>
-              <th className="text-center p-4 font-bold text-primary border-l border-border w-1/3">Cold Outreach</th>
-              <th className="text-center p-4 font-bold text-primary border-l border-border w-1/3">Referrals</th>
+              <th className="text-left p-4 font-bold text-foreground w-1/5">Metric</th>
+              <th className="text-center p-4 font-bold text-foreground border-l border-border w-2/5">Cold Outreach</th>
+              <th className="text-center p-4 font-bold text-foreground border-l border-border w-2/5">Referrals</th>
             </tr>
           </thead>
           <tbody>
             <tr className="border-b border-border">
-              <td className="p-4 font-medium text-foreground text-center align-middle">Weeks to Hire</td>
-              <td className="p-4 text-center align-middle border-l border-border" colSpan={2}>
+              <td className="p-4 font-medium text-foreground text-left align-middle">Total Outreach</td>
+              <td className="p-4 text-center align-middle border-l border-border">
+                <div className="text-2xl font-bold text-foreground">{Math.ceil(coldVolumes.outreach)}</div>
+                <div className="text-xs text-muted-foreground mt-1">touches needed</div>
+              </td>
+              <td className="p-4 text-center align-middle border-l border-border">
+                <div className="text-2xl font-bold text-foreground">{Math.ceil(referralVolumes.outreach)}</div>
+                <div className="text-xs text-muted-foreground mt-1">touches needed</div>
+              </td>
+            </tr>
+            <tr className="border-b border-border">
+              <td className="p-4 font-medium text-foreground text-left align-middle">Weeks to Hire</td>
+              <td className="p-4 text-center align-middle border-l border-border">
                 <input
                   type="number"
-                  value={weeksToHire}
-                  onChange={(e) => setWeeksToHire(Math.max(1, parseInt(e.target.value) || 1))}
+                  value={coldWeeksToHire}
+                  onChange={(e) => setColdWeeksToHire(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="text-2xl font-bold text-foreground w-20 text-center border border-border rounded px-2 py-1 hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
+                  min="1"
+                />
+              </td>
+              <td className="p-4 text-center align-middle border-l border-border">
+                <input
+                  type="number"
+                  value={referralWeeksToHire}
+                  onChange={(e) => setReferralWeeksToHire(Math.max(1, parseInt(e.target.value) || 1))}
                   className="text-2xl font-bold text-foreground w-20 text-center border border-border rounded px-2 py-1 hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
                   min="1"
                 />
               </td>
             </tr>
             <tr className="border-b border-border">
-              <td className="p-4 font-medium text-foreground text-center align-middle">Total Outreach</td>
+              <td className="p-4 font-medium text-foreground text-left align-middle">Per Week</td>
               <td className="p-4 text-center align-middle border-l border-border">
-                <div className="text-2xl font-bold text-primary">{Math.ceil(coldVolumes.outreach)}</div>
-                <div className="text-xs text-muted-foreground mt-1">touches needed</div>
+                <div className="text-2xl font-bold text-foreground">{coldWeeklyOutreach}</div>
               </td>
               <td className="p-4 text-center align-middle border-l border-border">
-                <div className="text-2xl font-bold text-primary">{Math.ceil(referralVolumes.outreach)}</div>
-                <div className="text-xs text-muted-foreground mt-1">touches needed</div>
-              </td>
-            </tr>
-            <tr className="border-b border-border">
-              <td className="p-4 font-medium text-foreground text-center align-middle">Per Week</td>
-              <td className="p-4 text-center align-middle border-l border-border">
-                <div className="text-2xl font-bold text-primary">{coldWeeklyOutreach}</div>
-              </td>
-              <td className="p-4 text-center align-middle border-l border-border">
-                <div className="text-2xl font-bold text-primary">{referralWeeklyOutreach}</div>
+                <div className="text-2xl font-bold text-foreground">{referralWeeklyOutreach}</div>
               </td>
             </tr>
           </tbody>
@@ -256,10 +266,6 @@ export default function PipelineCalculator() {
         </ul>
       </div>
 
-      {/* Footer */}
-      <div className="mt-8 text-center text-sm text-muted-foreground">
-        <p>Based on real hiring data. Click any conversion rate to edit with your own numbers.</p>
-      </div>
     </div>
   );
 }
