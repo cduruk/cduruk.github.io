@@ -57,6 +57,11 @@ export default function PipelineCalculator() {
   const referralWeeklyOutreach = Math.ceil(referralVolumes.outreach / referralWeeksToHire);
   const efficiency = coldVolumes.outreach / referralVolumes.outreach;
 
+  const pipelines = [
+    { type: 'cold' as const, label: 'Cold Outreach', volumes: coldVolumes, rates: rates.cold, weeksToHire: coldWeeksToHire, setWeeksToHire: setColdWeeksToHire, weeklyOutreach: coldWeeklyOutreach },
+    { type: 'referral' as const, label: 'Referrals', volumes: referralVolumes, rates: rates.referral, weeksToHire: referralWeeksToHire, setWeeksToHire: setReferralWeeksToHire, weeklyOutreach: referralWeeklyOutreach }
+  ];
+
   const updateRate = (pipelineType: 'cold' | 'referral', stage: string, value: string) => {
     const numValue = parseFloat(value);
     if (isNaN(numValue) || numValue < 0 || numValue > 100) return;
@@ -94,26 +99,25 @@ export default function PipelineCalculator() {
               <tr className="border-b border-border">
                 <th className="w-8"></th>
                 <th className="text-left p-4 font-bold text-foreground sticky left-0 bg-background">Pipeline Stage</th>
-                <th className="text-center p-4 font-bold text-foreground border-l border-border" colSpan={2}>
-                  Cold Outreach
-                </th>
-                <th className="text-center p-4 font-bold text-foreground border-l border-border" colSpan={2}>
-                  Referrals
-                </th>
+                {pipelines.map((pipeline) => (
+                  <th key={pipeline.type} className="text-center p-4 font-bold text-foreground border-l border-border" colSpan={2}>
+                    {pipeline.label}
+                  </th>
+                ))}
               </tr>
               <tr className="border-b border-border">
                 <th className="w-8"></th>
                 <th className="text-left p-3 text-sm font-medium text-foreground sticky left-0 bg-background"></th>
-                <th className="text-center p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
-                <th className="text-center p-3 text-sm font-medium text-foreground">Volume</th>
-                <th className="text-center p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
-                <th className="text-center p-3 text-sm font-medium text-foreground">Volume</th>
+                {pipelines.map((pipeline) => (
+                  <React.Fragment key={pipeline.type}>
+                    <th className="text-center p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
+                    <th className="text-center p-3 text-sm font-medium text-foreground">Volume</th>
+                  </React.Fragment>
+                ))}
               </tr>
             </thead>
             <tbody>
               {stages.map((stage, index) => {
-                const coldVolume = coldVolumes[stage.volumeKey];
-                const referralVolume = referralVolumes[stage.volumeKey];
                 const isLast = index === stages.length - 1;
                 const isOutreach = stage.key === 'outreach';
 
@@ -132,67 +136,40 @@ export default function PipelineCalculator() {
                       </span>
                     </td>
 
-                    {/* Cold Outreach - Rate */}
-                    <td className="p-3 text-center border-l border-border">
-                      {stage.rate ? (
-                        <div className="flex items-center justify-center gap-1">
-                          <input
-                            type="number"
-                            value={rates.cold[stage.rate]}
-                            onChange={(e) => updateRate('cold', stage.rate!, e.target.value)}
-                            className="w-16 px-2 py-1 border border-border rounded text-center text-foreground hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
-                            min="0"
-                            max="100"
-                            step="1"
-                          />
-                          <span className="text-muted-foreground text-sm">%</span>
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground text-sm">—</span>
-                      )}
-                    </td>
+                    {pipelines.map((pipeline) => (
+                      <React.Fragment key={pipeline.type}>
+                        {/* Rate */}
+                        <td className="p-3 text-center border-l border-border">
+                          {stage.rate ? (
+                            <div className="flex items-center justify-center gap-1">
+                              <input
+                                type="number"
+                                value={pipeline.rates[stage.rate]}
+                                onChange={(e) => updateRate(pipeline.type, stage.rate!, e.target.value)}
+                                className="w-16 px-2 py-1 border border-border rounded text-center text-foreground hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
+                                min="0"
+                                max="100"
+                                step="1"
+                              />
+                              <span className="text-muted-foreground text-sm">%</span>
+                            </div>
+                          ) : (
+                            <span className="text-muted-foreground text-sm">—</span>
+                          )}
+                        </td>
 
-                    {/* Cold Outreach - Volume */}
-                    <td
-                      className={`p-3 text-center align-middle transition-all ${isOutreach ? 'cursor-pointer' : ''} ${hoveredOutreach === 'cold' && isOutreach ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
-                      onMouseEnter={isOutreach ? () => setHoveredOutreach('cold') : undefined}
-                      onMouseLeave={isOutreach ? () => setHoveredOutreach(null) : undefined}
-                    >
-                      <span className={`${isLast ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
-                        {Math.ceil(coldVolume)}
-                      </span>
-                    </td>
-
-                    {/* Referral - Rate */}
-                    <td className="p-3 text-center border-l border-border">
-                      {stage.rate ? (
-                        <div className="flex items-center justify-center gap-1">
-                          <input
-                            type="number"
-                            value={rates.referral[stage.rate]}
-                            onChange={(e) => updateRate('referral', stage.rate!, e.target.value)}
-                            className="w-16 px-2 py-1 border border-border rounded text-center text-foreground hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
-                            min="0"
-                            max="100"
-                            step="1"
-                          />
-                          <span className="text-muted-foreground text-sm">%</span>
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground text-sm">—</span>
-                      )}
-                    </td>
-
-                    {/* Referral - Volume */}
-                    <td
-                      className={`p-3 text-center align-middle transition-all ${isOutreach ? 'cursor-pointer' : ''} ${hoveredOutreach === 'referral' && isOutreach ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
-                      onMouseEnter={isOutreach ? () => setHoveredOutreach('referral') : undefined}
-                      onMouseLeave={isOutreach ? () => setHoveredOutreach(null) : undefined}
-                    >
-                      <span className={`${isLast ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
-                        {Math.ceil(referralVolume)}
-                      </span>
-                    </td>
+                        {/* Volume */}
+                        <td
+                          className={`p-3 text-center align-middle transition-all ${isOutreach ? 'cursor-pointer' : ''} ${hoveredOutreach === pipeline.type && isOutreach ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
+                          onMouseEnter={isOutreach ? () => setHoveredOutreach(pipeline.type) : undefined}
+                          onMouseLeave={isOutreach ? () => setHoveredOutreach(null) : undefined}
+                        >
+                          <span className={`${isLast ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
+                            {Math.ceil(pipeline.volumes[stage.volumeKey])}
+                          </span>
+                        </td>
+                      </React.Fragment>
+                    ))}
                   </tr>
                 );
               })}
@@ -207,59 +184,49 @@ export default function PipelineCalculator() {
           <thead>
             <tr className="border-b border-border">
               <th className="text-left p-4 font-bold text-foreground w-1/5">Metric</th>
-              <th className="text-center p-4 font-bold text-foreground w-2/5">Cold Outreach</th>
-              <th className="text-center p-4 font-bold text-foreground w-2/5">Referrals</th>
+              {pipelines.map((pipeline) => (
+                <th key={pipeline.type} className="text-center p-4 font-bold text-foreground w-2/5">
+                  {pipeline.label}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
             <tr className="border-b border-border">
               <td className="p-4 font-medium text-foreground text-left align-middle">Total Outreach</td>
-              <td
-                className={`p-4 text-center align-middle cursor-pointer transition-all ${hoveredOutreach === 'cold' ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
-                onMouseEnter={() => setHoveredOutreach('cold')}
-                onMouseLeave={() => setHoveredOutreach(null)}
-              >
-                <div className="text-foreground">{Math.ceil(coldVolumes.outreach)}</div>
-                <div className="text-xs text-muted-foreground mt-1">touches needed</div>
-              </td>
-              <td
-                className={`p-4 text-center align-middle cursor-pointer transition-all ${hoveredOutreach === 'referral' ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
-                onMouseEnter={() => setHoveredOutreach('referral')}
-                onMouseLeave={() => setHoveredOutreach(null)}
-              >
-                <div className="text-foreground">{Math.ceil(referralVolumes.outreach)}</div>
-                <div className="text-xs text-muted-foreground mt-1">touches needed</div>
-              </td>
+              {pipelines.map((pipeline) => (
+                <td
+                  key={pipeline.type}
+                  className={`p-4 text-center align-middle cursor-pointer transition-all ${hoveredOutreach === pipeline.type ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
+                  onMouseEnter={() => setHoveredOutreach(pipeline.type)}
+                  onMouseLeave={() => setHoveredOutreach(null)}
+                >
+                  <div className="text-foreground">{Math.ceil(pipeline.volumes.outreach)}</div>
+                  <div className="text-xs text-muted-foreground mt-1">touches needed</div>
+                </td>
+              ))}
             </tr>
             <tr className="border-b border-border">
               <td className="p-4 font-medium text-foreground text-left align-middle">Weeks to Hire</td>
-              <td className="p-4 text-center align-middle">
-                <input
-                  type="number"
-                  value={coldWeeksToHire}
-                  onChange={(e) => setColdWeeksToHire(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="text-foreground w-20 text-center border border-border rounded px-2 py-1 hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
-                  min="1"
-                />
-              </td>
-              <td className="p-4 text-center align-middle">
-                <input
-                  type="number"
-                  value={referralWeeksToHire}
-                  onChange={(e) => setReferralWeeksToHire(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="text-foreground w-20 text-center border border-border rounded px-2 py-1 hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
-                  min="1"
-                />
-              </td>
+              {pipelines.map((pipeline) => (
+                <td key={pipeline.type} className="p-4 text-center align-middle">
+                  <input
+                    type="number"
+                    value={pipeline.weeksToHire}
+                    onChange={(e) => pipeline.setWeeksToHire(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="text-foreground w-20 text-center border border-border rounded px-2 py-1 hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
+                    min="1"
+                  />
+                </td>
+              ))}
             </tr>
             <tr className="border-b border-border">
               <td className="p-4 font-medium text-foreground text-left align-middle">Per Week</td>
-              <td className="p-4 text-center align-middle">
-                <div className="text-foreground">{coldWeeklyOutreach}</div>
-              </td>
-              <td className="p-4 text-center align-middle">
-                <div className="text-foreground">{referralWeeklyOutreach}</div>
-              </td>
+              {pipelines.map((pipeline) => (
+                <td key={pipeline.type} className="p-4 text-center align-middle">
+                  <div className="text-foreground">{pipeline.weeklyOutreach}</div>
+                </td>
+              ))}
             </tr>
           </tbody>
         </table>
