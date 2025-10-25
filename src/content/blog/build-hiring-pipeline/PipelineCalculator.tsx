@@ -260,9 +260,6 @@ export default function PipelineCalculator() {
           <li>
             <strong className="text-primary">{((1 / referralVolumes.outreach) * 100).toFixed(2)}%</strong> of referral outreach becomes a hire
           </li>
-          <li>
-            You'll need approximately <strong className="text-primary">{Math.ceil(coldVolumes.offered)}</strong> offers for cold outreach and <strong className="text-primary">{Math.ceil(referralVolumes.offered)}</strong> for referrals to make one hire
-          </li>
         </ul>
       </div>
 
