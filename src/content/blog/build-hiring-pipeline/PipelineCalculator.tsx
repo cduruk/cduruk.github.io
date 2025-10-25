@@ -4,6 +4,7 @@ import { Calculator, ArrowDown } from 'lucide-react';
 export default function PipelineCalculator() {
   const [coldWeeksToHire, setColdWeeksToHire] = useState(10);
   const [referralWeeksToHire, setReferralWeeksToHire] = useState(10);
+  const [hoveredOutreach, setHoveredOutreach] = useState<'cold' | 'referral' | null>(null);
 
   // Conversion rates (as percentages for easier editing)
   const [rates, setRates] = useState({
@@ -86,27 +87,27 @@ export default function PipelineCalculator() {
     <div className="w-full min-w-full">
 
       {/* Main Table */}
-      <div className="bg-background border border-border overflow-hidden mb-6 w-full">
+      <div className="bg-background overflow-hidden mb-6 w-full">
         <div className="overflow-x-auto w-full">
           <table className="w-full min-w-full">
             <thead>
-              <tr className="bg-muted border-b-2 border-border">
+              <tr className="border-b border-border">
                 <th className="w-8"></th>
-                <th className="text-left p-4 font-bold text-foreground sticky left-0 bg-muted">Pipeline Stage</th>
-                <th className="text-center p-4 font-bold text-foreground border-l border-border" colSpan={2}>
+                <th className="text-left p-4 font-bold text-foreground sticky left-0 bg-background">Pipeline Stage</th>
+                <th className="text-left p-4 font-bold text-foreground border-l border-border" colSpan={2}>
                   Cold Outreach
                 </th>
-                <th className="text-center p-4 font-bold text-foreground border-l border-border" colSpan={2}>
+                <th className="text-left p-4 font-bold text-foreground border-l border-border" colSpan={2}>
                   Referrals
                 </th>
               </tr>
-              <tr className="bg-muted border-b-2 border-border">
+              <tr className="border-b border-border">
                 <th className="w-8"></th>
-                <th className="text-left p-3 text-sm font-medium text-foreground sticky left-0 bg-muted"></th>
-                <th className="text-center p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
-                <th className="text-center p-3 text-sm font-medium text-foreground">Volume</th>
-                <th className="text-center p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
-                <th className="text-center p-3 text-sm font-medium text-foreground">Volume</th>
+                <th className="text-left p-3 text-sm font-medium text-foreground sticky left-0 bg-background"></th>
+                <th className="text-left p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
+                <th className="text-left p-3 text-sm font-medium text-foreground">Volume</th>
+                <th className="text-left p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
+                <th className="text-left p-3 text-sm font-medium text-foreground">Volume</th>
               </tr>
             </thead>
             <tbody>
@@ -114,6 +115,7 @@ export default function PipelineCalculator() {
                 const coldVolume = coldVolumes[stage.volumeKey];
                 const referralVolume = referralVolumes[stage.volumeKey];
                 const isLast = index === stages.length - 1;
+                const isOutreach = stage.key === 'outreach';
 
                 return (
                   <tr key={stage.key} className={`border-b border-border transition-colors ${isLast ? 'bg-emerald-50 dark:bg-emerald-950/20' : 'hover:bg-muted/50'}`}>
@@ -131,14 +133,14 @@ export default function PipelineCalculator() {
                     </td>
 
                     {/* Cold Outreach - Rate */}
-                    <td className="p-3 text-center border-l border-border">
+                    <td className="p-3 text-left border-l border-border">
                       {stage.rate ? (
-                        <div className="flex items-center justify-center gap-1">
+                        <div className="flex items-center gap-1">
                           <input
                             type="number"
                             value={rates.cold[stage.rate]}
                             onChange={(e) => updateRate('cold', stage.rate!, e.target.value)}
-                            className="w-16 px-2 py-1 border border-border rounded text-center font-medium text-foreground hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
+                            className="w-16 px-2 py-1 border border-border rounded text-center text-foreground hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
                             min="0"
                             max="100"
                             step="1"
@@ -151,21 +153,25 @@ export default function PipelineCalculator() {
                     </td>
 
                     {/* Cold Outreach - Volume */}
-                    <td className="p-3 text-center align-middle">
-                      <span className={`text-xl font-bold ${isLast ? 'text-emerald-700 dark:text-emerald-400' : 'text-foreground'}`}>
+                    <td
+                      className={`p-3 text-left align-middle transition-all ${isOutreach ? 'cursor-pointer' : ''} ${hoveredOutreach === 'cold' && isOutreach ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
+                      onMouseEnter={isOutreach ? () => setHoveredOutreach('cold') : undefined}
+                      onMouseLeave={isOutreach ? () => setHoveredOutreach(null) : undefined}
+                    >
+                      <span className={`${isLast ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
                         {Math.ceil(coldVolume)}
                       </span>
                     </td>
 
                     {/* Referral - Rate */}
-                    <td className="p-3 text-center border-l border-border">
+                    <td className="p-3 text-left border-l border-border">
                       {stage.rate ? (
-                        <div className="flex items-center justify-center gap-1">
+                        <div className="flex items-center gap-1">
                           <input
                             type="number"
                             value={rates.referral[stage.rate]}
                             onChange={(e) => updateRate('referral', stage.rate!, e.target.value)}
-                            className="w-16 px-2 py-1 border border-border rounded text-center font-medium text-foreground hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
+                            className="w-16 px-2 py-1 border border-border rounded text-center text-foreground hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
                             min="0"
                             max="100"
                             step="1"
@@ -178,8 +184,12 @@ export default function PipelineCalculator() {
                     </td>
 
                     {/* Referral - Volume */}
-                    <td className="p-3 text-center align-middle">
-                      <span className={`text-xl font-bold ${isLast ? 'text-emerald-700 dark:text-emerald-400' : 'text-foreground'}`}>
+                    <td
+                      className={`p-3 text-left align-middle transition-all ${isOutreach ? 'cursor-pointer' : ''} ${hoveredOutreach === 'referral' && isOutreach ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
+                      onMouseEnter={isOutreach ? () => setHoveredOutreach('referral') : undefined}
+                      onMouseLeave={isOutreach ? () => setHoveredOutreach(null) : undefined}
+                    >
+                      <span className={`${isLast ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
                         {Math.ceil(referralVolume)}
                       </span>
                     </td>
@@ -192,55 +202,63 @@ export default function PipelineCalculator() {
       </div>
 
       {/* Summary Stats */}
-      <div className="bg-background border border-border overflow-hidden mb-6 w-full">
+      <div className="bg-background overflow-hidden mb-6 w-full">
         <table className="w-full min-w-full table-fixed">
           <thead>
-            <tr className="bg-muted border-b border-border">
+            <tr className="border-b border-border">
               <th className="text-left p-4 font-bold text-foreground w-1/5">Metric</th>
-              <th className="text-center p-4 font-bold text-foreground border-l border-border w-2/5">Cold Outreach</th>
-              <th className="text-center p-4 font-bold text-foreground border-l border-border w-2/5">Referrals</th>
+              <th className="text-center p-4 font-bold text-foreground w-2/5">Cold Outreach</th>
+              <th className="text-center p-4 font-bold text-foreground w-2/5">Referrals</th>
             </tr>
           </thead>
           <tbody>
             <tr className="border-b border-border">
               <td className="p-4 font-medium text-foreground text-left align-middle">Total Outreach</td>
-              <td className="p-4 text-center align-middle border-l border-border">
-                <div className="text-2xl font-bold text-foreground">{Math.ceil(coldVolumes.outreach)}</div>
+              <td
+                className={`p-4 text-center align-middle cursor-pointer transition-all ${hoveredOutreach === 'cold' ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
+                onMouseEnter={() => setHoveredOutreach('cold')}
+                onMouseLeave={() => setHoveredOutreach(null)}
+              >
+                <div className="text-foreground">{Math.ceil(coldVolumes.outreach)}</div>
                 <div className="text-xs text-muted-foreground mt-1">touches needed</div>
               </td>
-              <td className="p-4 text-center align-middle border-l border-border">
-                <div className="text-2xl font-bold text-foreground">{Math.ceil(referralVolumes.outreach)}</div>
+              <td
+                className={`p-4 text-center align-middle cursor-pointer transition-all ${hoveredOutreach === 'referral' ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
+                onMouseEnter={() => setHoveredOutreach('referral')}
+                onMouseLeave={() => setHoveredOutreach(null)}
+              >
+                <div className="text-foreground">{Math.ceil(referralVolumes.outreach)}</div>
                 <div className="text-xs text-muted-foreground mt-1">touches needed</div>
               </td>
             </tr>
             <tr className="border-b border-border">
               <td className="p-4 font-medium text-foreground text-left align-middle">Weeks to Hire</td>
-              <td className="p-4 text-center align-middle border-l border-border">
+              <td className="p-4 text-center align-middle">
                 <input
                   type="number"
                   value={coldWeeksToHire}
                   onChange={(e) => setColdWeeksToHire(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="text-2xl font-bold text-foreground w-20 text-center border border-border rounded px-2 py-1 hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
+                  className="text-foreground w-20 text-center border border-border rounded px-2 py-1 hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
                   min="1"
                 />
               </td>
-              <td className="p-4 text-center align-middle border-l border-border">
+              <td className="p-4 text-center align-middle">
                 <input
                   type="number"
                   value={referralWeeksToHire}
                   onChange={(e) => setReferralWeeksToHire(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="text-2xl font-bold text-foreground w-20 text-center border border-border rounded px-2 py-1 hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
+                  className="text-foreground w-20 text-center border border-border rounded px-2 py-1 hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
                   min="1"
                 />
               </td>
             </tr>
             <tr className="border-b border-border">
               <td className="p-4 font-medium text-foreground text-left align-middle">Per Week</td>
-              <td className="p-4 text-center align-middle border-l border-border">
-                <div className="text-2xl font-bold text-foreground">{coldWeeklyOutreach}</div>
+              <td className="p-4 text-center align-middle">
+                <div className="text-foreground">{coldWeeklyOutreach}</div>
               </td>
-              <td className="p-4 text-center align-middle border-l border-border">
-                <div className="text-2xl font-bold text-foreground">{referralWeeklyOutreach}</div>
+              <td className="p-4 text-center align-middle">
+                <div className="text-foreground">{referralWeeklyOutreach}</div>
               </td>
             </tr>
           </tbody>
