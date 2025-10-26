@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowDown } from 'lucide-react';
+import { ArrowDown, Link } from 'lucide-react';
 
 export default function PipelineCalculator() {
   const [weeksToHire, setWeeksToHire] = useState(10);
@@ -82,9 +82,10 @@ export default function PipelineCalculator() {
             <tbody>
               {stages.map((stage, index) => {
                 const isLast = index === stages.length - 1;
+                const isOutreach = stage.key === 'outreach';
 
                 return (
-                  <tr key={stage.key} className={`border-b border-border transition-colors ${isLast ? 'bg-emerald-50 dark:bg-emerald-950/20' : 'hover:bg-muted/50'}`}>
+                  <tr key={stage.key} className={`border-b border-border ${isLast ? 'bg-emerald-50 dark:bg-emerald-950/20' : ''}`}>
                     {/* Arrow */}
                     <td className="p-3 text-center align-middle">
                       {!isLast && (
@@ -120,9 +121,14 @@ export default function PipelineCalculator() {
 
                     {/* Volume */}
                     <td className="p-3 text-center align-middle">
-                      <span className={`${isLast ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
-                        {Math.ceil(volumes[stage.volumeKey])}
-                      </span>
+                      <div className="flex items-center justify-center gap-2">
+                        <span className={`${isLast ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
+                          {Math.ceil(volumes[stage.volumeKey])}
+                        </span>
+                        {isOutreach && (
+                          <Link className="w-4 h-4 text-muted-foreground" />
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );
@@ -136,28 +142,33 @@ export default function PipelineCalculator() {
 
               {/* Summary rows */}
               <tr className="border-b border-border bg-muted/30">
-                <td className="p-3 text-center align-middle"></td>
+                <td className="p-3 text-center align-middle bg-muted/30"></td>
                 <td className="p-4 sticky left-0 bg-muted/30">
                   <span className="font-medium text-foreground">Total Outreach</span>
                 </td>
-                <td className="p-3 text-center border-l border-border">
+                <td className="p-3 text-center border-l border-border bg-muted/30">
                   <span className="text-muted-foreground text-sm">—</span>
                 </td>
-                <td className="p-3 text-center align-middle">
-                  <div className="text-foreground">{Math.ceil(volumes.outreach)}</div>
-                  <div className="text-xs text-muted-foreground mt-1">touches needed</div>
+                <td className="p-3 text-center align-middle bg-muted/30">
+                  <div className="flex flex-col items-center">
+                    <div className="flex items-center gap-2">
+                      <div className="text-foreground">{Math.ceil(volumes.outreach)}</div>
+                      <Link className="w-4 h-4 text-muted-foreground" />
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">touches needed</div>
+                  </div>
                 </td>
               </tr>
 
               <tr className="border-b border-border bg-muted/30">
-                <td className="p-3 text-center align-middle"></td>
+                <td className="p-3 text-center align-middle bg-muted/30"></td>
                 <td className="p-4 sticky left-0 bg-muted/30">
                   <span className="font-medium text-foreground">Weeks to Hire</span>
                 </td>
-                <td className="p-3 text-center border-l border-border">
+                <td className="p-3 text-center border-l border-border bg-muted/30">
                   <span className="text-muted-foreground text-sm">—</span>
                 </td>
-                <td className="p-3 text-center align-middle">
+                <td className="p-3 text-center align-middle bg-muted/30">
                   <input
                     type="number"
                     value={weeksToHire}
@@ -169,14 +180,14 @@ export default function PipelineCalculator() {
               </tr>
 
               <tr className="border-b border-border bg-muted/30">
-                <td className="p-3 text-center align-middle"></td>
+                <td className="p-3 text-center align-middle bg-muted/30"></td>
                 <td className="p-4 sticky left-0 bg-muted/30">
                   <span className="font-medium text-foreground">Per Week</span>
                 </td>
-                <td className="p-3 text-center border-l border-border">
+                <td className="p-3 text-center border-l border-border bg-muted/30">
                   <span className="text-muted-foreground text-sm">—</span>
                 </td>
-                <td className="p-3 text-center align-middle">
+                <td className="p-3 text-center align-middle bg-muted/30">
                   <div className="text-foreground font-medium">{weeklyOutreach}</div>
                   <div className="text-xs text-muted-foreground mt-1">outreach per week</div>
                 </td>
