@@ -1,0 +1,47 @@
+---
+title: 'Interactive Hiring Pipeline Calculator'
+description: 'How to Build a Hiring Pipeline'
+date: 2025-10-26
+tags: ['engineering-management', 'hiring']
+ogImage: './og-image.png'
+authors: ['cduruk']
+draft: false
+---
+
+import PipelineCalculator from './PipelineCalculator.tsx'
+
+## Understanding Your Hiring Pipeline
+
+Building a hiring pipeline is one of the most critical aspects of growing a team. But how many candidates do you actually need to reach out to in order to make one hire? This calculator helps you answer that question.
+
+### How to Read the Calculator
+
+The calculator works **backwards from one hire**. Starting with the assumption that you want to make 1 hire, it calculates how many candidates you need at each previous stage of your pipeline based on your conversion rates.
+
+The pipeline flows from top to bottom:
+1. **Initial Outreach** - Cold emails or messages you send
+2. **Response/Interest** - Candidates who reply with interest
+3. **Screening Call Booked** - Candidates who schedule an initial call
+4. **Take-Home Exercise** - Candidates who complete your technical assessment
+5. **Team Interview** - Candidates who advance to team interviews
+6. **Offer Extended** - Candidates who receive an offer
+7. **Offer Accepted** - Your 1 hire (highlighted in green)
+
+### How to Use the Calculator
+
+The calculator compares two sourcing strategies: **Cold Outreach** and **Referrals**.
+
+**Adjust Conversion Rates:**
+- Edit the percentage fields under "Rate" for each stage
+- For example, if 4% of your cold outreach gets a response, enter 4 in the Response/Interest rate field
+- Each rate represents the percentage of candidates who move from that stage to the next
+
+**Set Your Timeline:**
+- Enter your target "Weeks to Hire" in the Summary Stats section
+- The calculator will show you how many candidates you need to reach out to **per week** to hit your timeline
+
+<div class="not-prose w-full">
+  <PipelineCalculator client:load />
+</div>
+
+

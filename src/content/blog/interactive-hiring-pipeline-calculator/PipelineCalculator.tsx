@@ -178,6 +178,9 @@ export default function PipelineCalculator() {
         </div>
       </div>
 
+      {/* Horizontal divider */}
+      <hr className="border-t border-border mt-8 mb-6" />
+
       {/* Summary Stats */}
       <div className="bg-background overflow-hidden mb-6 w-full">
         <table className="w-full min-w-full table-fixed">
@@ -230,22 +233,6 @@ export default function PipelineCalculator() {
             </tr>
           </tbody>
         </table>
-      </div>
-
-      {/* Comparison Insights */}
-      <div className="bg-muted border-l-4 border-primary p-6">
-        <h3 className="font-bold text-foreground mb-3">Key Insights</h3>
-        <ul className="list-disc list-inside space-y-2 text-sm text-foreground">
-          <li>
-            Referrals are <strong className="text-primary">{efficiency.toFixed(1)}x more efficient</strong> than cold outreach ({Math.ceil(coldVolumes.outreach)} vs. {Math.ceil(referralVolumes.outreach)} touches)
-          </li>
-          <li>
-            Only <strong className="text-primary">{((1 / coldVolumes.outreach) * 100).toFixed(2)}%</strong> of cold outreach becomes a hire
-          </li>
-          <li>
-            <strong className="text-primary">{((1 / referralVolumes.outreach) * 100).toFixed(2)}%</strong> of referral outreach becomes a hire
-          </li>
-        </ul>
       </div>
 
     </div>
