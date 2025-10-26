@@ -3,7 +3,6 @@ import { ArrowDown } from 'lucide-react';
 
 export default function PipelineCalculator() {
   const [weeksToHire, setWeeksToHire] = useState(10);
-  const [hoveredOutreach, setHoveredOutreach] = useState(false);
 
   // Conversion rates (as percentages for easier editing)
   const [rates, setRates] = useState({
@@ -83,7 +82,6 @@ export default function PipelineCalculator() {
             <tbody>
               {stages.map((stage, index) => {
                 const isLast = index === stages.length - 1;
-                const isOutreach = stage.key === 'outreach';
 
                 return (
                   <tr key={stage.key} className={`border-b border-border transition-colors ${isLast ? 'bg-emerald-50 dark:bg-emerald-950/20' : 'hover:bg-muted/50'}`}>
@@ -121,11 +119,7 @@ export default function PipelineCalculator() {
                     </td>
 
                     {/* Volume */}
-                    <td
-                      className={`p-3 text-center align-middle transition-all ${isOutreach ? 'cursor-pointer' : ''} ${hoveredOutreach && isOutreach ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
-                      onMouseEnter={isOutreach ? () => setHoveredOutreach(true) : undefined}
-                      onMouseLeave={isOutreach ? () => setHoveredOutreach(false) : undefined}
-                    >
+                    <td className="p-3 text-center align-middle">
                       <span className={`${isLast ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
                         {Math.ceil(volumes[stage.volumeKey])}
                       </span>
@@ -133,55 +127,64 @@ export default function PipelineCalculator() {
                   </tr>
                 );
               })}
+              {/* Separator row */}
+              <tr>
+                <td colSpan={4} className="p-0">
+                  <hr className="border-t-2 border-border" />
+                </td>
+              </tr>
+
+              {/* Summary rows */}
+              <tr className="border-b border-border bg-muted/30">
+                <td className="p-3 text-center align-middle"></td>
+                <td className="p-4 sticky left-0 bg-muted/30">
+                  <span className="font-medium text-foreground">Total Outreach</span>
+                </td>
+                <td className="p-3 text-center border-l border-border">
+                  <span className="text-muted-foreground text-sm">—</span>
+                </td>
+                <td className="p-3 text-center align-middle">
+                  <div className="text-foreground">{Math.ceil(volumes.outreach)}</div>
+                  <div className="text-xs text-muted-foreground mt-1">touches needed</div>
+                </td>
+              </tr>
+
+              <tr className="border-b border-border bg-muted/30">
+                <td className="p-3 text-center align-middle"></td>
+                <td className="p-4 sticky left-0 bg-muted/30">
+                  <span className="font-medium text-foreground">Weeks to Hire</span>
+                </td>
+                <td className="p-3 text-center border-l border-border">
+                  <span className="text-muted-foreground text-sm">—</span>
+                </td>
+                <td className="p-3 text-center align-middle">
+                  <input
+                    type="number"
+                    value={weeksToHire}
+                    onChange={(e) => setWeeksToHire(Math.max(1, parseInt(e.target.value) || 1))}
+                    className="text-foreground w-20 text-center border border-border rounded px-2 py-1 hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
+                    min="1"
+                  />
+                </td>
+              </tr>
+
+              <tr className="border-b border-border bg-muted/30">
+                <td className="p-3 text-center align-middle"></td>
+                <td className="p-4 sticky left-0 bg-muted/30">
+                  <span className="font-medium text-foreground">Per Week</span>
+                </td>
+                <td className="p-3 text-center border-l border-border">
+                  <span className="text-muted-foreground text-sm">—</span>
+                </td>
+                <td className="p-3 text-center align-middle">
+                  <div className="text-foreground font-medium">{weeklyOutreach}</div>
+                  <div className="text-xs text-muted-foreground mt-1">outreach per week</div>
+                </td>
+              </tr>
+
             </tbody>
           </table>
         </div>
-      </div>
-
-      {/* Horizontal divider */}
-      <hr className="border-t border-border mt-6 mb-6" />
-
-      {/* Summary Stats */}
-      <div className="bg-background overflow-hidden mb-6 w-full">
-        <table className="w-full min-w-full table-fixed">
-          <thead>
-            <tr className="border-b border-border">
-              <th className="text-left p-4 font-bold text-foreground w-1/2">Metric</th>
-              <th className="text-center p-4 font-bold text-foreground w-1/2">Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr className="border-b border-border">
-              <td className="p-4 font-medium text-foreground text-left align-middle">Total Outreach</td>
-              <td
-                className={`p-4 text-center align-middle cursor-pointer transition-all ${hoveredOutreach ? 'bg-blue-100 dark:bg-blue-900/30' : ''}`}
-                onMouseEnter={() => setHoveredOutreach(true)}
-                onMouseLeave={() => setHoveredOutreach(false)}
-              >
-                <div className="text-foreground">{Math.ceil(volumes.outreach)}</div>
-                <div className="text-xs text-muted-foreground mt-1">touches needed</div>
-              </td>
-            </tr>
-            <tr className="border-b border-border">
-              <td className="p-4 font-medium text-foreground text-left align-middle">Weeks to Hire</td>
-              <td className="p-4 text-center align-middle">
-                <input
-                  type="number"
-                  value={weeksToHire}
-                  onChange={(e) => setWeeksToHire(Math.max(1, parseInt(e.target.value) || 1))}
-                  className="text-foreground w-20 text-center border border-border rounded px-2 py-1 hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
-                  min="1"
-                />
-              </td>
-            </tr>
-            <tr className="border-b border-border">
-              <td className="p-4 font-medium text-foreground text-left align-middle">Per Week</td>
-              <td className="p-4 text-center align-middle">
-                <div className="text-foreground">{weeklyOutreach}</div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
       </div>
 
     </div>
