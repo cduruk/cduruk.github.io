@@ -17,7 +17,7 @@
   h4,
   h5,
   h6 {
-    @apply text-balance;
+    @apply text-balance font-sans font-extrabold italic;
   }
 
   p {
@@ -34,7 +34,7 @@
     }
 
     :where(h1, h2, h3, h4, h5, h6):not(:where(.not-prose, .not-prose *)) {
-      @apply text-foreground scroll-mt-32 font-mono font-medium xl:scroll-mt-20;
+      @apply text-foreground scroll-mt-32 font-sans font-extrabold italic xl:scroll-mt-20;
     }
 
     :first-child:not(:where(.not-prose, .not-prose *)) {
