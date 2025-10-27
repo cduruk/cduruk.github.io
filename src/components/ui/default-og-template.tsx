@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { FaviconTemplate } from './favicon-template.js'
 
 export interface DefaultOGTemplateProps {
   title?: string
@@ -45,27 +46,8 @@ export function DefaultOGTemplate({
       }}
     >
       {/* Large -1 logo */}
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '200px',
-          height: '200px',
-          background: colors.primary,
-          borderRadius: '40px',
-        }}
-      >
-        <div
-          style={{
-            fontSize: '140px',
-            fontWeight: 'bold',
-            color: '#FFFCF0',
-            lineHeight: '1',
-          }}
-        >
-          -1
-        </div>
+      <div style={{ width: '200px', height: '200px', display: 'flex' }}>
+        <FaviconTemplate size={200} />
       </div>
 
       {/* Title and subtitle */}
