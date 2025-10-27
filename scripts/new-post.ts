@@ -40,7 +40,7 @@ function formatDate(date: Date): string {
 // Generate frontmatter
 function generateFrontmatter(data: {
   title: string
-  description?: string
+  description: string
   date: string
   tags?: string[]
   author: string
@@ -49,11 +49,7 @@ function generateFrontmatter(data: {
   const lines: string[] = ['---']
 
   lines.push(`title: '${data.title}'`)
-
-  if (data.description) {
-    lines.push(`description: '${data.description}'`)
-  }
-
+  lines.push(`description: '${data.description}'`)
   lines.push(`date: ${data.date}`)
 
   if (data.tags && data.tags.length > 0) {
@@ -75,7 +71,7 @@ function generateFrontmatter(data: {
 // Generate post content
 function generatePostContent(data: {
   title: string
-  description?: string
+  description: string
   date: string
   tags?: string[]
   author: string
@@ -127,8 +123,14 @@ async function main(): Promise<void> {
     return
   }
 
-  // Get description (optional)
-  const description = await question('Description (optional, press enter to skip): ')
+  // Get description (required)
+  let description = ''
+  while (!description.trim()) {
+    description = await question('Description: ')
+    if (!description.trim()) {
+      console.log('⚠️  Description is required!\n')
+    }
+  }
 
   // Get tags (optional)
   const tagsInput = await question('Tags (comma-separated, or press enter to skip): ')
@@ -146,7 +148,7 @@ async function main(): Promise<void> {
   // Generate content
   const content = generatePostContent({
     title,
-    description: description.trim() || undefined,
+    description,
     date: formatDate(new Date()),
     tags: tags.length > 0 ? tags : undefined,
     author: DEFAULT_AUTHOR,
