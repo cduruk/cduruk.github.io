@@ -1,4 +1,4 @@
-import { readdir, readFile, writeFile } from 'fs/promises'
+import { readdir, readFile, writeFile, mkdir } from 'fs/promises'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import satori from 'satori'
@@ -25,6 +25,13 @@ interface BlogPost {
   title?: string
   description?: string
   draft?: string
+}
+
+interface StaticPage {
+  name: string
+  title: string
+  description?: string
+  outputPath: string
 }
 
 // Simple frontmatter parser
@@ -190,28 +197,130 @@ export async function generateImage(post: BlogPost): Promise<void> {
   console.log(`✓ Generated: ${outputPath}`)
 }
 
+// Define static pages to generate OG images for
+function getStaticPages(): StaticPage[] {
+  const OG_DIR = join(__dirname, '../public/static/og')
+
+  return [
+    {
+      name: 'about',
+      title: 'About',
+      description: 'My name is Can Duruk. I am the former CTO and co-founder of Felt.',
+      outputPath: join(OG_DIR, 'about.png'),
+    },
+    {
+      name: 'subscribe',
+      title: 'Subscribe to Off by One',
+      description: 'Get new posts delivered directly to your inbox.',
+      outputPath: join(OG_DIR, 'subscribe.png'),
+    },
+  ]
+}
+
+// Generate image for a static page
+async function generateStaticPageImage(page: StaticPage): Promise<void> {
+  console.log(`  Generating OG image for: ${page.name}`)
+
+  // Ensure the og directory exists
+  const ogDir = dirname(page.outputPath)
+  await mkdir(ogDir, { recursive: true })
+
+  // Create React element using the TSX component
+  const element = createElement(HeroTemplate, {
+    title: page.title,
+    description: page.description,
+  })
+
+  // Generate SVG using Satori
+  const svg = await satori(element, {
+    width: OUTPUT_WIDTH,
+    height: OUTPUT_HEIGHT,
+    fonts: [
+      {
+        name: 'Inter',
+        data: await readFile(
+          join(
+            __dirname,
+            '../node_modules/@fontsource/inter/files/inter-latin-400-normal.woff',
+          ),
+        ),
+        weight: 400,
+        style: 'normal',
+      },
+      {
+        name: 'Inter',
+        data: await readFile(
+          join(
+            __dirname,
+            '../node_modules/@fontsource/inter/files/inter-latin-700-normal.woff',
+          ),
+        ),
+        weight: 700,
+        style: 'normal',
+      },
+    ],
+  })
+
+  // Convert SVG to PNG using resvg
+  const resvg = new Resvg(svg, {
+    fitTo: {
+      mode: 'width',
+      value: OUTPUT_WIDTH,
+    },
+  })
+
+  const pngData = resvg.render()
+  const pngBuffer = pngData.asPng()
+
+  // Optimize with sharp
+  const optimizedBuffer = await sharp(pngBuffer)
+    .png({ quality: 90, compressionLevel: 9 })
+    .toBuffer()
+
+  // Write to public/static/og directory
+  await writeFile(page.outputPath, optimizedBuffer)
+
+  console.log(`  ✓ Generated OG image: /static/og/${page.name}.png`)
+}
+
 // Main function
 async function main(): Promise<void> {
-  console.log('🎨 Generating OG images for blog posts...\n')
+  console.log('🎨 Generating OG images...\n')
 
+  // Generate blog post images
+  console.log('📝 Blog posts:')
   const posts = await getBlogPosts()
   const postsWithoutOgImage = posts.filter(
     (p) => !p.hasOgImage && p.draft !== 'true',
   )
 
   if (postsWithoutOgImage.length === 0) {
-    console.log('✨ All posts already have OG images!')
-    return
+    console.log('  ✨ All posts already have OG images!')
+  } else {
+    console.log(`  Found ${postsWithoutOgImage.length} posts without OG images:\n`)
+
+    for (const post of postsWithoutOgImage) {
+      try {
+        await generateImage(post)
+      } catch (error) {
+        console.error(
+          `  ✗ Failed to generate OG image for ${post.slug}:`,
+          (error as Error).message,
+        )
+      }
+    }
   }
 
-  console.log(`Found ${postsWithoutOgImage.length} posts without OG images:\n`)
+  // Generate static page images
+  console.log('\n📄 Static pages:')
+  const staticPages = getStaticPages()
 
-  for (const post of postsWithoutOgImage) {
+  for (const page of staticPages) {
     try {
-      await generateImage(post)
+      await generateStaticPageImage(page)
     } catch (error) {
       console.error(
-        `✗ Failed to generate OG image for ${post.slug}:`,
+        `  ✗ Failed to generate OG image for ${page.name}:`,
         (error as Error).message,
       )
     }
