@@ -6,6 +6,7 @@
  */
 
 import React from 'react'
+import { FaviconTemplate } from './favicon-template.js'
 
 export interface HeroTemplateProps {
   title: string
@@ -97,10 +98,15 @@ export function HeroTemplate({ title, description }: HeroTemplateProps) {
         <div
           style={{
             display: 'flex',
-            justifyContent: 'flex-end',
+            justifyContent: 'space-between',
             alignItems: 'flex-end',
           }}
         >
+          {/* Logo */}
+          <div style={{ width: '64px', height: '64px', display: 'flex' }}>
+            <FaviconTemplate size={64} />
+          </div>
+
           {/* Brand: Off by One */}
           <div
             style={{
