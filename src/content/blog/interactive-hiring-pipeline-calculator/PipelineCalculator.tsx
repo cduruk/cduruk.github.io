@@ -1,18 +1,72 @@
-import { useState } from 'react';
-import { ArrowDown, Link } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowDown, Link, Share2, Check } from 'lucide-react';
+
+// Default values
+const DEFAULT_WEEKS = 10;
+const DEFAULT_RATES = {
+  response: 4,
+  screening: 65,
+  technical: 30,
+  team: 50,
+  offer: 50,
+  acceptance: 50
+};
 
 export default function PipelineCalculator() {
-  const [weeksToHire, setWeeksToHire] = useState(10);
+  const [copied, setCopied] = useState(false);
 
-  // Conversion rates (as percentages for easier editing)
-  const [rates, setRates] = useState({
-    response: 4,
-    screening: 65,
-    technical: 30,
-    team: 50,
-    offer: 50,
-    acceptance: 50
-  });
+  // Initialize state from URL or use defaults
+  const getInitialState = () => {
+    if (typeof window === 'undefined') return { weeksToHire: DEFAULT_WEEKS, rates: DEFAULT_RATES };
+
+    const params = new URLSearchParams(window.location.search);
+    const weeksToHire = parseInt(params.get('weeks') || '') || DEFAULT_WEEKS;
+    const rates = {
+      response: parseFloat(params.get('response') || '') || DEFAULT_RATES.response,
+      screening: parseFloat(params.get('screening') || '') || DEFAULT_RATES.screening,
+      technical: parseFloat(params.get('technical') || '') || DEFAULT_RATES.technical,
+      team: parseFloat(params.get('team') || '') || DEFAULT_RATES.team,
+      offer: parseFloat(params.get('offer') || '') || DEFAULT_RATES.offer,
+      acceptance: parseFloat(params.get('acceptance') || '') || DEFAULT_RATES.acceptance
+    };
+
+    return { weeksToHire, rates };
+  };
+
+  const initialState = getInitialState();
+  const [weeksToHire, setWeeksToHire] = useState(initialState.weeksToHire);
+  const [rates, setRates] = useState(initialState.rates);
+
+  // Update URL when state changes
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    const params = new URLSearchParams();
+    params.set('weeks', weeksToHire.toString());
+    params.set('response', rates.response.toString());
+    params.set('screening', rates.screening.toString());
+    params.set('technical', rates.technical.toString());
+    params.set('team', rates.team.toString());
+    params.set('offer', rates.offer.toString());
+    params.set('acceptance', rates.acceptance.toString());
+
+    const newUrl = `${window.location.pathname}?${params.toString()}#calculator`;
+    window.history.replaceState({}, '', newUrl);
+  }, [weeksToHire, rates]);
+
+  // Scroll to calculator on mount if hash is present
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+
+    if (window.location.hash === '#calculator') {
+      setTimeout(() => {
+        const element = document.getElementById('calculator');
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, []);
 
   // Calculate pipeline volumes working backwards from 1 hire
   const calculatePipeline = (pipelineRates: typeof rates) => {
@@ -64,8 +118,40 @@ export default function PipelineCalculator() {
     { key: 'accepted', label: 'Offer Accepted', volumeKey: 'accepted', rate: 'acceptance' }
   ];
 
+  const handleCopyShareLink = async () => {
+    if (typeof window === 'undefined') return;
+
+    const url = window.location.href;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error('Failed to copy link:', err);
+    }
+  };
+
   return (
-    <div className="w-full min-w-full">
+    <div id="calculator" className="w-full min-w-full">
+      {/* Share Button */}
+      <div className="mb-4 flex justify-end">
+        <button
+          onClick={handleCopyShareLink}
+          className="flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border border-border bg-background hover:bg-muted/50 text-foreground transition-colors"
+        >
+          {copied ? (
+            <>
+              <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+              <span>Link Copied!</span>
+            </>
+          ) : (
+            <>
+              <Share2 className="w-4 h-4" />
+              <span>Copy Share Link</span>
+            </>
+          )}
+        </button>
+      </div>
 
       {/* Main Table */}
       <div className="bg-background overflow-hidden mb-6 w-full">
