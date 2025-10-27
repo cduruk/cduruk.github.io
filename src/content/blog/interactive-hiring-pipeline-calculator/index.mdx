@@ -1,6 +1,6 @@
 ---
 title: 'Interactive Hiring Pipeline Calculator'
-description: 'How to Build a Hiring Pipeline'
+description: 'Calculate how many candidates you need to reach out to make one hire based on your conversion rates.'
 date: 2025-10-26
 tags: ['engineering-management', 'hiring']
 ogImage: './og-image.png'
@@ -14,30 +14,24 @@ import PipelineCalculator from './PipelineCalculator.tsx'
 
 Building a hiring pipeline is one of the most critical aspects of growing a team. But how many candidates do you actually need to reach out to in order to make one hire? 
 
-The answer I've gotten from people in my day was "50~100 emails per week" but no one bothered to tell me where that number came from. Obviously, you can math this. 
+The answer I've gotten from people back in the day was "50~100 emails per week" but no one bothered to tell me where that number came from. Obviously, you can do the math. 
 
-There are a few inputs into this system like your stages, the conversion rates across them. But in my experience, the most important one, the top of funnel, is also the one gets the least attention. 
+There are a few inputs into this system like your stages and the conversion rates across them. But in my experience, the most important one, the top of funnel, is also the one that gets the least attention. 
 
-My goal in making this calculator (with Claude) is building conviction on that top of funnel number. 
+My goal in making this calculator (with Claude) is to build conviction around that top of funnel number. 
 
 ### How to Use the Calculator
 
 The calculator works **backwards from one hire**, calculating how many candidates you need at each stage based on your conversion rates.
 
 **Adjust the rates:**
-- Edit the percentage fields under "Rate" for each pipeline stage. I put in some numbers that seemed right with some basic research.
-- Each rate represents the percentage of candidates who move to the next stage
+- Edit the percentage fields under "Rate" for each pipeline stage. I put in some numbers that seemed right based on some basic research.
+- Each rate represents the percentage of candidates who move to the next stage.
 - For example, if 4% of your outreach gets a response, enter 4 in the Response/Interest rate field.
 
 **Set your timeline:**
 - Enter your target "Weeks to Hire" in the bottom section. This is how soon you need a hire.
 - The calculator shows how many candidates you need to reach out to per week.
-
-**What you'll discover:**
-- Whether your timeline is realistic given your current conversion rates
-- Where bottlenecks exist in your pipeline (look for dramatic drop-offs between stages)
-- How improving conversion at any single stage affects your overall outreach needs
-- The true scale of outreach required to make just one hire
 
 <div class="not-prose w-full">
   <PipelineCalculator client:load />
@@ -45,13 +39,13 @@ The calculator works **backwards from one hire**, calculating how many candidate
 
 ## The Real Value Isn't in the Numbers
 
-I'll be honest. I rarely measured these conversion rates with any precision when I was actually hiring. I have set up some of these columns in our Applicant Tracking System (ATS) but didn't look at it much.
+I'll be honest. I rarely measure these conversion rates with any precision when I was actually hiring. I set up some of these columns in our Applicant Tracking System (ATS) and maintain a good sense of where we were, but the numbers I saw didn't drive my decisions day to day.
 
-The real value of this calculator is understanding **the sheer scale of outreach required** to make a hire. When you need to hire someone right away, it's easy to think "I'll send out a few emails and see what happens." But the math is sobering. You actually need a very significant amount of outreach before you can reasonably expect a hire.
+The real value of this calculator is understanding **the sheer scale of outreach required** to make a hire. When you need to hire someone right away (small "Weeks to Hire"), it's easy to think "I'll send out a few emails and see what happens." But the math is sobering and motivating at once. You actually need a very significant amount of outreach before you can reasonably expect a hire. Or you need to extend your timeline, which no one wants to do.
 
 Another thing that surprised me is **how much the earlier stages matter**. A couple of percentage points increase in response rate can completely transform your hiring process. Going from 4% to 6% response rate might not sound like much, but it can be the difference between sending 50 emails per week versus 75. Small improvements at the top of the funnel have an outsized impact on everything downstream. Again, nothing groundbreaking as it's simple math but seeing it hits different.
 
-When I first started hiring, the idea of sending 50+ outreach emails per week felt impossible. It was overwhelming, honestly. But once I put these numbers down on paper and saw the math, something shifted. It stopped feeling like a chore and became more like a game to play. Each week became about hitting the numbers, improving conversion rates, and watching the pipeline fill up.
+When I first started hiring, the idea of sending 50+ outreach emails per week felt impossible. It was overwhelming. But once I put these numbers down on paper and saw the math, something shifted. It stopped feeling like a chore and became more like a game to play. Each week became about hitting the numbers, improving conversion rates, and watching the pipeline fill up.
 
 Of course, there's a right way and a wrong way to do this. The wrong way is spam. The right way is to provide genuine value and get people interested in what you're building. I'll be writing more about how to do outreach the right way in a future post.
 
