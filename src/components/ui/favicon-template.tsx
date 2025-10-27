@@ -5,16 +5,29 @@
  * Displays "-1" in a red box using the Flexoki color scheme.
  */
 
+import React from 'react'
+
+export interface FaviconTemplateProps {
+  size?: number
+}
+
 /**
  * Generate the favicon as a React component
  * Simple design with "-1" centered in a red rounded box
  */
-export function FaviconTemplate() {
+export function FaviconTemplate({ size = 100 }: FaviconTemplateProps) {
   // Flexoki brand colors (from global.css - dark theme)
   const colors = {
     red: '#AF3029', // red (Flexoki)
     text: '#FFFCF0', // base
   }
+
+  // Scale font size based on canvas size (65% of size works well)
+  const fontSize = Math.round(size * 0.65)
+
+  // Add slight padding top to improve vertical centering
+  // Text baseline naturally sits high, so we nudge it down
+  const paddingTop = Math.round(size * 0.05)
 
   return (
     <div
@@ -26,11 +39,12 @@ export function FaviconTemplate() {
         justifyContent: 'center',
         background: colors.red,
         borderRadius: '20%',
+        paddingTop: `${paddingTop}px`,
       }}
     >
       <div
         style={{
-          fontSize: '80px',
+          fontSize: `${fontSize}px`,
           fontWeight: 'bold',
           color: colors.text,
           lineHeight: '1',

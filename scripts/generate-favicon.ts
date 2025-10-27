@@ -26,8 +26,8 @@ const FAVICON_SIZES = [
 async function generateFaviconSize(size: number, outputPath: string): Promise<void> {
   console.log(`  Generating ${size}x${size} favicon...`)
 
-  // Create React element using the TSX component
-  const element = createElement(FaviconTemplate)
+  // Create React element using the TSX component with size prop
+  const element = createElement(FaviconTemplate, { size })
 
   // Generate SVG using Satori
   const svg = await satori(element, {

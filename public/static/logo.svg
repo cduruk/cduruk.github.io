@@ -2,6 +2,6 @@
   <!-- Red rounded box background -->
   <rect width="64" height="64" rx="12.8" fill="#AF3029"/>
 
-  <!-- -1 text in white -->
-  <text x="32" y="44" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="42" font-weight="700" fill="#FFFCF0" text-anchor="middle">-1</text>
+  <!-- -1 text in white (y adjusted for better vertical centering) -->
+  <text x="32" y="47" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="42" font-weight="700" fill="#FFFCF0" text-anchor="middle">-1</text>
 </svg>
