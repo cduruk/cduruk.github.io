@@ -154,134 +154,133 @@ export default function PipelineCalculator() {
       </div>
 
       {/* Main Table */}
-      <div className="bg-background overflow-hidden mb-6 w-full">
-        <div className="overflow-x-auto w-full">
-          <table className="w-full min-w-full">
-            <thead>
-              <tr className="border-b border-border">
-                <th className="w-8"></th>
-                <th className="text-left p-4 font-bold text-foreground sticky left-0 bg-background">Pipeline Stage</th>
-                <th className="text-center p-3 text-sm font-medium text-foreground border-l border-border">Rate</th>
-                <th className="text-center p-3 text-sm font-medium text-foreground">Volume</th>
-              </tr>
-            </thead>
-            <tbody>
-              {stages.map((stage, index) => {
-                const isLast = index === stages.length - 1;
-                const isOutreach = stage.key === 'outreach';
+      <div className="overflow-x-auto w-full">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b">
+              <th className="w-8"></th>
+              <th className="text-left p-4 font-medium">Pipeline Stage</th>
+              <th className="text-center p-4 border-l">Rate</th>
+              <th className="text-center p-4 border-l">Volume</th>
+            </tr>
+          </thead>
+          <tbody>
+            {stages.map((stage, index) => {
+              const isLast = index === stages.length - 1;
+              const isOutreach = stage.key === 'outreach';
 
-                return (
-                  <tr key={stage.key} className={`border-b border-border ${isLast ? 'bg-emerald-50 dark:bg-emerald-950/20' : ''}`}>
-                    {/* Arrow */}
-                    <td className="p-3 text-center align-middle">
-                      {!isLast && (
-                        <ArrowDown className="w-4 h-4 text-muted-foreground mx-auto" />
-                      )}
-                    </td>
+              return (
+                <tr key={stage.key} className={`border-b ${isLast ? 'bg-emerald-50 dark:bg-emerald-950/20' : ''}`}>
+                  {/* Arrow */}
+                  <td className="p-4 text-center">
+                    {!isLast && (
+                      <ArrowDown className="w-4 h-4 mx-auto" />
+                    )}
+                  </td>
 
-                    <td className={`p-4 sticky left-0 ${isLast ? 'bg-emerald-50 dark:bg-emerald-950/20' : 'bg-background'}`}>
-                      <span className={`font-medium ${isLast ? 'text-emerald-700 dark:text-emerald-400' : 'text-foreground'}`}>
-                        {stage.label}
-                      </span>
-                    </td>
+                  <td className="p-4">
+                    <span className={isLast ? 'text-emerald-700 dark:text-emerald-400' : ''}>
+                      {stage.label}
+                    </span>
+                  </td>
 
-                    {/* Rate */}
-                    <td className="p-3 text-center border-l border-border">
-                      {stage.rate ? (
-                        <div className="flex items-center justify-center gap-1">
-                          <input
-                            type="number"
-                            value={rates[stage.rate]}
-                            onChange={(e) => updateRate(stage.rate!, e.target.value)}
-                            className="w-16 px-2 py-1 border border-border rounded text-center text-foreground hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
-                            min="0"
-                            max="100"
-                            step="1"
-                          />
-                          <span className="text-muted-foreground text-sm">%</span>
-                        </div>
-                      ) : (
-                        <span className="text-muted-foreground text-sm">—</span>
-                      )}
-                    </td>
-
-                    {/* Volume */}
-                    <td className="p-3 text-center align-middle">
-                      <div className="flex items-center justify-center gap-2">
-                        <span className={`${isLast ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : 'text-foreground'}`}>
-                          {Math.ceil(volumes[stage.volumeKey])}
-                        </span>
-                        {isOutreach && (
-                          <Link className="w-4 h-4 text-muted-foreground" />
-                        )}
+                  {/* Rate */}
+                  <td className="p-4 text-center border-l">
+                    {stage.rate ? (
+                      <div className="flex items-center justify-center gap-1">
+                        <input
+                          type="number"
+                          value={rates[stage.rate]}
+                          onChange={(e) => updateRate(stage.rate!, e.target.value)}
+                          className="w-16 px-2 py-1 border rounded text-center"
+                          min="0"
+                          max="100"
+                          step="1"
+                        />
+                        <span>%</span>
                       </div>
-                    </td>
-                  </tr>
-                );
-              })}
-              {/* Separator row */}
-              <tr>
-                <td colSpan={4} className="p-0">
-                  <hr className="border-t-2 border-border" />
-                </td>
-              </tr>
+                    ) : (
+                      <span>—</span>
+                    )}
+                  </td>
 
-              {/* Summary rows */}
-              <tr className="border-b border-border bg-muted/30">
-                <td className="p-3 text-center align-middle bg-muted/30"></td>
-                <td className="p-4 sticky left-0 bg-muted/30">
-                  <span className="font-medium text-foreground">Total Outreach</span>
-                </td>
-                <td className="p-3 text-center border-l border-border bg-muted/30">
-                  <span className="text-muted-foreground text-sm">—</span>
-                </td>
-                <td className="p-3 text-center align-middle bg-muted/30">
-                  <div className="flex flex-col items-center">
-                    <div className="flex items-center gap-2">
-                      <div className="text-foreground">{Math.ceil(volumes.outreach)}</div>
-                      <Link className="w-4 h-4 text-muted-foreground" />
+                  {/* Volume */}
+                  <td className="p-4 text-center border-l">
+                    <div className="flex items-center justify-center gap-2">
+                      <span className={isLast ? 'text-emerald-700 dark:text-emerald-400 font-semibold' : ''}>
+                        {Math.ceil(volumes[stage.volumeKey])}
+                      </span>
+                      {isOutreach && (
+                        <Link className="w-4 h-4" />
+                      )}
                     </div>
-                    <div className="text-xs text-muted-foreground mt-1">touches needed</div>
+                  </td>
+                </tr>
+              );
+            })}
+
+            {/* Separator row */}
+            <tr>
+              <td colSpan={4} className="p-0">
+                <hr className="border-t-2" />
+              </td>
+            </tr>
+
+            {/* Summary rows */}
+            <tr className="border-b bg-muted/30">
+              <td className="p-4 bg-muted/30"></td>
+              <td className="p-4 bg-muted/30">
+                <span className="font-medium">Total Outreach</span>
+              </td>
+              <td className="p-4 text-center border-l bg-muted/30">
+                <span>—</span>
+              </td>
+              <td className="p-4 text-center border-l bg-muted/30">
+                <div className="flex flex-col items-center">
+                  <div className="flex items-center gap-2">
+                    <div>{Math.ceil(volumes.outreach)}</div>
+                    <Link className="w-4 h-4" />
                   </div>
-                </td>
-              </tr>
+                  <div className="text-xs mt-1">touches needed</div>
+                </div>
+              </td>
+            </tr>
 
-              <tr className="border-b border-border bg-muted/30">
-                <td className="p-3 text-center align-middle bg-muted/30"></td>
-                <td className="p-4 sticky left-0 bg-muted/30">
-                  <span className="font-medium text-foreground">Weeks to Hire</span>
-                </td>
-                <td className="p-3 text-center border-l border-border bg-muted/30">
-                  <span className="text-muted-foreground text-sm">—</span>
-                </td>
-                <td className="p-3 text-center align-middle bg-muted/30">
-                  <input
-                    type="number"
-                    value={weeksToHire}
-                    onChange={(e) => setWeeksToHire(Math.max(1, parseInt(e.target.value) || 1))}
-                    className="text-foreground w-20 text-center border border-border rounded px-2 py-1 hover:border-primary focus:border-primary focus:ring-2 focus:ring-ring/50 outline-none transition-all bg-background"
-                    min="1"
-                  />
-                </td>
-              </tr>
+            <tr className="border-b bg-muted/30">
+              <td className="p-4 bg-muted/30"></td>
+              <td className="p-4 bg-muted/30">
+                <span className="font-medium">Weeks to Hire</span>
+              </td>
+              <td className="p-4 text-center border-l bg-muted/30">
+                <span>—</span>
+              </td>
+              <td className="p-4 text-center border-l bg-muted/30">
+                <input
+                  type="number"
+                  value={weeksToHire}
+                  onChange={(e) => setWeeksToHire(Math.max(1, parseInt(e.target.value) || 1))}
+                  className="w-20 text-center border rounded px-2 py-1"
+                  min="1"
+                />
+              </td>
+            </tr>
 
-              <tr className="border-b border-border bg-muted/30">
-                <td className="p-3 text-center align-middle bg-muted/30"></td>
-                <td className="p-4 sticky left-0 bg-muted/30">
-                  <span className="font-medium text-foreground">Per Week</span>
-                </td>
-                <td className="p-3 text-center border-l border-border bg-muted/30">
-                  <span className="text-muted-foreground text-sm">—</span>
-                </td>
-                <td className="p-3 text-center align-middle bg-muted/30">
-                  <div className="text-foreground font-medium">{weeklyOutreach}</div>
-                  <div className="text-xs text-muted-foreground mt-1">outreach per week</div>
-                </td>
-              </tr>
+            <tr className="border-b bg-muted/30">
+              <td className="p-4 bg-muted/30"></td>
+              <td className="p-4 bg-muted/30">
+                <span className="font-medium">Per Week</span>
+              </td>
+              <td className="p-4 text-center border-l bg-muted/30">
+                <span>—</span>
+              </td>
+              <td className="p-4 text-center border-l bg-muted/30">
+                <div className="font-medium">{weeklyOutreach}</div>
+                <div className="text-xs mt-1">outreach per week</div>
+              </td>
+            </tr>
 
-            </tbody>
-          </table>
-        </div>
+          </tbody>
+        </table>
       </div>
 
     </div>
