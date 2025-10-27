@@ -55,13 +55,14 @@
   /* Flexoki Light Theme */
   --background: oklch(0.984 0.007 88); /* paper #FFFCF0 */
   --foreground: oklch(0.145 0.004 60); /* black #100F0F */
-  --primary: oklch(0.665 0.215 27); /* brightest red #FC4B44 */
+  --primary: oklch(0.78 0.19 27); /* brand red #F89C91 */
   --primary-foreground: oklch(0.984 0.007 88); /* paper */
+  --highlight: oklch(0.665 0.215 27); /* highlight red #FC4B44 */
   --muted: oklch(0.933 0.009 88); /* base-50 #F2F0E5 */
   --muted-foreground: oklch(0.556 0.006 70); /* base-600 #6F6E69 */
-  --destructive: oklch(0.665 0.215 27); /* brightest red #FC4B44 */
+  --destructive: var(--highlight); /* highlight red */
   --border: oklch(0.851 0.01 88); /* base-200 #CECDC3 */
-  --ring: oklch(0.665 0.215 27); /* brightest red accent #FC4B44 */
+  --ring: var(--highlight); /* highlight red */
   --accent-cyan: oklch(0.58 0.08 195); /* cyan-400 #3AA99F */
   --accent-blue: oklch(0.57 0.1 245); /* blue-400 #4385BE */
 }
@@ -70,13 +71,14 @@
   /* Flexoki Dark Theme */
   --background: oklch(0.145 0.004 60); /* black #100F0F */
   --foreground: oklch(0.933 0.009 88); /* base-50 #F2F0E5 */
-  --primary: oklch(0.665 0.215 27); /* brightest red #FC4B44 */
+  --primary: oklch(0.78 0.19 27); /* brand red #F89C91 */
   --primary-foreground: oklch(0.145 0.004 60); /* black */
+  --highlight: oklch(0.665 0.215 27); /* highlight red #FC4B44 */
   --muted: oklch(0.205 0.006 60); /* base-900 #282726 */
   --muted-foreground: oklch(0.708 0.008 75); /* base-500 #878580 */
-  --destructive: oklch(0.665 0.215 27); /* brightest red #FC4B44 */
+  --destructive: var(--highlight); /* highlight red */
   --border: oklch(0.269 0.006 60); /* base-850 #343331 */
-  --ring: oklch(0.665 0.215 27); /* brightest red accent #FC4B44 */
+  --ring: var(--highlight); /* highlight red */
   --accent-cyan: oklch(0.75 0.06 195); /* cyan-600 #8EDAD8 */
   --accent-blue: oklch(0.74 0.08 245); /* blue-600 #8DB7E5 */
 }
@@ -92,12 +94,12 @@
 
   /* Navigation link accent on hover */
   nav a[href]:hover {
-    @apply text-primary;
+    color: var(--highlight);
   }
 
   /* Blog/Project/Author card accent border on hover */
   .hover\:bg-muted\/50:hover,
   .has-\[a\:hover\]\:bg-muted\/50:has(a:hover) {
-    @apply border-primary;
+    border-color: var(--highlight);
   }
 }

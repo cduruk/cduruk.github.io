@@ -22,7 +22,8 @@ export function HeroTemplate({ title, description }: HeroTemplateProps) {
   const colors = {
     background: '#100F0F', // black
     foreground: '#F2F0E5', // base-50
-    primary: '#FC4B44', // brightest red accent
+    primary: '#F89C91', // brand red
+    highlight: '#FC4B44', // highlight red
     mutedForeground: '#878580', // base-500
     border: '#343331', // base-850
   }
@@ -145,7 +146,7 @@ export function HeroTemplate({ title, description }: HeroTemplateProps) {
             <div
               style={{
                 fontSize: '20px',
-                color: colors.primary,
+                color: colors.highlight,
                 textDecoration: 'underline',
               }}
             >
