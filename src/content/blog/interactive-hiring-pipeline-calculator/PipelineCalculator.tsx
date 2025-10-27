@@ -168,7 +168,6 @@ export default function PipelineCalculator() {
   const handleCopyShareLink = async () => {
     if (typeof window === 'undefined') return
 
-    // Build URL with current state
     const params = new URLSearchParams()
     params.set('weeks', weeksToHire.toString())
     params.set('response', rates.response.toString())
@@ -181,7 +180,6 @@ export default function PipelineCalculator() {
     const baseUrl = window.location.origin + window.location.pathname
     const url = `${baseUrl}?${params.toString()}#calculator`
 
-    // Update browser URL
     window.history.replaceState({}, '', url)
 
     try {
@@ -195,7 +193,6 @@ export default function PipelineCalculator() {
 
   return (
     <div id="calculator" className="w-full min-w-full">
-      {/* Main Table */}
       <div className="w-full overflow-x-auto">
         <table className="w-full">
           <thead>
@@ -265,14 +262,12 @@ export default function PipelineCalculator() {
               )
             })}
 
-            {/* Separator row */}
             <tr>
               <td colSpan={4} className="p-0">
                 <hr className="border-t-2" />
               </td>
             </tr>
 
-            {/* Summary rows */}
             <tr className="bg-muted/30 border-b">
               <td className="bg-muted/30 p-4"></td>
               <td className="bg-muted/30 p-4">
@@ -330,7 +325,6 @@ export default function PipelineCalculator() {
         </table>
       </div>
 
-      {/* Share Button */}
       <div className="mt-4 flex justify-end">
         <button
           onClick={handleCopyShareLink}
