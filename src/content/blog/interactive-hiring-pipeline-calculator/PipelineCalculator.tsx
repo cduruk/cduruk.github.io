@@ -192,18 +192,14 @@ export default function PipelineCalculator() {
               return (
                 <tr
                   key={stage.key}
-                  className={`border-b ${isLast ? 'bg-emerald-50 dark:bg-emerald-950/20' : ''}`}
+                  className="border-b"
                 >
                   <td className="p-4 text-center">
                     {!isLast && <ArrowDown className="mx-auto h-4 w-4" />}
                   </td>
 
                   <td className="p-4">
-                    <span
-                      className={
-                        isLast ? 'text-emerald-700 dark:text-emerald-400' : ''
-                      }
-                    >
+                    <span>
                       {stage.label}
                     </span>
                   </td>
@@ -233,8 +229,8 @@ export default function PipelineCalculator() {
                     <div className="flex items-center justify-center gap-2">
                       <span
                         className={
-                          isLast
-                            ? 'font-semibold text-emerald-700 dark:text-emerald-400'
+                          isOutreach
+                            ? 'font-semibold text-accent-cyan'
                             : ''
                         }
                       >
@@ -266,7 +262,7 @@ export default function PipelineCalculator() {
               <td className="bg-muted/30 border-l p-4 text-center">
                 <div className="flex flex-col items-center">
                   <div className="flex items-center gap-2">
-                    <div>{Math.ceil(volumes.outreach)}</div>
+                    <div className="font-semibold text-accent-cyan">{Math.ceil(volumes.outreach)}</div>
                     <Link className="h-4 w-4" />
                   </div>
                   <div className="mt-1 text-xs">touches needed</div>
@@ -295,7 +291,7 @@ export default function PipelineCalculator() {
               </td>
             </tr>
 
-            <tr className="bg-muted/30 border-b">
+            <tr className="bg-muted/30">
               <td className="bg-muted/30 p-4"></td>
               <td className="bg-muted/30 p-4">
                 <span className="font-medium">Per Week</span>
@@ -304,7 +300,7 @@ export default function PipelineCalculator() {
                 <span>—</span>
               </td>
               <td className="bg-muted/30 border-l p-4 text-center">
-                <div className="font-medium">{weeklyOutreach}</div>
+                <div className="font-semibold text-accent-blue">{weeklyOutreach}</div>
                 <div className="mt-1 text-xs">outreach per week</div>
               </td>
             </tr>
