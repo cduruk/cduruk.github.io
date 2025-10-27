@@ -18,7 +18,7 @@ export interface FaviconTemplateProps {
 export function FaviconTemplate({ size = 100 }: FaviconTemplateProps) {
   // Flexoki brand colors (from global.css - dark theme)
   const colors = {
-    red: '#AF3029', // red (Flexoki)
+    red: '#F89C91', // red accent
     text: '#FFFCF0', // base
   }
 
