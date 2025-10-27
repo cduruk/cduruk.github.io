@@ -9,6 +9,7 @@
     "build": "npm run generate-og-images && astro check && astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "new-post": "tsx scripts/new-post.ts",
     "generate-og-images": "tsx scripts/generate-og-images.ts",
     "prettier": "prettier --write **/*.{ts,tsx,css,astro} --ignore-path .gitignore",
     "postinstall": "patch-package"
