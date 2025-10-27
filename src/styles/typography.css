@@ -96,6 +96,12 @@
       @apply text-primary decoration-primary/30 hover:decoration-primary font-medium break-words underline underline-offset-[3px] transition-colors;
     }
 
+    :where(a):not(:where(.not-prose, .not-prose *)):hover,
+    :where(a):not(:where(.not-prose, .not-prose *)):focus-visible {
+      color: var(--highlight);
+      text-decoration-color: var(--highlight);
+    }
+
     :where(strong):not(:where(.not-prose, .not-prose *)) {
       @apply text-foreground font-medium;
     }
