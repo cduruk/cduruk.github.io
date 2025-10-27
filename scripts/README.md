@@ -1,6 +1,104 @@
+# Blog Post Scripts
+
+This directory contains TypeScript scripts for managing blog posts.
+
+## Scripts
+
+- **[new-post.ts](./new-post.ts)**: Interactive CLI for creating new blog posts
+- **[generate-og-images.ts](./generate-og-images.ts)**: Automatically generates Open Graph (social media preview) images
+
+---
+
+# Creating New Blog Posts
+
+The `new-post.ts` script provides an interactive CLI for creating new blog posts with all the required metadata and structure.
+
+## Usage
+
+```bash
+npm run new-post
+```
+
+## What It Does
+
+The script will prompt you for:
+
+1. **Title** (required) - The post title
+2. **Description** (required) - A brief description for SEO/social sharing
+3. **Tags** (optional) - Comma-separated list of tags (e.g., `engineering-management, hiring`)
+4. **Draft status** (optional) - Whether to mark the post as a draft
+
+Then it will:
+
+1. Generate a URL-friendly slug from the title
+2. Create a new directory: `src/content/blog/[slug]/`
+3. Create `index.mdx` with:
+   - Properly formatted frontmatter
+   - Current date
+   - Default author (`cduruk`)
+   - Starter template with Callout component import
+4. **Automatically generate an Open Graph image** for the post
+
+## Example
+
+```
+📝 Create New Blog Post
+
+Post title: Running 1:1s for Engineers
+Generated slug: running-11s-for-engineers
+
+Description: A practical framework for running weekly engineering 1:1s
+Tags (comma-separated, or press enter to skip): engineering-management
+Create as draft? (y/N): n
+
+✅ Created src/content/blog/running-11s-for-engineers/index.mdx
+📌 Post created as draft
+
+🎨 Generating Open Graph image...
+Generating image for: Running 1:1s for Engineers
+✓ Generated: /path/to/running-11s-for-engineers/og-image.png
+✅ OG image generated successfully
+
+💡 Next steps:
+   1. Edit running-11s-for-engineers/index.mdx
+   2. Run "npm run dev" to preview your post
+```
+
+## Generated File Structure
+
+```
+src/content/blog/your-post-slug/
+├── index.mdx      # Main post content
+└── og-image.png   # Auto-generated social media preview
+```
+
+## Post Template
+
+The generated `index.mdx` includes:
+
+```mdx
+---
+title: 'Your Post Title'
+description: 'Your description'
+date: 2025-10-27
+tags: ['tag1', 'tag2']
+ogImage: './og-image.png'
+authors: ['cduruk']
+draft: true  # Only if you selected draft mode
+---
+
+import Callout from '@/components/Callout.astro'
+
+## Introduction
+
+Your content here...
+```
+
+---
+
 # Open Graph Image Generation
 
-This directory contains a TypeScript script to automatically generate Open Graph (social media preview) images for blog posts.
+This directory also contains a script to automatically generate Open Graph (social media preview) images for blog posts.
 
 ## How It Works
 
@@ -103,7 +201,9 @@ Currently uses Inter font. To use a different font:
 
 ## Adding OG Images to Posts
 
-Once generated, add the image to your post's frontmatter:
+If you created your post with `npm run new-post`, the `ogImage` field is automatically added to your frontmatter.
+
+For manually created posts, add the image reference to your post's frontmatter:
 
 ```yaml
 ---
@@ -113,6 +213,8 @@ date: 2025-10-24
 ogImage: './og-image.png'
 ---
 ```
+
+Then run `npm run generate-og-images` to generate the image.
 
 **Note:** The `ogImage` field is separate from the `image` field:
 - `ogImage`: Used for Open Graph/social media previews only

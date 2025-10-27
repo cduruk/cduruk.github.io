@@ -90,8 +90,41 @@ async function getBlogPosts(): Promise<BlogPost[]> {
   return posts
 }
 
+// Generate OG image for a specific post by slug
+export async function generateImageForSlug(slug: string): Promise<void> {
+  const postDir = join(BLOG_DIR, slug)
+
+  try {
+    const files = await readdir(postDir)
+
+    // Find index.mdx or index.md
+    const indexFile = files.find(f => f === 'index.mdx' || f === 'index.md')
+    if (!indexFile) {
+      throw new Error(`No index.mdx or index.md found in ${slug}`)
+    }
+
+    const content = await readFile(join(postDir, indexFile), 'utf-8')
+    const frontmatter = parseFrontmatter(content)
+
+    if (!frontmatter) {
+      throw new Error(`No frontmatter found in ${slug}/${indexFile}`)
+    }
+
+    const post: BlogPost = {
+      slug,
+      dir: postDir,
+      hasOgImage: files.some(f => f.startsWith('og-image.')),
+      ...frontmatter
+    }
+
+    await generateImage(post)
+  } catch (error) {
+    throw new Error(`Failed to generate OG image for ${slug}: ${(error as Error).message}`)
+  }
+}
+
 // Generate image for a post
-async function generateImage(post: BlogPost): Promise<void> {
+export async function generateImage(post: BlogPost): Promise<void> {
   console.log(`Generating image for: ${post.title}`)
 
   // Create React element using the TSX component
@@ -168,4 +201,7 @@ async function main(): Promise<void> {
   console.log('\n✅ Done!')
 }
 
-main().catch(console.error)
+// Only run main if this file is being executed directly (not imported)
+if (fileURLToPath(import.meta.url) === process.argv[1]) {
+  main().catch(console.error)
+}
