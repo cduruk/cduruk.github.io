@@ -55,7 +55,7 @@
   /* Flexoki Light Theme */
   --background: oklch(0.984 0.007 88); /* paper #FFFCF0 */
   --foreground: oklch(0.145 0.004 60); /* black #100F0F */
-  --primary: oklch(0.78 0.19 27); /* brand red #F89C91 */
+  --primary: oklch(0.504 0.165 27.8); /* brand red #AF3029 */
   --primary-foreground: oklch(0.984 0.007 88); /* paper */
   --highlight: oklch(0.665 0.215 27); /* highlight red #FC4B44 */
   --muted: oklch(0.933 0.009 88); /* base-50 #F2F0E5 */
@@ -71,8 +71,8 @@
   /* Flexoki Dark Theme */
   --background: oklch(0.145 0.004 60); /* black #100F0F */
   --foreground: oklch(0.933 0.009 88); /* base-50 #F2F0E5 */
-  --primary: oklch(0.78 0.19 27); /* brand red #F89C91 */
-  --primary-foreground: oklch(0.145 0.004 60); /* black */
+  --primary: oklch(0.504 0.165 27.8); /* brand red #AF3029 */
+  --primary-foreground: oklch(0.933 0.009 88); /* base-50 */
   --highlight: oklch(0.665 0.215 27); /* highlight red #FC4B44 */
   --muted: oklch(0.205 0.006 60); /* base-900 #282726 */
   --muted-foreground: oklch(0.708 0.008 75); /* base-500 #878580 */
