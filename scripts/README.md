@@ -84,7 +84,7 @@ date: 2025-10-27
 tags: ['tag1', 'tag2']
 ogImage: './og-image.png'
 authors: ['cduruk']
-draft: true  # Only if you selected draft mode
+draft: true # Only if you selected draft mode
 ---
 
 import Callout from '@/components/Callout.astro'
@@ -105,6 +105,7 @@ This directory also contains a script to automatically generate Open Graph (soci
 The script ([generate-og-images.ts](./generate-og-images.ts)) scans all blog posts in `src/content/blog/` and generates `og-image.png` files for any posts that don't already have one.
 
 It uses:
+
 - **Satori**: Converts React/TSX components to SVG
 - **Resvg**: Converts SVG to PNG
 - **Sharp**: Optimizes the final PNG
@@ -150,6 +151,7 @@ The script:
 The OG image template is a React component defined in **[src/components/ui/hero-template.tsx](../src/components/ui/hero-template.tsx)**. This file is separate from the generation script to make customization easier.
 
 Since it's a real TSX file, you can:
+
 - Use JSX syntax for layout
 - Add TypeScript types for props
 - Use React patterns you're familiar with
@@ -166,6 +168,7 @@ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
 ### Changing Layout
 
 The template uses a React-like component structure. You can modify:
+
 - Font sizes
 - Spacing (padding, gap)
 - Layout (flexbox properties)
@@ -176,6 +179,7 @@ The template uses a React-like component structure. You can modify:
 Currently uses Inter font. To use a different font:
 
 1. Install the font package:
+
    ```bash
    npm install --save-dev @fontsource/your-font
    ```
@@ -185,7 +189,9 @@ Currently uses Inter font. To use a different font:
    fonts: [
      {
        name: 'Your Font',
-       data: await readFile(join(__dirname, '../node_modules/@fontsource/your-font/files/...')),
+       data: await readFile(
+         join(__dirname, '../node_modules/@fontsource/your-font/files/...'),
+       ),
        weight: 400,
        style: 'normal',
      },
@@ -217,6 +223,7 @@ ogImage: './og-image.png'
 Then run `npm run generate-og-images` to generate the image.
 
 **Note:** The `ogImage` field is separate from the `image` field:
+
 - `ogImage`: Used for Open Graph/social media previews only
 - `image`: Used for page banners and listing thumbnails
 
