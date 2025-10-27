@@ -22,7 +22,7 @@ export function HeroTemplate({ title, description }: HeroTemplateProps) {
   const colors = {
     background: '#100F0F', // black
     foreground: '#F2F0E5', // base-50
-    primary: '#F89C91', // brightest red lighter
+    primary: '#FC4B44', // brightest red accent
     mutedForeground: '#878580', // base-500
     border: '#343331', // base-850
   }
