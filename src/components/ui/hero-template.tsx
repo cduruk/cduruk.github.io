@@ -19,11 +19,11 @@ export interface HeroTemplateProps {
 export function HeroTemplate({ title, description }: HeroTemplateProps) {
   // Flexoki brand colors (from global.css - dark theme)
   const colors = {
-    background: '#100F0F',      // black
-    foreground: '#F2F0E5',      // base-50
-    primary: '#F89C91',         // brightest red lighter
+    background: '#100F0F', // black
+    foreground: '#F2F0E5', // base-50
+    primary: '#F89C91', // brightest red lighter
     mutedForeground: '#878580', // base-500
-    border: '#343331',          // base-850
+    border: '#343331', // base-850
   }
 
   return (

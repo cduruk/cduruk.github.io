@@ -209,18 +209,13 @@ export default function PipelineCalculator() {
               const isOutreach = stage.key === 'outreach'
 
               return (
-                <tr
-                  key={stage.key}
-                  className="border-b"
-                >
+                <tr key={stage.key} className="border-b">
                   <td className="p-4 text-center">
                     {!isLast && <ArrowDown className="mx-auto h-4 w-4" />}
                   </td>
 
                   <td className="p-4">
-                    <span>
-                      {stage.label}
-                    </span>
+                    <span>{stage.label}</span>
                   </td>
 
                   <td className="border-l p-4 text-center">
@@ -248,9 +243,7 @@ export default function PipelineCalculator() {
                     <div className="flex items-center justify-center gap-2">
                       <span
                         className={
-                          isOutreach
-                            ? 'font-semibold text-accent-cyan'
-                            : ''
+                          isOutreach ? 'text-accent-cyan font-semibold' : ''
                         }
                       >
                         {Math.ceil(volumes[stage.volumeKey])}
@@ -279,7 +272,9 @@ export default function PipelineCalculator() {
               <td className="bg-muted/30 border-l p-4 text-center">
                 <div className="flex flex-col items-center">
                   <div className="flex items-center gap-2">
-                    <div className="font-semibold text-accent-cyan">{Math.ceil(volumes.outreach)}</div>
+                    <div className="text-accent-cyan font-semibold">
+                      {Math.ceil(volumes.outreach)}
+                    </div>
                     <Link className="h-4 w-4" />
                   </div>
                   <div className="mt-1 text-xs">touches needed</div>
@@ -317,7 +312,9 @@ export default function PipelineCalculator() {
                 <span>—</span>
               </td>
               <td className="bg-muted/30 border-l p-4 text-center">
-                <div className="font-semibold text-accent-blue">{weeklyOutreach}</div>
+                <div className="text-accent-blue font-semibold">
+                  {weeklyOutreach}
+                </div>
                 <div className="mt-1 text-xs">outreach per week</div>
               </td>
             </tr>

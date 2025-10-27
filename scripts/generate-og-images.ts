@@ -45,8 +45,10 @@ function parseFrontmatter(content: string): Frontmatter | null {
     let value = line.slice(colonIndex + 1).trim()
 
     // Remove quotes
-    if ((value.startsWith("'") && value.endsWith("'")) ||
-        (value.startsWith('"') && value.endsWith('"'))) {
+    if (
+      (value.startsWith("'") && value.endsWith("'")) ||
+      (value.startsWith('"') && value.endsWith('"'))
+    ) {
       value = value.slice(1, -1)
     }
 
@@ -68,11 +70,11 @@ async function getBlogPosts(): Promise<BlogPost[]> {
     const files = await readdir(postDir)
 
     // Find index.mdx or index.md
-    const indexFile = files.find(f => f === 'index.mdx' || f === 'index.md')
+    const indexFile = files.find((f) => f === 'index.mdx' || f === 'index.md')
     if (!indexFile) continue
 
     // Check if OG image already exists
-    const hasOgImage = files.some(f => f.startsWith('og-image.'))
+    const hasOgImage = files.some((f) => f.startsWith('og-image.'))
 
     const content = await readFile(join(postDir, indexFile), 'utf-8')
     const frontmatter = parseFrontmatter(content)
@@ -83,7 +85,7 @@ async function getBlogPosts(): Promise<BlogPost[]> {
       slug: entry.name,
       dir: postDir,
       hasOgImage,
-      ...frontmatter
+      ...frontmatter,
     })
   }
 
@@ -98,7 +100,7 @@ export async function generateImageForSlug(slug: string): Promise<void> {
     const files = await readdir(postDir)
 
     // Find index.mdx or index.md
-    const indexFile = files.find(f => f === 'index.mdx' || f === 'index.md')
+    const indexFile = files.find((f) => f === 'index.mdx' || f === 'index.md')
     if (!indexFile) {
       throw new Error(`No index.mdx or index.md found in ${slug}`)
     }
@@ -113,13 +115,15 @@ export async function generateImageForSlug(slug: string): Promise<void> {
     const post: BlogPost = {
       slug,
       dir: postDir,
-      hasOgImage: files.some(f => f.startsWith('og-image.')),
-      ...frontmatter
+      hasOgImage: files.some((f) => f.startsWith('og-image.')),
+      ...frontmatter,
     }
 
     await generateImage(post)
   } catch (error) {
-    throw new Error(`Failed to generate OG image for ${slug}: ${(error as Error).message}`)
+    throw new Error(
+      `Failed to generate OG image for ${slug}: ${(error as Error).message}`,
+    )
   }
 }
 
@@ -140,13 +144,23 @@ export async function generateImage(post: BlogPost): Promise<void> {
     fonts: [
       {
         name: 'Inter',
-        data: await readFile(join(__dirname, '../node_modules/@fontsource/inter/files/inter-latin-400-normal.woff')),
+        data: await readFile(
+          join(
+            __dirname,
+            '../node_modules/@fontsource/inter/files/inter-latin-400-normal.woff',
+          ),
+        ),
         weight: 400,
         style: 'normal',
       },
       {
         name: 'Inter',
-        data: await readFile(join(__dirname, '../node_modules/@fontsource/inter/files/inter-latin-700-normal.woff')),
+        data: await readFile(
+          join(
+            __dirname,
+            '../node_modules/@fontsource/inter/files/inter-latin-700-normal.woff',
+          ),
+        ),
         weight: 700,
         style: 'normal',
       },
@@ -181,7 +195,9 @@ async function main(): Promise<void> {
   console.log('🎨 Generating OG images for blog posts...\n')
 
   const posts = await getBlogPosts()
-  const postsWithoutOgImage = posts.filter(p => !p.hasOgImage && p.draft !== 'true')
+  const postsWithoutOgImage = posts.filter(
+    (p) => !p.hasOgImage && p.draft !== 'true',
+  )
 
   if (postsWithoutOgImage.length === 0) {
     console.log('✨ All posts already have OG images!')
@@ -194,7 +210,10 @@ async function main(): Promise<void> {
     try {
       await generateImage(post)
     } catch (error) {
-      console.error(`✗ Failed to generate OG image for ${post.slug}:`, (error as Error).message)
+      console.error(
+        `✗ Failed to generate OG image for ${post.slug}:`,
+        (error as Error).message,
+      )
     }
   }
 

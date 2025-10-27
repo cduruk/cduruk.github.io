@@ -134,7 +134,9 @@ async function main(): Promise<void> {
   }
 
   // Get tags (optional)
-  const tagsInput = await question('Tags (comma-separated, or press enter to skip): ')
+  const tagsInput = await question(
+    'Tags (comma-separated, or press enter to skip): ',
+  )
   const tags = tagsInput
     .split(',')
     .map((tag) => tag.trim())
@@ -142,7 +144,8 @@ async function main(): Promise<void> {
 
   // Get draft status (optional)
   const draftInput = await question('Create as draft? (y/N): ')
-  const draft = draftInput.toLowerCase() === 'y' || draftInput.toLowerCase() === 'yes'
+  const draft =
+    draftInput.toLowerCase() === 'y' || draftInput.toLowerCase() === 'yes'
 
   rl.close()
 
@@ -176,8 +179,13 @@ async function main(): Promise<void> {
       await generateImageForSlug(slug)
       console.log('✅ OG image generated successfully')
     } catch (error) {
-      console.error('⚠️  Failed to generate OG image:', (error as Error).message)
-      console.log('   You can generate it later with: npm run generate-og-images')
+      console.error(
+        '⚠️  Failed to generate OG image:',
+        (error as Error).message,
+      )
+      console.log(
+        '   You can generate it later with: npm run generate-og-images',
+      )
     }
 
     console.log('\n💡 Next steps:')

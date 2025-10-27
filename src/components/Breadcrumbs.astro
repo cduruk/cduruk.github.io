@@ -35,9 +35,7 @@ const { items } = Astro.props
           <BreadcrumbItem>
             <BreadcrumbLink href={item.href}>
               <span class="flex items-center gap-x-2">
-                {item.icon && (
-                  <Icon name={item.icon} class="size-4 shrink-0" />
-                )}
+                {item.icon && <Icon name={item.icon} class="size-4 shrink-0" />}
                 <span>{item.label}</span>
               </span>
             </BreadcrumbLink>
