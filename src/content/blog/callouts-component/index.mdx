@@ -27,7 +27,9 @@ I've added a simple `Callout.astro` to `src/components` that now comes shipped w
 
 ```astro title="src/components/Callout.astro" collapse={12-126} {8-10,131}
 ---
-import { cva } from 'class-variance-authority'
+import { cn } from '@/lib/utils'
+import { Icon } from 'astro-icon/components'
+import { cva, type VariantProps } from 'class-variance-authority'
 
 const calloutConfig = {
   note: {
@@ -164,7 +166,6 @@ const calloutVariants = cva('relative px-4 py-3 my-6 border-l-4 text-sm', {
     variant: 'note',
   },
 })
----
 ```
 
 As such, if you feel like there's any variant that you're missing, it's insanely trivial to add it yourself. It's less trivial, however, to figure out what colors to use since I've essentially taken up every good Tailwind color for these!
@@ -183,9 +184,7 @@ image: './1200x630.png'
 authors: ['enscribe']
 ---
 
-import Callout from '@/components/Callout.astro
-
-'
+import Callout from '@/components/Callout.astro'
 ```
 
 Then, you can use the component like so. This is just an example but you should actually read the text since it's relevant to the article:
@@ -220,118 +219,48 @@ Then, you can use the component like so. This is just an example but you should 
 
 Callout only supports three props:
 
-| Prop          | Description                                                   | Default          |
-| ------------- | ------------------------------------------------------------- | ---------------- |
-| `title`       | The title of the callout                                      | `undefined{:js}` |
-| `variant`     | The variant of the callout                                    | `"note"{:js}`    |
-| `defaultOpen` | Whether the callout `<details>{:html}` box is open by default | `true{:js}`      |
+| Prop | Description | Default |
+| ---- | ----------- | ------- |
+| `title` | The title of the callout | `undefined{:js}` |
+| `variant` | The variant of the callout | `"note"{:js}` |
+| `defaultOpen` | Whether the callout `<details>{:html}` box is open by default | `true{:js}` |
 
 I've added an insane amount of variants to this component for potentially any use case you could think of. For the more general ones, you can use the following:
 
 <div class="[&_td]:align-middle">
-  | Variant | Usage | | ------- | ----- | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-blue-500 px-2 py-1 text-blue-700 dark:bg-blue-950/10 dark:text-blue-300">
-    <Icon name="lucide:info" /> Note
-  </span>{' '}
-  | For general information or comments that don't fit other categories | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-green-500 px-2 py-1 text-green-700 dark:bg-green-950/10 dark:text-green-300">
-    <Icon name="lucide:lightbulb" /> Tip
-  </span>{' '}
-  | For helpful advice or shortcuts related to the topic at hand | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-amber-500 px-2 py-1 text-amber-700 dark:bg-amber-950/10 dark:text-amber-300">
-    <Icon name="lucide:alert-triangle" /> Warning
-  </span>{' '}
-  | For potential pitfalls or common misconceptions | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-red-500 px-2 py-1 text-red-700 dark:bg-red-950/10 dark:text-red-300">
-    <Icon name="lucide:shield-alert" /> Danger
-  </span>{' '}
-  | For things that could potentially be destructive or harmful | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-purple-500 px-2 py-1 text-purple-700 dark:bg-purple-950/10 dark:text-purple-300">
-    <Icon name="lucide:message-square-warning" /> Important
-  </span>{' '}
-  | For things that are important to the reader's understanding |
+| Variant | Usage |
+| ------- | ----- |
+| <span class="flex items-center gap-2 border-blue-500 dark:bg-blue-950/10 text-blue-700 dark:text-blue-300 px-2 py-1 border-l-4"><Icon name="lucide:info" /> Note</span> | For general information or comments that don't fit other categories |
+| <span class="flex items-center gap-2 border-green-500 dark:bg-green-950/10 text-green-700 dark:text-green-300 px-2 py-1 border-l-4"><Icon name="lucide:lightbulb" /> Tip</span> | For helpful advice or shortcuts related to the topic at hand |
+| <span class="flex items-center gap-2 border-amber-500 dark:bg-amber-950/10 text-amber-700 dark:text-amber-300 px-2 py-1 border-l-4"><Icon name="lucide:alert-triangle" /> Warning</span> | For potential pitfalls or common misconceptions |
+| <span class="flex items-center gap-2 border-red-500 dark:bg-red-950/10 text-red-700 dark:text-red-300 px-2 py-1 border-l-4"><Icon name="lucide:shield-alert" /> Danger</span> | For things that could potentially be destructive or harmful |
+| <span class="flex items-center gap-2 border-purple-500 dark:bg-purple-950/10 text-purple-700 dark:text-purple-300 px-2 py-1 border-l-4"><Icon name="lucide:message-square-warning" /> Important</span> | For things that are important to the reader's understanding |
 </div>
 
 For the potentially more academic/mathy folk, you can use the following. I've created specific variants that are tailor-made to be used alongside and/or nested into each other:
 
 <div class="[&_td]:align-middle">
-  | Variant | Usage | | ------- | ----- | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-purple-500 px-2 py-1 text-purple-700 dark:bg-purple-950/10 dark:text-purple-300">
-    <Icon name="lucide:book-open" /> Definition
-  </span>{' '}
-  | For defining terms or concepts | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-teal-500 px-2 py-1 text-teal-700 dark:bg-teal-950/10 dark:text-teal-300">
-    <Icon name="lucide:check-circle" /> Theorem
-  </span>{' '}
-  | For important mathematical or logical statements that have been proven | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-sky-400 px-2 py-1 text-sky-700 dark:bg-sky-950/10 dark:text-sky-300">
-    <Icon name="lucide:puzzle" /> Lemma
-  </span>{' '}
-  | For helper theorems used in proving larger results | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-gray-500 px-2 py-1 text-gray-700 dark:bg-gray-950/10 dark:text-gray-300">
-    <Icon name="lucide:check-square" /> Proof
-  </span>{' '}
-  | For logical arguments that establish the truth of a theorem or lemma | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-cyan-500 px-2 py-1 text-cyan-700 dark:bg-cyan-950/10 dark:text-cyan-300">
-    <Icon name="lucide:git-branch" /> Corollary
-  </span>{' '}
-  | For results that follow directly from theorems | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-slate-500 px-2 py-1 text-slate-700 dark:bg-slate-950/10 dark:text-slate-300">
-    <Icon name="lucide:file-text" /> Proposition
-  </span>{' '}
-  | For important statements that are less significant than theorems | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-violet-600 px-2 py-1 text-violet-700 dark:bg-violet-950/10 dark:text-violet-300">
-    <Icon name="lucide:anchor" /> Axiom
-  </span>{' '}
-  | For fundamental assumptions that are accepted without proof | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-pink-500 px-2 py-1 text-pink-700 dark:bg-pink-950/10 dark:text-pink-300">
-    <Icon name="lucide:help-circle" /> Conjecture
-  </span>{' '}
-  | For unproven statements believed to be true | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-slate-400 px-2 py-1 text-slate-700 dark:bg-slate-950/10 dark:text-slate-300">
-    <Icon name="lucide:pen-tool" /> Notation
-  </span>{' '}
-  | For explaining mathematical notation | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-gray-400 px-2 py-1 text-gray-700 dark:bg-gray-950/10 dark:text-gray-300">
-    <Icon name="lucide:message-circle" /> Remark
-  </span>{' '}
-  | For additional comments or (potentially out-of-scope) observations | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-yellow-500 px-2 py-1 text-yellow-700 dark:bg-yellow-950/10 dark:text-yellow-300">
-    <Icon name="lucide:lightbulb" /> Intuition
-  </span>{' '}
-  | For explaining the intuitive reasoning behind concepts | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-blue-300 px-2 py-1 text-blue-600 dark:bg-blue-950/10 dark:text-blue-300">
-    <Icon name="lucide:rotate-ccw" /> Recall
-  </span>{' '}
-  | For reminding readers of previously covered material | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-lime-500 px-2 py-1 text-lime-700 dark:bg-lime-950/10 dark:text-lime-300">
-    <Icon name="lucide:help-circle" /> Explanation
-  </span>{' '}
-  | For providing deeper insights or clarifying complex topics | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-emerald-500 px-2 py-1 text-emerald-700 dark:bg-emerald-950/10 dark:text-emerald-300">
-    <Icon name="lucide:code" /> Example
-  </span>{' '}
-  | For illustrating concepts with concrete examples or analogies | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-indigo-500 px-2 py-1 text-indigo-700 dark:bg-indigo-950/10 dark:text-indigo-300">
-    <Icon name="lucide:dumbbell" /> Exercise
-  </span>{' '}
-  | For practice problems or take-home challenges for the reader | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-orange-600 px-2 py-1 text-orange-700 dark:bg-orange-950/10 dark:text-orange-300">
-    <Icon name="lucide:alert-circle" /> Problem
-  </span>{' '}
-  | For presenting problems to be solved thoroughly | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-teal-500 px-2 py-1 text-teal-700 dark:bg-teal-950/10 dark:text-teal-300">
-    <Icon name="lucide:check" /> Answer
-  </span>{' '}
-  | For providing simple, short answers to exercises or problems | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-emerald-600 px-2 py-1 text-emerald-700 dark:bg-emerald-950/10 dark:text-emerald-300">
-    <Icon name="lucide:check-circle-2" /> Solution
-  </span>{' '}
-  | For detailed solutions to exercises or problems | |{' '}
-  <span class="flex items-center gap-2 border-l-4 border-sky-500 px-2 py-1 text-sky-700 dark:bg-sky-950/10 dark:text-sky-300">
-    <Icon name="lucide:list" /> Summary
-  </span>{' '}
-  | For summarizing key points or concepts |
+| Variant | Usage |
+| ------- | ----- |
+| <span class="flex items-center gap-2 border-purple-500 dark:bg-purple-950/10 text-purple-700 dark:text-purple-300 px-2 py-1 border-l-4"><Icon name="lucide:book-open" /> Definition</span> | For defining terms or concepts |
+| <span class="flex items-center gap-2 border-teal-500 dark:bg-teal-950/10 text-teal-700 dark:text-teal-300 px-2 py-1 border-l-4"><Icon name="lucide:check-circle" /> Theorem</span> | For important mathematical or logical statements that have been proven |
+| <span class="flex items-center gap-2 border-sky-400 dark:bg-sky-950/10 text-sky-700 dark:text-sky-300 px-2 py-1 border-l-4"><Icon name="lucide:puzzle" /> Lemma</span> | For helper theorems used in proving larger results |
+| <span class="flex items-center gap-2 border-gray-500 dark:bg-gray-950/10 text-gray-700 dark:text-gray-300 px-2 py-1 border-l-4"><Icon name="lucide:check-square" /> Proof</span> | For logical arguments that establish the truth of a theorem or lemma |
+| <span class="flex items-center gap-2 border-cyan-500 dark:bg-cyan-950/10 text-cyan-700 dark:text-cyan-300 px-2 py-1 border-l-4"><Icon name="lucide:git-branch" /> Corollary</span> | For results that follow directly from theorems |
+| <span class="flex items-center gap-2 border-slate-500 dark:bg-slate-950/10 text-slate-700 dark:text-slate-300 px-2 py-1 border-l-4"><Icon name="lucide:file-text" /> Proposition</span> | For important statements that are less significant than theorems |
+| <span class="flex items-center gap-2 border-violet-600 dark:bg-violet-950/10 text-violet-700 dark:text-violet-300 px-2 py-1 border-l-4"><Icon name="lucide:anchor" /> Axiom</span> | For fundamental assumptions that are accepted without proof |
+| <span class="flex items-center gap-2 border-pink-500 dark:bg-pink-950/10 text-pink-700 dark:text-pink-300 px-2 py-1 border-l-4"><Icon name="lucide:help-circle" /> Conjecture</span> | For unproven statements believed to be true |
+| <span class="flex items-center gap-2 border-slate-400 dark:bg-slate-950/10 text-slate-700 dark:text-slate-300 px-2 py-1 border-l-4"><Icon name="lucide:pen-tool" /> Notation</span> | For explaining mathematical notation |
+| <span class="flex items-center gap-2 border-gray-400 dark:bg-gray-950/10 text-gray-700 dark:text-gray-300 px-2 py-1 border-l-4"><Icon name="lucide:message-circle" /> Remark</span> | For additional comments or (potentially out-of-scope) observations |
+| <span class="flex items-center gap-2 border-yellow-500 dark:bg-yellow-950/10 text-yellow-700 dark:text-yellow-300 px-2 py-1 border-l-4"><Icon name="lucide:lightbulb" /> Intuition</span> | For explaining the intuitive reasoning behind concepts |
+| <span class="flex items-center gap-2 border-blue-300 dark:bg-blue-950/10 text-blue-600 dark:text-blue-300 px-2 py-1 border-l-4"><Icon name="lucide:rotate-ccw" /> Recall</span> | For reminding readers of previously covered material |
+| <span class="flex items-center gap-2 border-lime-500 dark:bg-lime-950/10 text-lime-700 dark:text-lime-300 px-2 py-1 border-l-4"><Icon name="lucide:help-circle" /> Explanation</span> | For providing deeper insights or clarifying complex topics |
+| <span class="flex items-center gap-2 border-emerald-500 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-300 px-2 py-1 border-l-4"><Icon name="lucide:code" /> Example</span> | For illustrating concepts with concrete examples or analogies |
+| <span class="flex items-center gap-2 border-indigo-500 dark:bg-indigo-950/10 text-indigo-700 dark:text-indigo-300 px-2 py-1 border-l-4"><Icon name="lucide:dumbbell" /> Exercise</span> | For practice problems or take-home challenges for the reader |
+| <span class="flex items-center gap-2 border-orange-600 dark:bg-orange-950/10 text-orange-700 dark:text-orange-300 px-2 py-1 border-l-4"><Icon name="lucide:alert-circle" /> Problem</span> | For presenting problems to be solved thoroughly |
+| <span class="flex items-center gap-2 border-teal-500 dark:bg-teal-950/10 text-teal-700 dark:text-teal-300 px-2 py-1 border-l-4"><Icon name="lucide:check" /> Answer</span> | For providing simple, short answers to exercises or problems |
+| <span class="flex items-center gap-2 border-emerald-600 dark:bg-emerald-950/10 text-emerald-700 dark:text-emerald-300 px-2 py-1 border-l-4"><Icon name="lucide:check-circle-2" /> Solution</span> | For detailed solutions to exercises or problems |
+| <span class="flex items-center gap-2 border-sky-500 dark:bg-sky-950/10 text-sky-700 dark:text-sky-300 px-2 py-1 border-l-4"><Icon name="lucide:list" /> Summary</span> | For summarizing key points or concepts |
 </div>
 
 ## Generic callouts
@@ -339,20 +268,19 @@ For the potentially more academic/mathy folk, you can use the following. I've cr
 These are what the generic callouts look like (of course, all the text is made up):
 
 <Callout title="Prerequisites for advanced React development" variant="note">
-  This tutorial assumes you're familiar with React hooks and the component
-  lifecycle. If you need a refresher, check out the [official React
-  documentation](https://reactjs.org/docs/hooks-intro.html) before proceeding.
+  This tutorial assumes you're familiar with React hooks and the component lifecycle. If you need a refresher, check out the [official React documentation](https://reactjs.org/docs/hooks-intro.html) before proceeding.
 </Callout>
 
 <Callout title="Productivity enhancement" variant="tip">
-  You can quickly format your code by pressing <kbd>Ctrl</kbd> + <kbd>Alt</kbd>{' '}
-  + <kbd>F</kbd> (Windows/Linux) or <kbd>Cmd</kbd> + <kbd>Option</kbd> +{' '}
-  <kbd>F</kbd> (Mac). Additional shortcuts include: | Action | Windows/Linux |
-  Mac | | ------ | ------------- | --- | | Search | <kbd>Ctrl</kbd> +{' '}
-  <kbd>F</kbd> | <kbd>Cmd</kbd> + <kbd>F</kbd> | | Replace | <kbd>Ctrl</kbd> +{' '}
-  <kbd>H</kbd> | <kbd>Cmd</kbd> + <kbd>H</kbd> | | Save all | <kbd>Ctrl</kbd> +{' '}
-  <kbd>Alt</kbd> + <kbd>S</kbd> | <kbd>Cmd</kbd> + <kbd>Option</kbd> +{' '}
-  <kbd>S</kbd> |
+  You can quickly format your code by pressing <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>F</kbd> (Windows/Linux) or <kbd>Cmd</kbd> + <kbd>Option</kbd> + <kbd>F</kbd> (Mac).
+  
+  Additional shortcuts include:
+  
+  | Action | Windows/Linux | Mac |
+  | ------ | ------------- | --- |
+  | Search | <kbd>Ctrl</kbd> + <kbd>F</kbd> | <kbd>Cmd</kbd> + <kbd>F</kbd> |
+  | Replace | <kbd>Ctrl</kbd> + <kbd>H</kbd> | <kbd>Cmd</kbd> + <kbd>H</kbd> |
+  | Save all | <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>S</kbd> | <kbd>Cmd</kbd> + <kbd>Option</kbd> + <kbd>S</kbd> |
 </Callout>
 
 <Callout title="Cross-browser compatibility issues" variant="warning">
@@ -374,30 +302,33 @@ These are what the generic callouts look like (of course, all the text is made u
 </Callout>
 
 <Callout title="Critical data loss risk" variant="danger">
-  Running this command will **permanently delete** all files in your current
-  directory. Make sure to back up important data before proceeding. ```bash
-  title="danger.sh" # This will delete everything in the current directory rm
-  -rf ./* # Safer alternative with confirmation rm -ri ./* ``` This operation
-  cannot be undone and recovery tools may not be able to restore your data.
+  Running this command will **permanently delete** all files in your current directory. Make sure to back up important data before proceeding.
+  
+  ```bash title="danger.sh"
+  # This will delete everything in the current directory
+  rm -rf ./*
+  # Safer alternative with confirmation
+  rm -ri ./*
+  ```
+  
+  This operation cannot be undone and recovery tools may not be able to restore your data.
 </Callout>
 
 <Callout title="Major API changes in v2.0" variant="important">
   Version 2.0 introduces significant API changes. You'll need to update your existing code to use the new parameter structure.
 
-1. The `configure(){:js}` method now returns a Promise
-2. Authentication requires an API key object instead of a string
-3. Event handlers use a new callback pattern
-
-A migration example looks like the following:
-
-```diff lang="js"
-- app.configure("api-key-string");
-+ await app.configure({ key: "api-key-string", version: "2.0" });
-
-- app.on('event', callback);
-+ app.on('event', { handler: callback, options: { once: true } });
-```
-
+  1. The `configure(){:js}` method now returns a Promise
+  2. Authentication requires an API key object instead of a string
+  3. Event handlers use a new callback pattern
+  
+  A migration example looks like the following:
+  ```diff lang="js"
+  - app.configure("api-key-string");
+  + await app.configure({ key: "api-key-string", version: "2.0" });
+  
+  - app.on('event', callback);
+  + app.on('event', { handler: callback, options: { once: true } });
+  ```
 </Callout>
 
 ## Mathematical callouts
@@ -466,14 +397,13 @@ Like I mentioned before, some of these variants are meant to be nested within ea
 
 I'll add this little subgenre of variant called "example-based" callouts that have more generally a question-answer format. For the "exercise-answer" pairing, the difference is that I'd recommend you default the answer to a closed state to hide the answer from any peeping readers until they've actually done the work themselves. Typically, the difference between an "Answer" and a "Solution" is that the answer basically just gives you the final answer, while the solution will show you the steps it takes to get to the answer:
 
-<Callout
-  title="Finding the derivative of a product function"
-  variant="exercise"
->
+<Callout title="Finding the derivative of a product function" variant="exercise">
   Calculate the derivative of $f(x) = x^3 \sin(x)$ using the product rule.
+  
   <Callout variant="answer" defaultOpen={false}>
-    $$ \frac{d}
-    {dx}[x^3 \sin(x)] = 3x^2 \sin(x) + x^3 \cos(x) $$
+    $$
+      \frac{d}{dx}[x^3 \sin(x)] = 3x^2 \sin(x) + x^3 \cos(x)
+    $$
   </Callout>
 </Callout>
 
