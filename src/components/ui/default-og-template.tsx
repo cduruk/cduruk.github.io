@@ -25,7 +25,7 @@ export function DefaultOGTemplate({
   const colors = {
     background: '#100F0F', // black
     foreground: '#F2F0E5', // base-50
-    primary: '#F89C91', // brand red
+    primary: '#AF3029', // brand red
     mutedForeground: '#878580', // base-500
   }
 
