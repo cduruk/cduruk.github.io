@@ -42,9 +42,15 @@ export default function PipelineCalculator() {
   const [weeksToHire, setWeeksToHire] = useState(initialState.weeksToHire)
   const [rates, setRates] = useState(initialState.rates)
 
-  // Update URL when state changes
+  // Check if URL had params on initial load
+  const [hadInitialParams] = useState(() => {
+    if (typeof window === 'undefined') return false
+    return window.location.search.length > 0
+  })
+
+  // Auto-update URL if there were initial params (shared link)
   useEffect(() => {
-    if (typeof window === 'undefined') return
+    if (typeof window === 'undefined' || !hadInitialParams) return
 
     const params = new URLSearchParams()
     params.set('weeks', weeksToHire.toString())
@@ -55,9 +61,10 @@ export default function PipelineCalculator() {
     params.set('offer', rates.offer.toString())
     params.set('acceptance', rates.acceptance.toString())
 
-    const newUrl = `${window.location.pathname}?${params.toString()}#calculator`
+    const hash = window.location.hash
+    const newUrl = `${window.location.pathname}?${params.toString()}${hash}`
     window.history.replaceState({}, '', newUrl)
-  }, [weeksToHire, rates])
+  }, [weeksToHire, rates, hadInitialParams])
 
   // Scroll to calculator on mount if hash is present
   useEffect(() => {
@@ -161,7 +168,22 @@ export default function PipelineCalculator() {
   const handleCopyShareLink = async () => {
     if (typeof window === 'undefined') return
 
-    const url = window.location.href
+    // Build URL with current state
+    const params = new URLSearchParams()
+    params.set('weeks', weeksToHire.toString())
+    params.set('response', rates.response.toString())
+    params.set('screening', rates.screening.toString())
+    params.set('technical', rates.technical.toString())
+    params.set('team', rates.team.toString())
+    params.set('offer', rates.offer.toString())
+    params.set('acceptance', rates.acceptance.toString())
+
+    const baseUrl = window.location.origin + window.location.pathname
+    const url = `${baseUrl}?${params.toString()}#calculator`
+
+    // Update browser URL
+    window.history.replaceState({}, '', url)
+
     try {
       await navigator.clipboard.writeText(url)
       setCopied(true)
