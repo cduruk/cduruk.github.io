@@ -173,26 +173,6 @@ export default function PipelineCalculator() {
 
   return (
     <div id="calculator" className="w-full min-w-full">
-      {/* Share Button */}
-      <div className="mb-4 flex justify-end">
-        <button
-          onClick={handleCopyShareLink}
-          className="border-border bg-background hover:bg-muted/50 text-foreground flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors"
-        >
-          {copied ? (
-            <>
-              <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
-              <span>Link Copied!</span>
-            </>
-          ) : (
-            <>
-              <Share2 className="h-4 w-4" />
-              <span>Copy Share Link</span>
-            </>
-          )}
-        </button>
-      </div>
-
       {/* Main Table */}
       <div className="w-full overflow-x-auto">
         <table className="w-full">
@@ -330,6 +310,26 @@ export default function PipelineCalculator() {
             </tr>
           </tbody>
         </table>
+      </div>
+
+      {/* Share Button */}
+      <div className="mt-4 flex justify-end">
+        <button
+          onClick={handleCopyShareLink}
+          className="border-border bg-background hover:bg-muted/50 text-foreground flex items-center gap-2 rounded-lg border px-4 py-2 text-sm font-medium transition-colors"
+        >
+          {copied ? (
+            <>
+              <Check className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+              <span>Link Copied!</span>
+            </>
+          ) : (
+            <>
+              <Share2 className="h-4 w-4" />
+              <span>Copy Share Link</span>
+            </>
+          )}
+        </button>
       </div>
     </div>
   )
