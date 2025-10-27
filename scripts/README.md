@@ -45,7 +45,7 @@ The script creates all favicon files in the `public/` directory:
 
 ## Design
 
-All favicons feature the "-1" logo in white text on a red rounded box background, using the Flexoki color scheme (#AF3029). The design uses:
+All favicons feature the "-1" logo in white text on a red rounded box background (#F89C91). The design uses:
 
 - **Responsive font sizing**: 65% of canvas size (e.g., 16px canvas = 10px font, 512px canvas = 333px font)
 - **Vertical centering**: 5% paddingTop to compensate for text baseline offset
