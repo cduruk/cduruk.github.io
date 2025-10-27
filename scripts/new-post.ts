@@ -2,6 +2,7 @@ import { mkdir, writeFile, readdir } from 'fs/promises'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 import readline from 'readline'
+import { generateImageForSlug } from './generate-og-images.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -169,10 +170,19 @@ async function main(): Promise<void> {
       console.log('📌 Post created as draft')
     }
 
+    // Generate OG image
+    console.log('\n🎨 Generating Open Graph image...')
+    try {
+      await generateImageForSlug(slug)
+      console.log('✅ OG image generated successfully')
+    } catch (error) {
+      console.error('⚠️  Failed to generate OG image:', (error as Error).message)
+      console.log('   You can generate it later with: npm run generate-og-images')
+    }
+
     console.log('\n💡 Next steps:')
     console.log(`   1. Edit ${slug}/index.mdx`)
-    console.log(`   2. Run "npm run generate-og-images" to create the OG image`)
-    console.log(`   3. Run "npm run dev" to preview your post`)
+    console.log(`   2. Run "npm run dev" to preview your post`)
   } catch (error) {
     console.error('❌ Failed to create post:', (error as Error).message)
     process.exit(1)
