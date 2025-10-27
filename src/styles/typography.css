@@ -102,6 +102,22 @@
       text-decoration-color: var(--highlight);
     }
 
+    :where([data-theme='dark'] .prose p a):not(:where(.not-prose, .not-prose *)),
+    [data-theme='dark'] :where(.prose p a):not(:where(.not-prose, .not-prose *)) {
+      color: var(--highlight);
+      text-decoration-color: var(--highlight);
+    }
+
+    :where([data-theme='dark'] .prose p a):not(:where(.not-prose, .not-prose *)):hover,
+    :where([data-theme='dark'] .prose p a):not(:where(.not-prose, .not-prose *)):focus-visible,
+    [data-theme='dark']
+      :where(.prose p a):not(:where(.not-prose, .not-prose *)):hover,
+    [data-theme='dark']
+      :where(.prose p a):not(:where(.not-prose, .not-prose *)):focus-visible {
+      color: var(--primary);
+      text-decoration-color: var(--primary);
+    }
+
     :where(strong):not(:where(.not-prose, .not-prose *)) {
       @apply text-foreground font-medium;
     }
