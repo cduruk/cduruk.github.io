@@ -5,7 +5,7 @@ This directory contains TypeScript scripts for managing blog posts.
 ## Scripts
 
 - **[new-post.ts](./new-post.ts)**: Interactive CLI for creating new blog posts
-- **[generate-og-images.ts](./generate-og-images.ts)**: Automatically generates Open Graph (social media preview) images
+- **[generate-og-images.ts](./generate-og-images.ts)**: Automatically generates Open Graph (social media preview) images for blog posts and static pages
 
 ---
 
@@ -98,11 +98,13 @@ Your content here...
 
 # Open Graph Image Generation
 
-This directory also contains a script to automatically generate Open Graph (social media preview) images for blog posts.
+This directory also contains a script to automatically generate Open Graph (social media preview) images for both blog posts and static pages.
 
 ## How It Works
 
-The script ([generate-og-images.ts](./generate-og-images.ts)) scans all blog posts in `src/content/blog/` and generates `og-image.png` files for any posts that don't already have one.
+The script ([generate-og-images.ts](./generate-og-images.ts)):
+- Scans all blog posts in `src/content/blog/` and generates `og-image.png` files for any posts that don't already have one
+- Generates OG images for static pages (e.g., About, Subscribe) defined in the `getStaticPages()` function
 
 It uses:
 - **Satori**: Converts React/TSX components to SVG
@@ -120,6 +122,23 @@ To generate OG images manually:
 npm run generate-og-images
 ```
 
+Example output:
+
+```
+🎨 Generating OG images...
+
+📝 Blog posts:
+  ✨ All posts already have OG images!
+
+📄 Static pages:
+  Generating OG image for: about
+  ✓ Generated OG image: /static/og/about.png
+  Generating OG image for: subscribe
+  ✓ Generated OG image: /static/og/subscribe.png
+
+✅ Done!
+```
+
 ### Automatic Generation
 
 OG images are automatically generated during the build process:
@@ -132,9 +151,11 @@ The build script runs `generate-og-images` before building the site.
 
 ## How Images Are Generated
 
-The script:
+### Blog Posts
 
-1. Reads all blog post directories
+For each blog post, the script:
+
+1. Reads all blog post directories in `src/content/blog/`
 2. Checks for existing `og-image.png`, `og-image.jpg`, etc.
 3. For posts without OG images (and not marked as draft), it:
    - Extracts frontmatter (title, description)
@@ -144,6 +165,18 @@ The script:
      - Description (if provided)
      - "Off by One" branding in the footer
 4. Saves the image as `og-image.png` in the post's directory
+
+### Static Pages
+
+For static pages (About, Subscribe, etc.), the script:
+
+1. Reads the list of pages from `getStaticPages()` in [generate-og-images.ts](./generate-og-images.ts)
+2. For each defined page, it:
+   - Uses the configured title and description
+   - Generates a 1200x630 PNG image using the same template as blog posts
+   - Saves the image to `public/static/og/{page-name}.png`
+
+Static page OG images are always regenerated on each build to ensure they stay up to date.
 
 ## Customization
 
@@ -192,14 +225,53 @@ Currently uses Inter font. To use a different font:
    ]
    ```
 
+## Adding Static Pages
+
+To add a new static page to OG image generation:
+
+1. **Define the page** in `getStaticPages()` in [generate-og-images.ts](./generate-og-images.ts):
+
+```typescript
+{
+  name: 'contact',  // Used for filename: contact.png
+  title: 'Contact Me',  // Displayed on the OG image
+  description: 'Get in touch with me.',  // Optional subtitle
+  outputPath: join(OG_DIR, 'contact.png'),
+}
+```
+
+2. **Reference the image** in your page component (e.g., `src/pages/contact.astro`):
+
+```astro
+<PageHead slot="head" title="Contact" image="/static/og/contact.png" />
+```
+
+3. **Run the build** to generate the image:
+
+```bash
+npm run build
+```
+
+The OG image will be created at `public/static/og/contact.png` and automatically included in your page's meta tags.
+
+### Current Static Pages
+
+The following static pages currently have OG images generated:
+- **About** (`/static/og/about.png`)
+- **Subscribe** (`/static/og/subscribe.png`)
+
 ## Image Specifications
 
 - **Dimensions**: 1200x630 (optimal for Open Graph/social sharing)
 - **Format**: PNG
 - **Compression**: Level 9, Quality 90
-- **Average size**: ~60-80 KB
+- **Average size**:
+  - Blog posts: ~60-80 KB
+  - Static pages: ~8-11 KB
 
-## Adding OG Images to Posts
+## Adding OG Images to Your Content
+
+### Blog Posts
 
 If you created your post with `npm run new-post`, the `ogImage` field is automatically added to your frontmatter.
 
@@ -220,13 +292,29 @@ Then run `npm run generate-og-images` to generate the image.
 - `ogImage`: Used for Open Graph/social media previews only
 - `image`: Used for page banners and listing thumbnails
 
+### Static Pages
+
+For static pages, pass the `image` prop to the `PageHead` component:
+
+```astro
+<PageHead slot="head" title="Page Title" image="/static/og/page-name.png" />
+```
+
+The image path should match the `outputPath` defined in `getStaticPages()` (relative to the `public/` directory).
+
 ## Skipping Auto-Generation
 
-If you want to skip auto-generation for a specific post:
+### Blog Posts
+
+If you want to skip auto-generation for a specific blog post:
 
 1. Create an empty `og-image.png` file in the post directory, OR
 2. Mark the post as `draft: true`, OR
 3. Manually create your own OG image
+
+### Static Pages
+
+Static page OG images are always regenerated during the build process to ensure they stay current. To use a custom OG image for a static page, reference a different image path in the `PageHead` component instead of the generated one.
 
 ## Troubleshooting
 
