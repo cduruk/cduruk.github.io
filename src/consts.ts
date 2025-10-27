@@ -21,8 +21,8 @@ export const NAV_LINKS: SocialLink[] = [
     label: 'about',
   },
   {
-    href: '/newsletter',
-    label: 'newsletter',
+    href: '/subscribe',
+    label: 'subscribe',
   },
 ]
 
@@ -40,6 +40,10 @@ export const SOCIAL_LINKS: SocialLink[] = [
     label: 'Email',
   },
   {
+    href: '/subscribe',
+    label: 'Subscribe',
+  },
+  {
     href: '/rss.xml',
     label: 'RSS',
   },
@@ -51,5 +55,6 @@ export const ICON_MAP: IconMap = {
   LinkedIn: 'lucide:linkedin',
   Twitter: 'lucide:twitter',
   Email: 'lucide:mail',
+  Subscribe: 'lucide:newspaper',
   RSS: 'lucide:rss',
 }
