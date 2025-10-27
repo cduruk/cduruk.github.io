@@ -243,7 +243,7 @@ To add a new static page to OG image generation:
 2. **Reference the image** in your page component (e.g., `src/pages/contact.astro`):
 
 ```astro
-<PageHead slot="head" title="Contact" image="/static/og/contact.png" />
+<PageHead slot="head" title="Contact" ogImage="/static/og/contact.png" />
 ```
 
 3. **Run the build** to generate the image:
@@ -294,10 +294,10 @@ Then run `npm run generate-og-images` to generate the image.
 
 ### Static Pages
 
-For static pages, pass the `image` prop to the `PageHead` component:
+For static pages, pass the `ogImage` prop to the `PageHead` component:
 
 ```astro
-<PageHead slot="head" title="Page Title" image="/static/og/page-name.png" />
+<PageHead slot="head" title="Page Title" ogImage="/static/og/page-name.png" />
 ```
 
 The image path should match the `outputPath` defined in `getStaticPages()` (relative to the `public/` directory).
