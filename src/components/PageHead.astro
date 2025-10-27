@@ -5,17 +5,17 @@ interface Props {
   title?: string
   description?: string
   noindex?: boolean
-  image?: string
+  ogImage?: string
 }
 
 const {
   title = SITE.title,
   description = SITE.description,
   noindex = false,
-  image: imagePath,
+  ogImage,
 } = Astro.props
-const image = imagePath
-  ? new URL(imagePath, Astro.site)
+const image = ogImage
+  ? new URL(ogImage, Astro.site)
   : new URL('/static/1200x630.png', Astro.site)
 ---
 
