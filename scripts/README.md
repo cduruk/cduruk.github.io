@@ -1,11 +1,105 @@
-# Blog Post Scripts
+# Build & Asset Generation Scripts
 
-This directory contains TypeScript scripts for managing blog posts.
+This directory contains TypeScript scripts for managing blog posts and generating website assets.
 
-## Scripts
+## Scripts Overview
 
-- **[new-post.ts](./new-post.ts)**: Interactive CLI for creating new blog posts
-- **[generate-og-images.ts](./generate-og-images.ts)**: Automatically generates Open Graph (social media preview) images for blog posts and static pages
+### Content Management
+- **[new-post.ts](./new-post.ts)**: Interactive CLI for creating new blog posts with auto-generated OG images
+
+### Asset Generation
+- **[generate-favicon.ts](./generate-favicon.ts)**: Generates all favicon sizes (16x16, 32x32, 96x96, 180x180, 192x192, 512x512) and favicon.ico
+- **[generate-logo.ts](./generate-logo.ts)**: Generates the site logo (logo.svg) used in the header
+- **[generate-default-og.ts](./generate-default-og.ts)**: Generates the default fallback OG image (1200x630.png)
+- **[generate-og-images.ts](./generate-og-images.ts)**: Generates Open Graph images for blog posts and static pages
+
+All asset generation scripts use:
+- **Satori**: Converts React/TSX components to SVG
+- **Resvg**: Converts SVG to PNG (for raster images)
+- **Sharp**: Optimizes PNG images
+- **tsx**: TypeScript execution for Node.js
+
+---
+
+# Favicon Generation
+
+The `generate-favicon.ts` script generates all required favicon sizes for the website.
+
+## Usage
+
+```bash
+npx tsx scripts/generate-favicon.ts
+```
+
+## What It Generates
+
+The script creates all favicon files in the `public/` directory:
+
+- `favicon-16x16.png` - Standard browser tab icon (small)
+- `favicon-32x32.png` - Standard browser tab icon (medium)
+- `favicon-96x96.png` - Standard browser tab icon (large)
+- `favicon.ico` - Legacy browser support (generated from 32x32)
+- `apple-touch-icon.png` (180x180) - iOS home screen icon
+- `web-app-manifest-192x192.png` - PWA icon (small)
+- `web-app-manifest-512x512.png` - PWA icon (large)
+
+## Design
+
+All favicons feature the "-1" logo in white text on a red rounded box background, using the Flexoki color scheme (#AF3029). The design uses:
+
+- **Responsive font sizing**: 65% of canvas size (e.g., 16px canvas = 10px font, 512px canvas = 333px font)
+- **Vertical centering**: 5% paddingTop to compensate for text baseline offset
+- **Consistent branding**: Same template across all sizes
+
+## Template
+
+The favicon design is defined in **[src/components/ui/favicon-template.tsx](../src/components/ui/favicon-template.tsx)**. The template accepts a `size` prop and automatically scales the font and padding for optimal appearance at any size.
+
+---
+
+# Logo Generation
+
+The `generate-logo.ts` script generates the site logo used in the header navigation.
+
+## Usage
+
+```bash
+npx tsx scripts/generate-logo.ts
+```
+
+## What It Generates
+
+Creates `public/static/logo.svg` - a 64x64 SVG logo with the "-1" design, used in the site header.
+
+## Design
+
+The logo uses the exact same `FaviconTemplate` component as the favicons, ensuring perfect visual consistency across all branding assets.
+
+---
+
+# Default OG Image Generation
+
+The `generate-default-og.ts` script creates the fallback Open Graph image used when a page doesn't have a custom OG image.
+
+## Usage
+
+```bash
+npx tsx scripts/generate-default-og.ts
+```
+
+## What It Generates
+
+Creates `public/static/1200x630.png` - a 1200x630 PNG image featuring:
+- Large centered "-1" logo (200x200 red box)
+- "Off by One" title
+- "by Can Duruk" subtitle
+- Dark background with Flexoki colors
+
+This image is used as a fallback in `PageHead.astro` and `PostHead.astro` when no custom OG image is provided.
+
+## Template
+
+The default OG image design is defined in **[src/components/ui/default-og-template.tsx](../src/components/ui/default-og-template.tsx)**.
 
 ---
 
