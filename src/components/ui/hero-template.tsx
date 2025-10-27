@@ -5,6 +5,8 @@
  * Uses the Flexoki dark color scheme from global.css.
  */
 
+import React from 'react'
+
 export interface HeroTemplateProps {
   title: string
   description?: string
