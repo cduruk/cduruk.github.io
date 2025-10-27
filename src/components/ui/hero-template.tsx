@@ -102,12 +102,30 @@ export function HeroTemplate({ title, description }: HeroTemplateProps) {
             alignItems: 'flex-end',
           }}
         >
-          {/* Logo */}
-          <div style={{ width: '64px', height: '64px', display: 'flex' }}>
-            <FaviconTemplate size={64} />
+          {/* Logo and site name */}
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+            }}
+          >
+            <div style={{ width: '64px', height: '64px', display: 'flex' }}>
+              <FaviconTemplate size={64} />
+            </div>
+            <div
+              style={{
+                fontSize: '32px',
+                fontWeight: 'bold',
+                color: colors.foreground,
+                letterSpacing: '-0.02em',
+              }}
+            >
+              Off by One
+            </div>
           </div>
 
-          {/* Brand: Off by One */}
+          {/* Brand details */}
           <div
             style={{
               display: 'flex',
@@ -116,16 +134,6 @@ export function HeroTemplate({ title, description }: HeroTemplateProps) {
               gap: '8px',
             }}
           >
-            <div
-              style={{
-                fontSize: '28px',
-                fontWeight: 'bold',
-                color: colors.primary,
-                letterSpacing: '-0.02em',
-              }}
-            >
-              Off by One
-            </div>
             <div
               style={{
                 fontSize: '20px',
