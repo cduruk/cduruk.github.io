@@ -119,17 +119,30 @@ That's right: missing a single character made my site **27% slower**! Unacceptab
 
 Let's get even more technical. Here's what happens when a user clicks a link to your blog post. Again, here's a pathological but albeit real set of requests.
 
-| Step | Action               | Without `/`                                 | Duration   | With `/`                                    | Duration  |
-| ---- | -------------------- | ------------------------------------------- | ---------- | ------------------------------------------- | --------- |
-| 1    | DNS lookup           | github.com                                  | 2ms        | github.com                                  | 2ms       |
-| 2    | TCP handshake        |                                             | 50ms       |                                             | 8ms       |
-| 3    | TLS handshake        |                                             | 17ms       |                                             | 14ms      |
-| 4    | Request              | GET /posts/article                          |            | GET /posts/article/                         |           |
-| 5    | Response             | 301 Redirect                                | 20ms       | <span style="color: #28a745;">200 OK</span> | 34ms      |
-| 6    | Follow redirect      |                                             |            | —                                           | —         |
-| 7    | Request (redirected) | GET /posts/article/                         | 35ms       | —                                           | —         |
-| 8    | Response             | <span style="color: #28a745;">200 OK</span> |            | —                                           | —         |
-|      | **Total**            |                                             | **~124ms** |                                             | **~58ms** |
+Without a trailing slash:
+
+```
+1. DNS lookup: github.com → 2ms
+2. TCP handshake → 50ms
+3. TLS handshake → 17ms
+4. Request: GET /posts/article
+5. Response: 301 Redirect → 20ms
+6. Follow redirect
+7. Request: GET /posts/article/ → 35ms
+8. Response: 200 OK
+Total: ~124ms
+```
+
+And with:
+
+```
+1. DNS lookup: github.com → 2ms
+2. TCP handshake → 8ms
+3. TLS handshake → 14ms
+4. Request: GET /posts/article/
+5. Response: 200 OK → 34ms
+Total: ~58ms
+```
 
 The redirect forces a **full round trip** through the network stack before you can even start downloading the page.
 
