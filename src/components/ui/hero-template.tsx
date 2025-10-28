@@ -108,7 +108,7 @@ export function HeroTemplate({ title, description }: HeroTemplateProps) {
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: '16px',
+              gap: '8px',
             }}
           >
             <div style={{ width: '64px', height: '64px', display: 'flex' }}>
