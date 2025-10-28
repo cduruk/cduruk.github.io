@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest'
 import { readFileSync, readdirSync } from 'fs'
 import { join } from 'path'
-import { glob } from 'glob'
+import { globSync } from 'glob'
 
 describe('Internal blog post links', () => {
   it('should have trailing slashes on all internal /posts/ links', async () => {
     // Find all MDX files in the blog content directory
-    const mdxFiles = glob.sync('src/content/blog/**/*.mdx', {
+    const mdxFiles = globSync('src/content/blog/**/*.mdx', {
       cwd: process.cwd(),
     })
 
