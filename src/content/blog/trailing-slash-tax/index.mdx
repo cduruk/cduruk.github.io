@@ -112,7 +112,7 @@ OK, fine, but how does it look when you re-run the tests over and over again. He
 | Total Time           | **67ms**    | **53ms** | **+14ms** |
 | **Performance Cost** |             |          | **+27%**  |
 
-That's right: missing a single character makes your page **27% slower**.
+That's right: missing a single character made my site **27% slower**! Unacceptable!!
 
 ## The Real-World Cascade
 
@@ -188,7 +188,7 @@ Unfortunately, you can't really fix this via Astro only, as far as I can tell. T
 **For Astro**
 
 ```javascript
-// astro.config.mjs
+// astro.config.ts
 export default defineConfig({
   trailingSlash: 'always',
 })
@@ -202,7 +202,7 @@ Luckily, at the time I've recognized this issue, I didn't have too much content.
 
 I ended up doing two things:
 
-**1. Created a helper function** to wrap all link generation:
+**1. Created a helper function** to wrap (almost) all link generation:
 
 ```typescript
 export function ensureTrailingSlash(href: string): string {
@@ -247,7 +247,7 @@ it('should have trailing slashes on all internal /posts/ links', async () => {
 })
 ```
 
-This test runs on every commit and catches any hardcoded links in my MDX files that are missing trailing slashes. It's already saved me multiple times from accidentally introducing redirects.
+This test runs on every commit and catches any hardcoded links in my MDX files that are missing trailing slashes. It's already saved me multiple times from accidentally introducing redirects, including on this post. Oops! 
 
 ## Why This Annoyed Me
 
