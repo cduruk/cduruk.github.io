@@ -14,9 +14,9 @@ I was browsing my own blog on my phone when I noticed something odd: some pages 
 
 The really surprising part? GitHub Pages felt *faster* than my local development server on those fast pages. That didn't make sense—local development should be instant, even if Astro is doing on-demand rendering.
 
-The font flicker was the clue. Fonts don't flicker unless the browser is making multiple requests. That meant one thing: **redirects**.
+The font flicker was the clue. Fonts don't flicker unless the browser is making multiple requests. What was going on?
 
-Sure enough, every URL without a trailing slash was triggering a 301 redirect. That single missing character was costing me **60% in page load performance**.
+Sure enough, every URL without a trailing slash was triggering a 301 redirect. That single missing character was costing me up to **60% in page load performance**. (More on this later)
 
 ## The Problem
 
@@ -25,7 +25,7 @@ GitHub Pages (and many static site generators) treat directories and files diffe
 - `/posts/my-article` → 301 redirect → `/posts/my-article/`
 - `/posts/my-article/` → 200 OK (direct response)
 
-This isn't new—[Marc Gauthier documented the same issue back in 2016](https://marcgg.com/blog/2016/03/14/github-pages-jekyll/) with Jekyll. But the redirect cost is real, and I wanted to measure it.
+This isn't new. Marc Gauthier documented the [same issue back in 2016](https://marcgg.com/blog/2016/03/14/github-pages-jekyll/) with Jekyll. But the redirect cost is real, and I wanted to [math it out](/posts/interactive-hiring-pipeline-calculator/), as I want to do.
 
 ## The Evidence
 
@@ -107,8 +107,6 @@ Let's measure the actual cost. I created a curl timing format to track each phas
 </Callout>
 
 The overhead varies depending on network conditions—I've seen it range from 10% to 40% across different test runs. CDN caching, geographic distance, and connection quality all play a role.
-
-Very annoyingly, when I ran the tests first, it was around 40 milliseconds difference. But then, when it was time to actually publish the post and I ran the tests again, the difference became around 14 milliseconds. Now, I could have posted the original numbers and I'd be in the right—but it didn't feel right. I love good provocative content as much as the next guy, but hey, you know, you gotta be honest.
 
 ## Why This Annoyed Me
 
@@ -268,6 +266,10 @@ This test runs on every commit and catches any hardcoded links in my MDX files t
 Honestly? I did this because it's fun to optimize things. But I was pleasantly surprised by how much faster the site feels now. I haven't dug too deeply into it, but I suspect that when all your links return proper 200s, the browser gets better at prefetching or caching across resources.
 
 The numbers show a 60% improvement, but the real win is that font flicker is gone and navigation feels instant. Sometimes the small details compound into something noticeable.
+
+## A Note on the Numbers
+
+Very annoyingly, when I ran the tests first, it was around 40 milliseconds difference. But then, when it was time to actually publish the post and I ran the tests again, the difference became around 14 milliseconds. Now, I could have posted the original numbers and I'd be in the right—but it didn't feel right. I love good provocative content as much as the next guy, but hey, you know, you gotta be honest.
 
 ---
 
