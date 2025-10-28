@@ -38,15 +38,17 @@ export function getHeadingMargin(depth: number): string {
 
 /**
  * Ensures that internal links always have a trailing slash.
- * Preserves hash fragments and doesn't add trailing slash before hash.
+ * Preserves query strings and hash fragments in the correct order.
  *
  * @param href - The URL to normalize
- * @returns The URL with a trailing slash (if internal and no hash at the end)
+ * @returns The URL with a trailing slash (if internal and appropriate)
  *
  * @example
  * ensureTrailingSlash('/posts') // => '/posts/'
  * ensureTrailingSlash('/posts/my-post') // => '/posts/my-post/'
  * ensureTrailingSlash('/posts#top') // => '/posts/#top'
+ * ensureTrailingSlash('/search?q=test') // => '/search/?q=test'
+ * ensureTrailingSlash('/search?q=test#results') // => '/search/?q=test#results'
  * ensureTrailingSlash('/posts/') // => '/posts/'
  * ensureTrailingSlash('/rss.xml') // => '/rss.xml' (keeps file extensions as is)
  */
@@ -56,15 +58,47 @@ export function ensureTrailingSlash(href: string): string {
     return href
   }
 
-  // Split the URL into path and hash
-  const [path, hash] = href.split('#')
+  // Split the URL into path and query+hash parts (split on first ?)
+  const queryIndex = href.indexOf('?')
+  const hasQuery = queryIndex !== -1
+
+  let pathPart: string
+  let queryAndHashPart: string | undefined
+
+  if (hasQuery) {
+    pathPart = href.substring(0, queryIndex)
+    queryAndHashPart = href.substring(queryIndex + 1)
+  } else {
+    // No query string, but might have hash
+    const hashIndex = href.indexOf('#')
+    if (hashIndex !== -1) {
+      pathPart = href.substring(0, hashIndex)
+      queryAndHashPart = href.substring(hashIndex + 1)
+    } else {
+      pathPart = href
+      queryAndHashPart = undefined
+    }
+  }
 
   // Don't add trailing slash to files with extensions (like .xml, .pdf, etc.)
   // or if the path already has a trailing slash
-  if (path.endsWith('/') || /\.[a-z]+$/i.test(path)) {
+  if (pathPart.endsWith('/') || /\.[a-z]+$/i.test(pathPart)) {
     return href
   }
 
-  // Add trailing slash to the path, then reattach hash if present
-  return hash ? `${path}/#${hash}` : `${path}/`
+  // Add trailing slash to the path
+  const normalizedPath = `${pathPart}/`
+
+  // Reattach query/hash with appropriate separator (skip if empty)
+  if (!queryAndHashPart || queryAndHashPart === '') {
+    return normalizedPath
+  }
+
+  // If we had a query string, reattach with ?
+  if (hasQuery) {
+    return `${normalizedPath}?${queryAndHashPart}`
+  }
+
+  // Otherwise, it was a hash, reattach with #
+  return `${normalizedPath}#${queryAndHashPart}`
 }
