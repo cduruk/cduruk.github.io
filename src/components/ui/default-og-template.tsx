@@ -39,7 +39,7 @@ export function DefaultOGTemplate({
         padding: '80px',
         background: colors.background,
         color: colors.foreground,
-        fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+        fontFamily: 'Fira Sans, system-ui, -apple-system, sans-serif',
         alignItems: 'center',
         justifyContent: 'center',
         gap: '48px',
