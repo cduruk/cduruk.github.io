@@ -4,14 +4,18 @@ description: 'A deep dive into how GitHub Pages handles trailing slashes, the hi
 date: 2025-10-28
 tags: ['web-performance', 'github-pages']
 authors: ['cduruk']
-draft: true
+draft: false
 ---
 
 import Callout from '@/components/Callout.astro'
 
-When I deployed this blog to GitHub Pages, I noticed something odd: pages were loading slower than they should. The culprit? Missing trailing slashes.
+I was browsing my own blog on my phone when I noticed something odd: some pages loaded instantly, while others had a barely perceptible delay. Even stranger, those slower pages had a subtle font flicker as they loaded.
 
-Every URL without a trailing slash was triggering a 301 redirect. That single character—or lack thereof—was costing me **60% in page load performance**.
+The really surprising part? GitHub Pages felt *faster* than my local development server on those fast pages. That didn't make sense—local development should be instant, even if Astro is doing on-demand rendering.
+
+The font flicker was the clue. Fonts don't flicker unless the browser is making multiple requests. That meant one thing: **redirects**.
+
+Sure enough, every URL without a trailing slash was triggering a 301 redirect. That single missing character was costing me **60% in page load performance**.
 
 ## The Problem
 
@@ -105,13 +109,13 @@ Let's measure the actual cost. I created a curl timing format to track each phas
 
 "38 milliseconds? That's nothing!" you might think. But consider:
 
-1. **Compounding Effect**: Every resource redirect adds up. If your HTML redirects, and some of your assets redirect, you're looking at hundreds of milliseconds.
+1. **User Perception**: Research shows users perceive delays over 100ms. One redirect puts you in that territory. More importantly, redirects cause **visible symptoms** like font flickering as the browser reloads resources—that's what tipped me off in the first place.
 
-2. **Mobile Networks**: These tests were from a fast connection in New York. On 4G or 3G, redirects can take 200-500ms each.
+2. **Compounding Effect**: Every resource redirect adds up. If your HTML redirects, and some of your assets redirect, you're looking at hundreds of milliseconds.
 
-3. **Geographic Distance**: The further you are from GitHub's CDN edge, the more each redirect costs.
+3. **Mobile Networks**: These tests were from a fast connection in New York. On 4G or 3G, redirects can take 200-500ms each.
 
-4. **User Perception**: Research shows users perceive delays over 100ms. One redirect puts you in that territory.
+4. **Geographic Distance**: The further you are from GitHub's CDN edge, the more each redirect costs.
 
 ## The Real-World Cascade
 
