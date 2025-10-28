@@ -108,6 +108,8 @@ Let's measure the actual cost. I created a curl timing format to track each phas
 
 The overhead varies depending on network conditions—I've seen it range from 10% to 40% across different test runs. CDN caching, geographic distance, and connection quality all play a role.
 
+Very annoyingly, when I ran the tests first, it was around 40 milliseconds difference. But then, when it was time to actually publish the post and I ran the tests again, the difference became around 14 milliseconds. Now, I could have posted the original numbers and I'd be in the right—but it didn't feel right. I love good provocative content as much as the next guy, but hey, you know, you gotta be honest.
+
 ## Why This Annoyed Me
 
 I was kind of surprised that a mere 14ms average felt so different. Here's my guess on why it seemed to matter that much. First of all, we know from cog sci research that humans can detect delays up to 100ms. 14ms isn't much on its own, but when you're navigating between multiple pages, it adds up. And during worse network conditions (when I hit 40% overhead), you're definitely crossing into perceptible territory.
