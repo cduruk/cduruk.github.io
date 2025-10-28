@@ -105,15 +105,13 @@ Let's measure the actual cost. I created a curl timing format to track each phas
   That's right: missing a single character makes your page **60% slower**.
 </Callout>
 
-## Why This Matters
+## Why This Annoyed Me
 
-You might be thinking "38 milliseconds? That's nothing!" And you'd be right—if we were just talking about raw numbers.
+I was kind of surprised that a mere 38ms felt so different. Here's my guess on why it seemed to matter that much. First of all, we know from cog sci research that humans can detect delays up to 100ms. 38ms isn't that slow, but it's almost half of that 100ms budget. And it's very likely that with that 40ms, we went from imperceptible to perceptible delay.
 
-But that's not what users experience. What they experience is that font flicker. That subtle delay. Research shows people perceive delays over 100ms, and one redirect puts you right there. More importantly, redirects cause visible symptoms as the browser makes multiple requests and reloads resources.
+Also, these tests were from a fast connection in New York. On 4G or 3G? You're looking at 200-500ms per redirect. And if you're far from GitHub's CDN edge, that cost multiplies.
 
-These tests were from a fast connection in New York. On 4G or 3G? You're looking at 200-500ms per redirect. And if you're far from GitHub's CDN edge, that cost multiplies. Every resource that redirects compounds the problem—your HTML redirects, some assets redirect, and suddenly you're talking hundreds of milliseconds.
-
-The numbers tell one story. The font flicker tells the real one.
+But mostly, it was that font flicker. Once you see it, you can't unsee it.
 
 ## The Real-World Cascade
 
