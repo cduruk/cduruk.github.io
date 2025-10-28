@@ -7,8 +7,8 @@ export const SITE: Site = {
   href: 'https://justoffbyone.com',
   author: 'cduruk',
   locale: 'en-US',
-  featuredPostCount: 2,
-  postsPerPage: 3,
+  featuredPostCount: 10,
+  postsPerPage: 5,
 }
 
 export const NAV_LINKS: SocialLink[] = [
