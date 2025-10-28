@@ -56,7 +56,7 @@ echo ""
 echo ""
 
 # Multiple runs for averaging
-echo "Performance comparison (5 runs each):"
+echo "Performance comparison (20 runs each):"
 echo "==========================================================="
 echo ""
 
@@ -64,7 +64,7 @@ declare -a times_without=()
 declare -a times_with=()
 
 echo -n "Running tests"
-for i in {1..5}; do
+for i in {1..20}; do
     echo -n "."
     time_without=$(curl -L -w "%{time_total}" -o /dev/null -s "$URL_WITHOUT_SLASH")
     times_without+=($time_without)
