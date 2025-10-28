@@ -262,11 +262,9 @@ This test runs on every commit and catches any hardcoded links in my MDX files t
 
 ## The Takeaway
 
-Every millisecond counts. A single missing character—a trailing slash—can cost you significant performance. When you're building for the web, these details matter.
+Honestly? I did this because it's fun to optimize things. But I was pleasantly surprised by how much faster the site feels now. I haven't dug too deeply into it, but I suspect that when all your links return proper 200s, the browser gets better at prefetching or caching across resources.
 
-**Check your site. Test your URLs. Add those slashes.**
-
-Your users will thank you, even if they never notice why your site feels snappier.
+The numbers show a 60% improvement, but the real win is that font flicker is gone and navigation feels instant. Sometimes the small details compound into something noticeable.
 
 ---
 
