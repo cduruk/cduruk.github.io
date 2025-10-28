@@ -20,6 +20,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   site: 'https://justoffbyone.com',
+  trailingSlash: 'always',
   integrations: [
     expressiveCode({
       themes: ['github-light', 'github-dark'],
