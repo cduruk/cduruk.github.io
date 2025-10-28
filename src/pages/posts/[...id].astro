@@ -193,21 +193,6 @@ const tocSections = await getTOCSections(currentPostId)
             )
           }
         </div>
-        <div class="flex flex-wrap justify-center gap-2">
-          {
-            post.data.tags &&
-              post.data.tags.length > 0 &&
-              post.data.tags.map((tag) => (
-                <a
-                  href={`/tags/${tag}`}
-                  class={badgeVariants({ variant: 'muted' })}
-                >
-                  <Icon name="lucide:hash" class="size-3" />
-                  {tag}
-                </a>
-              ))
-          }
-        </div>
       </div>
     </section>
 
@@ -231,6 +216,22 @@ const tocSections = await getTOCSections(currentPostId)
         />
       )
     }
+
+    <div class="col-start-2 -mt-4 flex flex-wrap justify-start gap-2">
+      {
+        post.data.tags &&
+          post.data.tags.length > 0 &&
+          post.data.tags.map((tag) => (
+            <a
+              href={`/tags/${tag}`}
+              class={badgeVariants({ variant: 'muted' })}
+            >
+              <Icon name="lucide:hash" class="size-3" />
+              {tag}
+            </a>
+          ))
+      }
+    </div>
 
     <PostNavigation
       newerPost={navigation.newer}
