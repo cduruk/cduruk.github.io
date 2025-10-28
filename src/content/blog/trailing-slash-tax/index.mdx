@@ -10,6 +10,14 @@ draft: false
 
 import Callout from '@/components/Callout.astro'
 
+I was browsing my own blog on my phone when I noticed something odd: some pages loaded instantly, while others had a barely perceptible delay. Even stranger, those slower pages had a subtle font flicker as they loaded. Annoying!
+
+Being the geriatric millennial I am, I knew I had to test this on my computer. And then, things got weirder. My site, hosted on Github Pages felt _faster_ than my local development server on those fast pages. That didn't make sense—local development should be instant, even if Astro is doing on-demand rendering.
+
+The font flicker was the clue. Fonts don't flicker unless the browser is making multiple requests. What was going on?
+
+Sure enough, every URL without a trailing slash was triggering a 301 redirect. That single missing character was costing me up to **60% in page load performance** during some test runs. I fixed it and wanted to share how.
+
 ## The Problem
 
 GitHub Pages seems to treat directories and files differently:
@@ -246,16 +254,6 @@ it('should have trailing slashes on all internal /posts/ links', async () => {
 ```
 
 This test runs on every commit and catches any hardcoded links in my MDX files that are missing trailing slashes. It's saved me multiple times from accidentally introducing redirects.
-
-## How I Discovered This
-
-I was browsing my own blog on my phone when I noticed something odd: some pages loaded instantly, while others had a barely perceptible delay. Even stranger, those slower pages had a subtle font flicker as they loaded. Annoying!
-
-Being the geriatric millennial I am, I knew I had to test this on my computer. And then, things got weirder. My site, hosted on Github Pages felt _faster_ than my local development server on those fast pages. That didn't make sense—local development should be instant, even if Astro is doing on-demand rendering.
-
-The font flicker was the clue. Fonts don't flicker unless the browser is making multiple requests. What was going on?
-
-Sure enough, every URL without a trailing slash was triggering a 301 redirect. That single missing character was costing me up to **60% in page load performance** during some test runs. I fixed it and wanted to share how.
 
 ## Why This Annoyed Me
 
