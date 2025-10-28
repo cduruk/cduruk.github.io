@@ -48,7 +48,7 @@ export function FaviconTemplate({ size = 100 }: FaviconTemplateProps) {
           fontWeight: 'bold',
           color: colors.text,
           lineHeight: '1',
-          fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+          fontFamily: 'Fira Sans, system-ui, -apple-system, sans-serif',
         }}
       >
         -1

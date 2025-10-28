@@ -35,11 +35,11 @@ async function generateFaviconSize(size: number, outputPath: string): Promise<vo
     height: size,
     fonts: [
       {
-        name: 'Inter',
+        name: 'Fira Sans',
         data: await readFile(
           join(
             __dirname,
-            '../node_modules/@fontsource/inter/files/inter-latin-700-normal.woff',
+            '../node_modules/@fontsource/fira-sans/files/fira-sans-latin-700-normal.woff',
           ),
         ),
         weight: 700,

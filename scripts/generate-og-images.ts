@@ -150,22 +150,22 @@ export async function generateImage(post: BlogPost): Promise<void> {
     height: OUTPUT_HEIGHT,
     fonts: [
       {
-        name: 'Inter',
+        name: 'Fira Sans',
         data: await readFile(
           join(
             __dirname,
-            '../node_modules/@fontsource/inter/files/inter-latin-400-normal.woff',
+            '../node_modules/@fontsource/fira-sans/files/fira-sans-latin-400-normal.woff',
           ),
         ),
         weight: 400,
         style: 'normal',
       },
       {
-        name: 'Inter',
+        name: 'Fira Sans',
         data: await readFile(
           join(
             __dirname,
-            '../node_modules/@fontsource/inter/files/inter-latin-700-normal.woff',
+            '../node_modules/@fontsource/fira-sans/files/fira-sans-latin-700-normal.woff',
           ),
         ),
         weight: 700,
@@ -237,22 +237,22 @@ async function generateStaticPageImage(page: StaticPage): Promise<void> {
     height: OUTPUT_HEIGHT,
     fonts: [
       {
-        name: 'Inter',
+        name: 'Fira Sans',
         data: await readFile(
           join(
             __dirname,
-            '../node_modules/@fontsource/inter/files/inter-latin-400-normal.woff',
+            '../node_modules/@fontsource/fira-sans/files/fira-sans-latin-400-normal.woff',
           ),
         ),
         weight: 400,
         style: 'normal',
       },
       {
-        name: 'Inter',
+        name: 'Fira Sans',
         data: await readFile(
           join(
             __dirname,
-            '../node_modules/@fontsource/inter/files/inter-latin-700-normal.woff',
+            '../node_modules/@fontsource/fira-sans/files/fira-sans-latin-700-normal.woff',
           ),
         ),
         weight: 700,

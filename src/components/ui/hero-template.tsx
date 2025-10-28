@@ -38,7 +38,7 @@ export function HeroTemplate({ title, description }: HeroTemplateProps) {
         padding: '80px',
         background: colors.background,
         color: colors.foreground,
-        fontFamily: 'Inter, system-ui, -apple-system, sans-serif',
+        fontFamily: 'Fira Sans, system-ui, -apple-system, sans-serif',
         justifyContent: 'space-between',
       }}
     >
