@@ -47,6 +47,17 @@ describe('ensureTrailingSlash', () => {
     { input: '/posts#', expected: '/posts/', description: 'handles path with empty hash fragment' },
     { input: '/#about', expected: '/#about', description: 'handles root with hash' },
 
+    // Query string handling
+    { input: '/search?q=test', expected: '/search/?q=test', description: 'adds trailing slash before query string' },
+    { input: '/search?q=test#results', expected: '/search/?q=test#results', description: 'adds trailing slash before query string with hash' },
+    { input: '/search?q=test&sort=date', expected: '/search/?q=test&sort=date', description: 'handles multiple query parameters' },
+    { input: '/search/?q=test', expected: '/search/?q=test', description: 'preserves existing trailing slash with query' },
+    { input: '/api/posts?limit=10&offset=0', expected: '/api/posts/?limit=10&offset=0', description: 'handles nested path with query params' },
+    { input: '/?search=something', expected: '/?search=something', description: 'handles root path with query string' },
+    { input: '/search?', expected: '/search/', description: 'handles path with empty query string' },
+    { input: '/rss.xml?format=pretty', expected: '/rss.xml?format=pretty', description: 'preserves file extension with query params' },
+    { input: '/file.pdf?download=true', expected: '/file.pdf?download=true', description: 'preserves PDF with download query' },
+
     // mailto and other protocols
     { input: 'mailto:test@example.com', expected: 'mailto:test@example.com', description: 'preserves mailto links' },
   ])('$description', ({ input, expected }) => {
