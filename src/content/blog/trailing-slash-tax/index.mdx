@@ -10,26 +10,18 @@ draft: false
 
 import Callout from '@/components/Callout.astro'
 
-I was browsing my own blog on my phone when I noticed something odd: some pages loaded instantly, while others had a barely perceptible delay. Even stranger, those slower pages had a subtle font flicker as they loaded.
-
-The really surprising part? GitHub Pages felt _faster_ than my local development server on those fast pages. That didn't make sense—local development should be instant, even if Astro is doing on-demand rendering.
-
-The font flicker was the clue. Fonts don't flicker unless the browser is making multiple requests. What was going on?
-
-Sure enough, every URL without a trailing slash was triggering a 301 redirect. That single missing character was costing me up to **60% in page load performance**. (More on this later)
-
 ## The Problem
 
-GitHub Pages (and many static site generators) treat directories and files differently:
+GitHub Pages seems to treat directories and files differently:
 
 - `/posts/my-article` → 301 redirect → `/posts/my-article/`
 - `/posts/my-article/` → 200 OK (direct response)
 
-This isn't new. Marc Gauthier documented the [same issue back in 2016](https://marcgg.com/blog/2016/03/14/github-pages-jekyll/) with Jekyll. But the redirect cost is real, and I wanted to [math it out](/posts/interactive-hiring-pipeline-calculator/), as I want to do.
+This isn't new. Everyone has hates / loves trailing slashes. It's one of those weird quirks of working on the web. And of course, it's a thing on Github Pages you need to know about too. Others documented the [same issue back in 2016](https://marcgg.com/blog/2016/03/14/github-pages-jekyll/) with Jekyll. So, how do we [put some numbers](/posts/interactive-hiring-pipeline-calculator/) on this issue? `curl` to the rescue.
 
 ## The Evidence
 
-I ran timing tests against this very site using `curl`. Here's what happens when you request a URL without a trailing slash:
+This is my [post](/posts/measuring-engineering-productivity/) on `curl` without a trailing slash.
 
 ```bash
 $ curl -I https://justoffbyone.com/posts/measuring-engineering-productivity
@@ -53,11 +45,11 @@ cache-control: max-age=600
 content-length: 70127
 ```
 
-The first request gets a `301 Moved Permanently` response, forcing the browser to make a second request. The second request goes straight to the content.
+The first request gets a `301 Moved Permanently` response, forcing the browser to make a second request. The second request goes straight to the content. Getting closer!
 
 ## The Performance Impact
 
-Let's measure the actual cost. I created a curl timing format to track each phase of the request:
+Let's measure the actual cost. I (and Claude) created a curl timing format to track each phase of the request and ran a few tests.
 
 <Callout variant="theorem">
   $$
@@ -97,30 +89,19 @@ Let's measure the actual cost. I created a curl timing format to track each phas
 
 ### The Results (50-Run Average)
 
-| Metric               | Without `/` | With `/` | Overhead   |
-| -------------------- | ----------- | -------- | ---------- |
-| Time to First Byte   | 89ms        | 34ms     | +55ms      |
-| Total Time           | **67ms**    | **53ms** | **+14ms**  |
-| Redirects            | 1           | 0        | +1 request |
-| **Performance Cost** |             |          | **+27%**   |
+| Metric               | Without `/` | With `/` | Overhead  |
+| -------------------- | ----------- | -------- | --------- |
+| Time to First Byte   | 89ms        | 34ms     | +55ms     |
+| Total Time           | **67ms**    | **53ms** | **+14ms** |
+| **Performance Cost** |             |          | **+27%**  |
 
 <Callout variant="tip">
   That's right: missing a single character makes your page **27% slower**.
 </Callout>
 
-The overhead varies depending on network conditions—I've seen it range from 10% to 40% across different test runs. CDN caching, geographic distance, and connection quality all play a role.
-
-## Why This Annoyed Me
-
-I was kind of surprised that a mere 14ms average felt so different. Here's my guess on why it seemed to matter that much. First of all, we know from cog sci research that humans can detect delays up to 100ms. 14ms isn't much on its own, but when you're navigating between multiple pages, it adds up. And during worse network conditions (when I hit 40% overhead), you're definitely crossing into perceptible territory.
-
-Also, these tests were from a fast connection in New York. On 4G or 3G? You're looking at 200-500ms per redirect. And if you're far from GitHub's CDN edge, that cost multiplies.
-
-But mostly, it was that font flicker. Once you see it, you can't unsee it.
-
 ## The Real-World Cascade
 
-Here's what happens when a user clicks a link to your blog post:
+Let's get technical. Here's what happens when a user clicks a link to your blog post. This is an actual request, though admittedly a bit of a pathological case.
 
 ### Without Trailing Slash
 
@@ -266,11 +247,29 @@ it('should have trailing slashes on all internal /posts/ links', async () => {
 
 This test runs on every commit and catches any hardcoded links in my MDX files that are missing trailing slashes. It's saved me multiple times from accidentally introducing redirects.
 
+## How I Discovered This
+
+I was browsing my own blog on my phone when I noticed something odd: some pages loaded instantly, while others had a barely perceptible delay. Even stranger, those slower pages had a subtle font flicker as they loaded. Annoying!
+
+Being the geriatric millennial I am, I knew I had to test this on my computer. And then, things got weirder. My site, hosted on Github Pages felt _faster_ than my local development server on those fast pages. That didn't make sense—local development should be instant, even if Astro is doing on-demand rendering.
+
+The font flicker was the clue. Fonts don't flicker unless the browser is making multiple requests. What was going on?
+
+Sure enough, every URL without a trailing slash was triggering a 301 redirect. That single missing character was costing me up to **60% in page load performance** during some test runs. I fixed it and wanted to share how.
+
+## Why This Annoyed Me
+
+I was kind of surprised that a mere 14ms average felt so different. Here's my guess on why it seemed to matter that much. First of all, we know from cognitive science research that humans can detect delays up to 100ms. 14ms isn't much on its own, but when you're navigating between multiple pages, it adds up. And during worse network conditions (when I hit 40% overhead), you're definitely crossing into perceptible territory, if that difference tips you from 80ms to 120ms.
+
+Also, these tests were from a fast connection in New York on a fiber connection on a high-end wifi router. On 4G or 3G? You're looking at 200-500ms per redirect. And if you're far from GitHub's CDN edge, that cost multiplies.
+
+But mostly, it was that font flicker. Once you see it, you can't unsee it.
+
 ## The Takeaway
 
 Honestly? I did this because it's fun to optimize things. But I was pleasantly surprised by how much faster the site feels now. I haven't dug too deeply into it, but I suspect that when all your links return proper 200s, the browser gets better at prefetching or caching across resources.
 
-The numbers show a 60% improvement, but the real win is that font flicker is gone and navigation feels instant. Sometimes the small details compound into something noticeable.
+The numbers show up to a 60% improvement in some test runs, but the real win is that font flicker is gone and navigation feels instant. Sometimes the small details compound into something noticeable.
 
 ## A Note on the Numbers
 
