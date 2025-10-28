@@ -12,7 +12,7 @@ import Callout from '@/components/Callout.astro'
 
 I was browsing my own blog on my phone when I noticed something odd: some pages loaded instantly, while others had a barely perceptible delay. Even stranger, those slower pages had a subtle font flicker as they loaded.
 
-The really surprising part? GitHub Pages felt *faster* than my local development server on those fast pages. That didn't make sense—local development should be instant, even if Astro is doing on-demand rendering.
+The really surprising part? GitHub Pages felt _faster_ than my local development server on those fast pages. That didn't make sense—local development should be instant, even if Astro is doing on-demand rendering.
 
 The font flicker was the clue. Fonts don't flicker unless the browser is making multiple requests. What was going on?
 
@@ -68,6 +68,7 @@ Let's measure the actual cost. I created a curl timing format to track each phas
 ### Detailed Timing Breakdown
 
 **Without Trailing Slash (with redirect):**
+
 ```
     time_namelookup:  0.002011s
        time_connect:  0.052185s
@@ -81,6 +82,7 @@ Let's measure the actual cost. I created a curl timing format to track each phas
 ```
 
 **With Trailing Slash (direct):**
+
 ```
     time_namelookup:  0.001993s
        time_connect:  0.008183s
@@ -95,12 +97,12 @@ Let's measure the actual cost. I created a curl timing format to track each phas
 
 ### The Results (50-Run Average)
 
-| Metric | Without `/` | With `/` | Overhead |
-|--------|-------------|----------|----------|
-| Time to First Byte | 89ms | 34ms | +55ms |
-| Total Time | **67ms** | **53ms** | **+14ms** |
-| Redirects | 1 | 0 | +1 request |
-| **Performance Cost** | | | **+27%** |
+| Metric               | Without `/` | With `/` | Overhead   |
+| -------------------- | ----------- | -------- | ---------- |
+| Time to First Byte   | 89ms        | 34ms     | +55ms      |
+| Total Time           | **67ms**    | **53ms** | **+14ms**  |
+| Redirects            | 1           | 0        | +1 request |
+| **Performance Cost** |             |          | **+27%**   |
 
 <Callout variant="tip">
   That's right: missing a single character makes your page **27% slower**.
@@ -121,6 +123,7 @@ But mostly, it was that font flicker. Once you see it, you can't unsee it.
 Here's what happens when a user clicks a link to your blog post:
 
 ### Without Trailing Slash
+
 ```
 1. DNS lookup: github.com → 2ms
 2. TCP handshake → 50ms
@@ -134,6 +137,7 @@ Total: ~124ms
 ```
 
 ### With Trailing Slash
+
 ```
 1. DNS lookup: github.com → 2ms
 2. TCP handshake → 8ms
@@ -198,13 +202,14 @@ The `-L` flag tells curl to follow redirects, and the `-w` flag outputs timing i
 
 ## Preventing the Problem
 
-The solution isn't about "fixing" GitHub Pages—it will always redirect URLs without trailing slashes. The goal is to ensure your code never generates those incorrect URLs in the first place.
+You can't really fix this via Astro only, as far as I can tell. The Astro config isn't about "fixing" GitHub Pages—it will always redirect URLs without trailing slashes, which I assume due to their web server configuration. The goal is to ensure your code never generates those incorrect URLs in the first place.
 
 **For Astro (this blog):**
+
 ```javascript
 // astro.config.mjs
 export default defineConfig({
-  trailingSlash: 'always'
+  trailingSlash: 'always',
 })
 ```
 
@@ -273,4 +278,4 @@ Very annoyingly, when I ran the tests first, it was around 40 milliseconds diffe
 
 ---
 
-*All tests were conducted from New York (EWR) against justoffbyone.com hosted on GitHub Pages. Results will vary based on geography, network conditions, and hosting setup.*
+_All tests were conducted from New York (EWR) against justoffbyone.com hosted on GitHub Pages. Results will vary based on geography, network conditions, and hosting setup._
