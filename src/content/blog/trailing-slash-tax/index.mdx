@@ -45,8 +45,6 @@ GitHub Pages seems to treat directories and files differently:
 
 This isn't new. Everyone has hates / loves trailing slashes. It's one of those weird quirks of working on the web. And of course, it's a thing on Github Pages you need to know about too. Others documented the [same issue back in 2016](https://marcgg.com/blog/2016/03/14/github-pages-jekyll/) with Jekyll. So, how do we [put some numbers](/posts/interactive-hiring-pipeline-calculator/) on this issue? `curl` to the rescue!
 
-## The Evidence
-
 This is my [post](/posts/measuring-engineering-productivity/) on `curl` without a trailing slash.
 
 ```bash
@@ -250,15 +248,13 @@ it('should have trailing slashes on all internal /posts/ links', async () => {
 
 This test runs on every commit and catches any hardcoded links in my MDX files that are missing trailing slashes. It's already saved me multiple times from accidentally introducing redirects, including on this post. Oops!
 
-## Why This Annoyed Me
+## Ending Thoughts
 
 I was kind of surprised that a mere 14ms average felt so different. Here's my guess on why it seemed to matter that much. First of all, we know from cognitive science research that humans can detect delays up to 100ms. 14ms isn't much on its own, but when you're navigating between multiple pages, it adds up. And during worse network conditions (like when I hit 40%, even 60% overhead), you're definitely crossing into perceptible territory. Especially if that difference tips you from 80ms to 120ms.
 
 Also, these tests were from a fast connection in New York on a fiber connection on a high-end wifi router. On 4G or 3G? You're looking at 200-500ms per redirect. And if you're far from GitHub's CDN edge, that cost multiplies.
 
 But mostly, it was that font flicker. Once you see it, you can't unsee it.
-
-## The Takeaway
 
 Honestly? I did this because it's fun to optimize things. But I was pleasantly surprised by how much faster the site feels now. I haven't dug too deeply into it, but I suspect that when all your links return proper 200s, the browser gets better at prefetching or caching across resources.
 
@@ -274,6 +270,8 @@ Here's the complete script I wrote with some help from Claude to test trailing s
 
 ```bash
 #!/bin/bash
+
+# With some edits via Claude Code.
 
 set -e
 
