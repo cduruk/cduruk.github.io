@@ -195,9 +195,9 @@ echo "Performance cost:       ${percentage}% slower"
 
 The `-L` flag tells curl to follow redirects, and the `-w` flag outputs timing information. By running multiple iterations, we get a more accurate average that accounts for network variability.
 
-## The Fix
+## Preventing the Problem
 
-The solution for static sites is straightforward: always generate URLs with trailing slashes.
+The solution isn't about "fixing" GitHub Pages—it will always redirect URLs without trailing slashes. The goal is to ensure your code never generates those incorrect URLs in the first place.
 
 **For Astro (this blog):**
 ```javascript
@@ -207,7 +207,7 @@ export default defineConfig({
 })
 ```
 
-This ensures all generated URLs include trailing slashes by default.
+This doesn't eliminate redirects in production, but it ensures consistency between development and production. More importantly, in development Astro will show you a warning page when you request a URL without a trailing slash, catching the issue before it ships.
 
 ### Auditing Existing Links
 
