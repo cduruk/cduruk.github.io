@@ -300,14 +300,14 @@ The template uses a React-like component structure. You can modify:
 
 ### Changing Fonts
 
-Currently uses Inter font. To use a different font:
+Currently uses Fira Sans font. To use a different font:
 
 1. Install the font package:
    ```bash
    npm install --save-dev @fontsource/your-font
    ```
 
-2. Update the fonts array in the script:
+2. Update the fonts array in the generation scripts:
    ```js
    fonts: [
      {
@@ -317,6 +317,11 @@ Currently uses Inter font. To use a different font:
        style: 'normal',
      },
    ]
+   ```
+
+3. Update the fontFamily in the template components:
+   ```tsx
+   fontFamily: 'Your Font, system-ui, -apple-system, sans-serif'
    ```
 
 ## Adding Static Pages
@@ -414,10 +419,10 @@ Static page OG images are always regenerated during the build process to ensure 
 
 ### "No fonts are loaded" error
 
-Make sure `@fontsource/inter` is installed:
+Make sure `@fontsource/fira-sans` is installed:
 
 ```bash
-npm install --save-dev @fontsource/inter
+npm install @fontsource/fira-sans
 ```
 
 ### OG images not appearing in social previews
