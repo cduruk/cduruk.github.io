@@ -101,8 +101,6 @@ and without
            num_redirects:  1
 ```
 
-### The Results (50-Run Average)
-
 OK, fine, but how does it look when you re-run the tests over and over again. Here's me running the above test 50 times:
 
 | Metric               | Without `/` | With `/` | Overhead  |
@@ -194,8 +192,6 @@ export default defineConfig({
 ```
 
 So, if we can't eliminate redirects in production on Github Pages, our best option is to not cause them at all in the first place. That means, we need to make sure we always use links with trailing slashes.
-
-## Actually Fixing the Problem
 
 Luckily, at the time I've recognized this issue, I didn't have too much content. I also enjoyed the opportunity to go deeper into the Astro code and familiarize myself with how it works.
 
