@@ -226,7 +226,7 @@ export function ensureTrailingSlash(href: string): string {
 }
 ```
 
-Now every navigation component uses this function, ensuring all generated links have trailing slashes. It handles edge cases like query strings (`/search/?q=test`), hash fragments (`/posts/#top`), and file extensions (`/rss.xml`). Using Claude and Codex helped making the changes quite fun and easy.
+Now every navigation component uses this function, ensuring all generated links have trailing slashes. It handles edge cases like query strings (`/search/?q=test`), hash fragments (`/#top`), and file extensions (`/rss.xml`). Using Claude and Codex helped making the changes quite fun and easy.
 
 **2. Added an automated test** to catch hardcoded links in blog posts, like this one:
 
