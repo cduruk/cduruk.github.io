@@ -107,15 +107,13 @@ Let's measure the actual cost. I created a curl timing format to track each phas
 
 ## Why This Matters
 
-"38 milliseconds? That's nothing!" you might think. But consider:
+You might be thinking "38 milliseconds? That's nothing!" And you'd be right—if we were just talking about raw numbers.
 
-1. **User Perception**: Research shows users perceive delays over 100ms. One redirect puts you in that territory. More importantly, redirects cause **visible symptoms** like font flickering as the browser reloads resources—that's what tipped me off in the first place.
+But that's not what users experience. What they experience is that font flicker. That subtle delay. Research shows people perceive delays over 100ms, and one redirect puts you right there. More importantly, redirects cause visible symptoms as the browser makes multiple requests and reloads resources.
 
-2. **Compounding Effect**: Every resource redirect adds up. If your HTML redirects, and some of your assets redirect, you're looking at hundreds of milliseconds.
+These tests were from a fast connection in New York. On 4G or 3G? You're looking at 200-500ms per redirect. And if you're far from GitHub's CDN edge, that cost multiplies. Every resource that redirects compounds the problem—your HTML redirects, some assets redirect, and suddenly you're talking hundreds of milliseconds.
 
-3. **Mobile Networks**: These tests were from a fast connection in New York. On 4G or 3G, redirects can take 200-500ms each.
-
-4. **Geographic Distance**: The further you are from GitHub's CDN edge, the more each redirect costs.
+The numbers tell one story. The font flicker tells the real one.
 
 ## The Real-World Cascade
 
