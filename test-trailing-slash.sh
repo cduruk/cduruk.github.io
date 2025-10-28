@@ -79,9 +79,9 @@ echo ""
 avg_without=$(printf '%s\n' "${times_without[@]}" | awk '{sum+=$1} END {print sum/NR}')
 avg_with=$(printf '%s\n' "${times_with[@]}" | awk '{sum+=$1} END {print sum/NR}')
 
-# Calculate difference
-difference=$(echo "$avg_without - $avg_with" | bc)
-percentage=$(echo "scale=2; ($difference / $avg_with) * 100" | bc)
+# Calculate difference (set scale to preserve fractional seconds)
+difference=$(echo "scale=4; $avg_without - $avg_with" | bc)
+percentage=$(echo "scale=1; ($difference / $avg_with) * 100" | bc)
 
 echo "Average time WITHOUT trailing slash: ${avg_without}s"
 echo "Average time WITH trailing slash:    ${avg_with}s"

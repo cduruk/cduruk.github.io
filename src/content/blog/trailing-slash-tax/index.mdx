@@ -184,7 +184,7 @@ done
 # Calculate averages and difference
 avg_without=$(printf '%s\n' "${times_without[@]}" | awk '{sum+=$1} END {print sum/NR}')
 avg_with=$(printf '%s\n' "${times_with[@]}" | awk '{sum+=$1} END {print sum/NR}')
-difference=$(echo "$avg_without - $avg_with" | bc)
+difference=$(echo "scale=4; $avg_without - $avg_with" | bc)
 percentage=$(echo "scale=1; ($difference / $avg_with) * 100" | bc)
 
 echo "WITHOUT trailing slash: ${avg_without}s"
