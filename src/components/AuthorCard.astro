@@ -1,7 +1,7 @@
 ---
 import Link from '@/components/Link.astro'
 import AvatarComponent from '@/components/ui/avatar'
-import { cn } from '@/lib/utils'
+import { cn, ensureTrailingSlash } from '@/lib/utils'
 import type { SocialLink } from '@/types'
 import type { CollectionEntry } from 'astro:content'
 import SocialIcons from './SocialIcons.astro'
@@ -13,7 +13,8 @@ interface Props {
 const { author } = Astro.props
 const { name, avatar, bio, pronouns } = author.data
 const currentPath = Astro.url.pathname
-const isAuthorPage = currentPath === `/authors/${author.id}`
+const authorPath = ensureTrailingSlash(`/authors/${author.id}`)
+const isAuthorPage = currentPath === authorPath
 
 const socialLinks: SocialLink[] = [
   author.data.website && { href: author.data.website, label: 'Website' },
@@ -29,7 +30,7 @@ const socialLinks: SocialLink[] = [
 >
   <div class="flex flex-wrap gap-4">
     <Link
-      href={`/authors/${author.id}`}
+      href={authorPath}
       class={cn('block', isAuthorPage && 'pointer-events-none')}
     >
       <AvatarComponent

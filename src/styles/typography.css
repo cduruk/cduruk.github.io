@@ -17,7 +17,7 @@
   h4,
   h5,
   h6 {
-    @apply text-balance font-sans font-extrabold italic;
+    @apply font-sans font-extrabold text-balance italic;
   }
 
   p {
@@ -93,7 +93,7 @@
     }
 
     :where(a):not(:where(.not-prose, .not-prose *)) {
-      @apply text-primary dark:text-[var(--highlight)] decoration-primary/30 dark:decoration-[var(--highlight)]/30 hover:decoration-primary dark:hover:decoration-primary font-medium break-words underline underline-offset-[3px] transition-colors;
+      @apply text-primary decoration-primary/30 hover:decoration-primary dark:hover:decoration-primary font-medium break-words underline underline-offset-[3px] transition-colors dark:text-[var(--highlight)] dark:decoration-[var(--highlight)]/30;
     }
 
     :where(a):not(:where(.not-prose, .not-prose *)):hover,
@@ -102,8 +102,14 @@
       text-decoration-color: var(--highlight);
     }
 
-    :where(a):not(:where(.not-prose, .not-prose *)):hover:where([data-theme='dark'], [data-theme='dark'] *),
-    :where(a):not(:where(.not-prose, .not-prose *)):focus-visible:where([data-theme='dark'], [data-theme='dark'] *) {
+    :where(a):not(:where(.not-prose, .not-prose *)):hover:where(
+        [data-theme='dark'],
+        [data-theme='dark'] *
+      ),
+    :where(a):not(:where(.not-prose, .not-prose *)):focus-visible:where(
+        [data-theme='dark'],
+        [data-theme='dark'] *
+      ) {
       color: var(--primary);
       text-decoration-color: var(--primary);
     }

@@ -19,7 +19,7 @@ export interface DefaultOGTemplateProps {
  */
 export function DefaultOGTemplate({
   title = 'Off by One',
-  subtitle = 'by Can Duruk'
+  subtitle = 'by Can Duruk',
 }: DefaultOGTemplateProps) {
   // Flexoki brand colors (from global.css - dark theme)
   const colors = {
