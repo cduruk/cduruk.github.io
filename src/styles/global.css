@@ -88,3 +88,10 @@
     border-color: var(--highlight);
   }
 }
+
+@layer components {
+  .post-page-title::before {
+    content: '# ';
+    @apply text-primary;
+  }
+}
