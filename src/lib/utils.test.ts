@@ -58,6 +58,12 @@ describe('ensureTrailingSlash', () => {
     { input: '/rss.xml?format=pretty', expected: '/rss.xml?format=pretty', description: 'preserves file extension with query params' },
     { input: '/file.pdf?download=true', expected: '/file.pdf?download=true', description: 'preserves PDF with download query' },
 
+    // Hash-based routes with query-like parameters (? appears after #)
+    { input: '/#settings?tab=2', expected: '/#settings?tab=2', description: 'preserves hash with query-like params (root path)' },
+    { input: '/posts#comments?sort=new', expected: '/posts/#comments?sort=new', description: 'adds slash before hash with query-like params' },
+    { input: '/app#/route?param=value', expected: '/app/#/route?param=value', description: 'handles hash-based routing with params' },
+    { input: '/#page?id=1&view=grid', expected: '/#page?id=1&view=grid', description: 'preserves root hash with multiple query-like params' },
+
     // mailto and other protocols
     { input: 'mailto:test@example.com', expected: 'mailto:test@example.com', description: 'preserves mailto links' },
   ])('$description', ({ input, expected }) => {
