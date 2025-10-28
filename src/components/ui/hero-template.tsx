@@ -126,32 +126,15 @@ export function HeroTemplate({ title, description }: HeroTemplateProps) {
             </div>
           </div>
 
-          {/* Brand details */}
+          {/* Site link */}
           <div
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'flex-end',
-              gap: '8px',
+              fontSize: '28px',
+              color: colors.highlight,
+              textDecoration: 'underline',
             }}
           >
-            <div
-              style={{
-                fontSize: '20px',
-                color: colors.mutedForeground,
-              }}
-            >
-              by Can Duruk
-            </div>
-            <div
-              style={{
-                fontSize: '20px',
-                color: colors.highlight,
-                textDecoration: 'underline',
-              }}
-            >
-              justoffbyone.com
-            </div>
+            justoffbyone.com
           </div>
         </div>
       </div>
