@@ -103,9 +103,7 @@ Let's measure the actual cost. I (and Claude) created a curl timing format to tr
 | Total Time           | **67ms**    | **53ms** | **+14ms** |
 | **Performance Cost** |             |          | **+27%**  |
 
-<Callout variant="tip">
-  That's right: missing a single character makes your page **27% slower**.
-</Callout>
+That's right: missing a single character makes your page **27% slower**.
 
 ## The Real-World Cascade
 
@@ -140,7 +138,7 @@ The redirect forces a **full round trip** through the network stack before you c
 
 ## Testing Your Own Site
 
-I created a script to test any URL for trailing slash behavior. The full script is available in [this repository](test-trailing-slash.sh) and includes HTTP header inspection, detailed timing breakdowns, and multi-run averaging.
+I created a script to test any URL for trailing slash behavior. The full script is available down below and includes HTTP header inspection, detailed timing breakdowns, and multi-run averaging.
 
 Here's the core logic that measures the performance difference:
 
@@ -191,9 +189,9 @@ The `-L` flag tells curl to follow redirects, and the `-w` flag outputs timing i
 
 ## Preventing the Problem
 
-You can't really fix this via Astro only, as far as I can tell. The Astro config isn't about "fixing" GitHub Pages—it will always redirect URLs without trailing slashes, which I assume due to their web server configuration. The goal is to ensure your code never generates those incorrect URLs in the first place.
+You can't really fix this via Astro only, as far as I can tell. The Astro [trailing slash config](https://docs.astro.build/en/reference/configuration-reference/#trailingslash) isn't about "fixing" GitHub Pages—it will always redirect URLs without trailing slashes, which I assume due to their web server configuration. The goal is to ensure your code never generates those incorrect URLs in the first place.
 
-**For Astro (this blog):**
+**For Astro**
 
 ```javascript
 // astro.config.mjs
@@ -202,11 +200,11 @@ export default defineConfig({
 })
 ```
 
-This doesn't eliminate redirects in production, but it ensures consistency between development and production. More importantly, in development Astro will show you a warning page when you request a URL without a trailing slash, catching the issue before it ships.
+This doesn't eliminate redirects in production on Github Pages since we are using pre-rendered pages, but it ensures consistency between development and production. In development Astro will show you a warning page when you request a URL without a trailing slash, catching the issue before it ships.
 
-### Auditing Existing Links
+## Actually Fixing the Problem
 
-Configuration alone isn't enough—you also need to audit your existing content. I took two approaches:
+Again, Configuration alone isn't enough, you also need to audit your existing content. I took two approaches:
 
 **1. Created a helper function** to wrap all link generation:
 
@@ -234,7 +232,7 @@ export function ensureTrailingSlash(href: string): string {
 
 Now every navigation component uses this function, ensuring all generated links have trailing slashes. It handles edge cases like query strings (`/search/?q=test`), hash fragments (`/posts/#top`), and file extensions (`/rss.xml`).
 
-**2. Added an automated test** to catch hardcoded links in blog posts:
+**2. Added an automated test** to catch hardcoded links in blog posts, like this one:
 
 ```typescript
 it('should have trailing slashes on all internal /posts/ links', async () => {
@@ -257,7 +255,7 @@ This test runs on every commit and catches any hardcoded links in my MDX files t
 
 ## Why This Annoyed Me
 
-I was kind of surprised that a mere 14ms average felt so different. Here's my guess on why it seemed to matter that much. First of all, we know from cognitive science research that humans can detect delays up to 100ms. 14ms isn't much on its own, but when you're navigating between multiple pages, it adds up. And during worse network conditions (when I hit 40% overhead), you're definitely crossing into perceptible territory, if that difference tips you from 80ms to 120ms.
+I was kind of surprised that a mere 14ms average felt so different. Here's my guess on why it seemed to matter that much. First of all, we know from cognitive science research that humans can detect delays up to 100ms. 14ms isn't much on its own, but when you're navigating between multiple pages, it adds up. And during worse network conditions (like when I hit 40%, even 60% overhead), you're definitely crossing into perceptible territory. Especially if that difference tips you from 80ms to 120ms.
 
 Also, these tests were from a fast connection in New York on a fiber connection on a high-end wifi router. On 4G or 3G? You're looking at 200-500ms per redirect. And if you're far from GitHub's CDN edge, that cost multiplies.
 
@@ -273,6 +271,106 @@ The numbers show up to a 60% improvement in some test runs, but the real win is 
 
 Very annoyingly, when I ran the tests first, it was around 40 milliseconds difference. But then, when it was time to actually publish the post and I ran the tests again, the difference became around 14 milliseconds. Now, I could have posted the original numbers and I'd be in the right—but it didn't feel right. I love good provocative content as much as the next guy, but hey, you know, you gotta be honest.
 
----
+## The Full Test Script
 
-_All tests were conducted from New York (EWR) against justoffbyone.com hosted on GitHub Pages. Results will vary based on geography, network conditions, and hosting setup._
+Here's the complete script I used to test trailing slash behavior. It tests both URLs, shows the HTTP headers, provides detailed timing breakdowns, and runs 50 iterations for statistical accuracy:
+
+```bash
+#!/bin/bash
+
+# Script to test trailing slash redirect behavior and performance impact
+# Usage: ./test-trailing-slash.sh <url-without-trailing-slash>
+# Example: ./test-trailing-slash.sh https://example.com/page
+
+set -e
+
+if [ $# -eq 0 ]; then
+    echo "Usage: $0 <url-without-trailing-slash>"
+    echo "Example: $0 https://example.com/page"
+    exit 1
+fi
+
+URL_WITHOUT_SLASH="$1"
+URL_WITH_SLASH="${1}/"
+
+# Create temporary file for curl timing format
+TIMING_FORMAT=$(mktemp)
+cat > "$TIMING_FORMAT" << 'EOF'
+{
+  "dns_lookup": %{time_namelookup},
+  "tcp_connection": %{time_connect},
+  "tls_handshake": %{time_appconnect},
+  "time_redirect": %{time_redirect},
+  "time_to_first_byte": %{time_starttransfer},
+  "total_time": %{time_total},
+  "num_redirects": %{num_redirects},
+  "http_code": %{http_code},
+  "redirect_url": "%{redirect_url}"
+}
+EOF
+
+echo "Testing trailing slash redirect behavior and performance"
+echo "==========================================================="
+echo ""
+
+# Test WITHOUT trailing slash
+echo "Testing: $URL_WITHOUT_SLASH"
+echo "-----------------------------------------------------------"
+curl -I "$URL_WITHOUT_SLASH" 2>&1 | head -15
+echo ""
+echo "Timing data:"
+curl -L -w "@$TIMING_FORMAT" -o /dev/null -s "$URL_WITHOUT_SLASH"
+echo ""
+echo ""
+
+# Test WITH trailing slash
+echo "Testing: $URL_WITH_SLASH"
+echo "-----------------------------------------------------------"
+curl -I "$URL_WITH_SLASH" 2>&1 | head -15
+echo ""
+echo "Timing data:"
+curl -L -w "@$TIMING_FORMAT" -o /dev/null -s "$URL_WITH_SLASH"
+echo ""
+echo ""
+
+# Multiple runs for averaging
+echo "Performance comparison (50 runs each):"
+echo "==========================================================="
+echo ""
+
+declare -a times_without=()
+declare -a times_with=()
+
+echo -n "Running tests"
+for i in {1..50}; do
+    echo -n "."
+    time_without=$(curl -L -w "%{time_total}" -o /dev/null -s "$URL_WITHOUT_SLASH")
+    times_without+=($time_without)
+
+    time_with=$(curl -L -w "%{time_total}" -o /dev/null -s "$URL_WITH_SLASH")
+    times_with+=($time_with)
+done
+echo " done!"
+echo ""
+
+# Calculate averages
+avg_without=$(printf '%s\n' "${times_without[@]}" | awk '{sum+=$1} END {print sum/NR}')
+avg_with=$(printf '%s\n' "${times_with[@]}" | awk '{sum+=$1} END {print sum/NR}')
+
+# Calculate difference (set scale to preserve fractional seconds)
+difference=$(echo "scale=4; $avg_without - $avg_with" | bc)
+percentage=$(echo "scale=1; ($difference / $avg_with) * 100" | bc)
+
+echo "Average time WITHOUT trailing slash: ${avg_without}s"
+echo "Average time WITH trailing slash:    ${avg_with}s"
+echo "Difference:                          ${difference}s (${percentage}% slower)"
+echo ""
+
+# Cleanup
+rm "$TIMING_FORMAT"
+
+echo "TIP: Run this from multiple geographic locations to see CDN impact"
+echo "TIP: Use WebPageTest.org for visual waterfall comparison"
+```
+
+Save this as `test-trailing-slash.sh`, make it executable with `chmod +x test-trailing-slash.sh`, and run it with your URL as an argument.
