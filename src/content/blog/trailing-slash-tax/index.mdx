@@ -226,29 +226,54 @@ This ensures all generated URLs include trailing slashes by default.
 
 ### Auditing Existing Links
 
-Configuration alone isn't enough—you also need to audit your existing content. I went through every link in this blog to ensure they all included trailing slashes. This included:
+Configuration alone isn't enough—you also need to audit your existing content. I took two approaches:
 
-- Internal navigation links
-- Blog post cross-references
-- Footer and header links
-- Any hardcoded URLs in MDX files
+**1. Created a helper function** to wrap all link generation:
 
-The combination of proper configuration and thorough auditing eliminated all redirects from internal navigation.
+```typescript
+export function ensureTrailingSlash(href: string): string {
+  // Don't modify empty strings, external URLs, or anchor-only links
+  if (!href || href.startsWith('http') || href.startsWith('#')) {
+    return href
+  }
 
-## Lessons Learned
+  // Handle query strings and hash fragments
+  const queryIndex = href.indexOf('?')
+  const hashIndex = href.indexOf('#')
 
-After fixing all my internal links to use trailing slashes:
+  // ... logic to preserve query strings and hash fragments
 
-1. **Page load times dropped by ~40ms** on average
-2. **First contentful paint improved** noticeably
-3. **Mobile performance** improved even more dramatically
-4. **Analytics showed** users navigating faster through the site
+  // Don't add trailing slash to files with extensions
+  if (pathPart.endsWith('/') || /\.[a-z]+$/i.test(pathPart)) {
+    return href
+  }
 
-<Callout variant="tip">
-  $$
-    \text{Better UX} = \frac{\text{Content Delivery Time}}{\text{Unnecessary Redirects}}
-  $$
-</Callout>
+  return `${pathPart}/`
+}
+```
+
+Now every navigation component uses this function, ensuring all generated links have trailing slashes. It handles edge cases like query strings (`/search/?q=test`), hash fragments (`/posts/#top`), and file extensions (`/rss.xml`).
+
+**2. Added an automated test** to catch hardcoded links in blog posts:
+
+```typescript
+it('should have trailing slashes on all internal /posts/ links', async () => {
+  const mdxFiles = globSync('src/content/blog/**/*.mdx')
+
+  for (const file of mdxFiles) {
+    const content = readFileSync(file, 'utf-8')
+    const lines = content.split('\n')
+
+    lines.forEach((line, index) => {
+      // Match internal /posts/ links without trailing slash
+      const regex = /\/posts\/([^/\s)]+)\)/g
+      // ... report any violations
+    })
+  }
+})
+```
+
+This test runs on every commit and catches any hardcoded links in my MDX files that are missing trailing slashes. It's saved me multiple times from accidentally introducing redirects.
 
 ## The Takeaway
 
