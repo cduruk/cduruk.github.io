@@ -93,22 +93,24 @@ Let's measure the actual cost. I created a curl timing format to track each phas
            num_redirects:  0
 ```
 
-### The Results (20-Run Average)
+### The Results (50-Run Average)
 
 | Metric | Without `/` | With `/` | Overhead |
 |--------|-------------|----------|----------|
 | Time to First Byte | 89ms | 34ms | +55ms |
-| Total Time | **87ms** | **54ms** | **+33ms** |
+| Total Time | **67ms** | **53ms** | **+14ms** |
 | Redirects | 1 | 0 | +1 request |
-| **Performance Cost** | | | **+60%** |
+| **Performance Cost** | | | **+27%** |
 
 <Callout variant="tip">
-  That's right: missing a single character makes your page **60% slower**.
+  That's right: missing a single character makes your page **27% slower**.
 </Callout>
+
+The overhead varies depending on network conditions—I've seen it range from 10% to 40% across different test runs. CDN caching, geographic distance, and connection quality all play a role.
 
 ## Why This Annoyed Me
 
-I was kind of surprised that a mere 33ms felt so different. Here's my guess on why it seemed to matter that much. First of all, we know from cog sci research that humans can detect delays up to 100ms. 33ms isn't that slow, but it's a third of that 100ms budget. And it's very likely that with those extra milliseconds, we went from imperceptible to perceptible delay.
+I was kind of surprised that a mere 14ms average felt so different. Here's my guess on why it seemed to matter that much. First of all, we know from cog sci research that humans can detect delays up to 100ms. 14ms isn't much on its own, but when you're navigating between multiple pages, it adds up. And during worse network conditions (when I hit 40% overhead), you're definitely crossing into perceptible territory.
 
 Also, these tests were from a fast connection in New York. On 4G or 3G? You're looking at 200-500ms per redirect. And if you're far from GitHub's CDN edge, that cost multiplies.
 
@@ -173,7 +175,7 @@ URL_WITH_SLASH="${1}/"
 declare -a times_without=()
 declare -a times_with=()
 
-for i in {1..20}; do
+for i in {1..50}; do
     time_without=$(curl -L -w "%{time_total}" -o /dev/null -s "$URL_WITHOUT_SLASH")
     times_without+=($time_without)
 
