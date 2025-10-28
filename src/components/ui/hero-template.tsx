@@ -116,7 +116,7 @@ export function HeroTemplate({ title, description }: HeroTemplateProps) {
             </div>
             <div
               style={{
-                fontSize: '32px',
+                fontSize: '54px',
                 fontWeight: 'bold',
                 color: colors.foreground,
                 letterSpacing: '-0.02em',
