@@ -1,8 +1,8 @@
 ---
-title: 'The Trailing Slash Tax'
+title: 'Avoiding the Trailing Slash Tax on Github Pages and Astro'
 description: 'A deep dive into how GitHub Pages handles trailing slashes, the hidden redirect cost, and why every millisecond matters for user experience'
 date: 2025-10-28
-tags: ['web-performance', 'github-pages']
+tags: ['web-performance', 'github-pages', 'astro']
 ogImage: './og-image.png'
 authors: ['cduruk']
 draft: false
@@ -14,21 +14,25 @@ I was browsing my own blog on my phone when I noticed something odd: some pages 
 
 Being the geriatric millennial I am, I knew I had to test this on my computer. And then, things got weirder. My site, hosted on Github Pages felt _faster_ than my local development server on those fast pages. That didn't make sense—local development should be instant, even if Astro is doing on-demand rendering.
 
-The font flicker was the clue. Fonts don't flicker unless the browser is making multiple requests. What was going on?
+The font flicker was a clue. Fonts don't flicker unless the browser is making multiple requests. What was going on?
 
 Sure enough, every URL without a trailing slash was triggering a 301 redirect. That single missing character was costing me up to **60% in page load performance** during some test runs. I fixed it and wanted to share how.
 
 Here's what the font flicker looks like in action:
 
-**With redirect (font flicker):**
+**With redirect:**
 <video autoplay loop muted playsinline width="800">
   <source src="/videos/flash.mp4" type="video/mp4" />
 </video>
 
-**Without redirect (smooth):**
+**Without redirect:**
 <video autoplay loop muted playsinline width="800">
   <source src="/videos/no-flash.mp4" type="video/mp4" />
 </video>
+
+Annoying!
+
+A disclaimer is in order. Now I don't exactly think the flash of unstyled text is caused by the redirect itself. However, I have a suspicion that the redirects are causing an issue with the prefetching mechanisms, which is exacerbating the issue. Nevertheless, it was what triggered me to actually dive deeper into what is going on.
 
 ## The Problem
 
@@ -37,7 +41,7 @@ GitHub Pages seems to treat directories and files differently:
 - `/posts/my-article` → 301 redirect → `/posts/my-article/`
 - `/posts/my-article/` → 200 OK (direct response)
 
-This isn't new. Everyone has hates / loves trailing slashes. It's one of those weird quirks of working on the web. And of course, it's a thing on Github Pages you need to know about too. Others documented the [same issue back in 2016](https://marcgg.com/blog/2016/03/14/github-pages-jekyll/) with Jekyll. So, how do we [put some numbers](/posts/interactive-hiring-pipeline-calculator/) on this issue? `curl` to the rescue.
+This isn't new. Everyone has hates / loves trailing slashes. It's one of those weird quirks of working on the web. And of course, it's a thing on Github Pages you need to know about too. Others documented the [same issue back in 2016](https://marcgg.com/blog/2016/03/14/github-pages-jekyll/) with Jekyll. So, how do we [put some numbers](/posts/interactive-hiring-pipeline-calculator/) on this issue? `curl` to the rescue!
 
 ## The Evidence
 
@@ -69,25 +73,8 @@ The first request gets a `301 Moved Permanently` response, forcing the browser t
 
 ## The Performance Impact
 
-Let's measure the actual cost. I (and Claude) created a curl timing format to track each phase of the request and ran a few tests.
+Let's measure the actual cost. Here's a pathological but still a real request, without a trailing slash.
 
-### Detailed Timing Breakdown
-
-**Without Trailing Slash (with redirect):**
-
-```
-    time_namelookup:  0.002011s
-       time_connect:  0.052185s
-    time_appconnect:  0.068896s
-   time_pretransfer:  0.069005s
-      time_redirect:  0.079601s
- time_starttransfer:  0.089141s
-                    ----------
-         time_total:  0.101227s
-           num_redirects:  1
-```
-
-**With Trailing Slash (direct):**
 
 ```
     time_namelookup:  0.001993s
@@ -101,7 +88,23 @@ Let's measure the actual cost. I (and Claude) created a curl timing format to tr
            num_redirects:  0
 ```
 
+And here, with:
+
+```
+    time_namelookup:  0.002011s
+       time_connect:  0.052185s
+    time_appconnect:  0.068896s
+   time_pretransfer:  0.069005s
+      time_redirect:  0.079601s <-- the culprit!!
+ time_starttransfer:  0.089141s
+                    ----------
+         time_total:  0.101227s
+           num_redirects:  1
+```
+
 ### The Results (50-Run Average)
+
+OK, fine, but how does it look when you re-run the tests over and over again. Here's me running the above test 50 times:
 
 | Metric               | Without `/` | With `/` | Overhead  |
 | -------------------- | ----------- | -------- | --------- |
@@ -113,7 +116,7 @@ That's right: missing a single character makes your page **27% slower**.
 
 ## The Real-World Cascade
 
-Let's get technical. Here's what happens when a user clicks a link to your blog post. This is an actual request, though admittedly a bit of a pathological case.
+Let's get even more technical. Here's what happens when a user clicks a link to your blog post. This is an actual request, though admittedly a bit of a pathological case.
 
 ### Without Trailing Slash
 
@@ -144,14 +147,13 @@ The redirect forces a **full round trip** through the network stack before you c
 
 ## Testing Your Own Site
 
-I created a script to test any URL for trailing slash behavior. The full script is available down below and includes HTTP header inspection, detailed timing breakdowns, and multi-run averaging.
+I ran my tests via a script Claude and I created to test for trailing slash behavior. The full script is available down below and includes HTTP header inspection, detailed timing breakdowns, and multi-run averaging.
 
 Here's the core logic that measures the performance difference:
 
 ```bash
-#!/bin/bash
 
-# Create curl timing format
+# Define a format...
 TIMING_FORMAT=$(mktemp)
 cat > "$TIMING_FORMAT" << 'EOF'
 {
@@ -165,12 +167,7 @@ cat > "$TIMING_FORMAT" << 'EOF'
 }
 EOF
 
-# Test both URLs multiple times
-URL_WITHOUT_SLASH="$1"
-URL_WITH_SLASH="${1}/"
-
-declare -a times_without=()
-declare -a times_with=()
+# Various setup things...
 
 for i in {1..50}; do
     time_without=$(curl -L -w "%{time_total}" -o /dev/null -s "$URL_WITHOUT_SLASH")
@@ -180,22 +177,13 @@ for i in {1..50}; do
     times_with+=($time_with)
 done
 
-# Calculate averages and difference
-avg_without=$(printf '%s\n' "${times_without[@]}" | awk '{sum+=$1} END {print sum/NR}')
-avg_with=$(printf '%s\n' "${times_with[@]}" | awk '{sum+=$1} END {print sum/NR}')
-difference=$(echo "scale=4; $avg_without - $avg_with" | bc)
-percentage=$(echo "scale=1; ($difference / $avg_with) * 100" | bc)
-
-echo "WITHOUT trailing slash: ${avg_without}s"
-echo "WITH trailing slash:    ${avg_with}s"
-echo "Performance cost:       ${percentage}% slower"
 ```
 
 The `-L` flag tells curl to follow redirects, and the `-w` flag outputs timing information. By running multiple iterations, we get a more accurate average that accounts for network variability.
 
-## Preventing the Problem
+## Let's Fix It
 
-You can't really fix this via Astro only, as far as I can tell. The Astro [trailing slash config](https://docs.astro.build/en/reference/configuration-reference/#trailingslash) isn't about "fixing" GitHub Pages—it will always redirect URLs without trailing slashes, which I assume due to their web server configuration. The goal is to ensure your code never generates those incorrect URLs in the first place.
+Unfortunately, you can't really fix this via Astro only, as far as I can tell. The Astro [trailing slash config](https://docs.astro.build/en/reference/configuration-reference/#trailingslash) isn't about "fixing" GitHub Pages—it will always redirect URLs without trailing slashes, which I assume due to Github's web server configuration.
 
 **For Astro**
 
@@ -206,11 +194,13 @@ export default defineConfig({
 })
 ```
 
-This doesn't eliminate redirects in production on Github Pages since we are using pre-rendered pages, but it ensures consistency between development and production. In development Astro will show you a warning page when you request a URL without a trailing slash, catching the issue before it ships.
+So, if we can't eliminate redirects in production on Github Pages, our best option is to not cause them at all in the first place. That means, we need to make sure we always use links with trailing slashes.
 
 ## Actually Fixing the Problem
 
-Again, Configuration alone isn't enough, you also need to audit your existing content. I took two approaches:
+Luckily, at the time I've recognized this issue, I didn't have too much content. I also enjoyed the opportunity to go deeper into the Astro code and familiarize myself with how it works.
+
+I ended up doing two things:
 
 **1. Created a helper function** to wrap all link generation:
 
@@ -236,7 +226,7 @@ export function ensureTrailingSlash(href: string): string {
 }
 ```
 
-Now every navigation component uses this function, ensuring all generated links have trailing slashes. It handles edge cases like query strings (`/search/?q=test`), hash fragments (`/posts/#top`), and file extensions (`/rss.xml`).
+Now every navigation component uses this function, ensuring all generated links have trailing slashes. It handles edge cases like query strings (`/search/?q=test`), hash fragments (`/posts/#top`), and file extensions (`/rss.xml`). Using Claude and Codex helped making the changes quite fun and easy.
 
 **2. Added an automated test** to catch hardcoded links in blog posts, like this one:
 
@@ -257,7 +247,7 @@ it('should have trailing slashes on all internal /posts/ links', async () => {
 })
 ```
 
-This test runs on every commit and catches any hardcoded links in my MDX files that are missing trailing slashes. It's saved me multiple times from accidentally introducing redirects.
+This test runs on every commit and catches any hardcoded links in my MDX files that are missing trailing slashes. It's already saved me multiple times from accidentally introducing redirects.
 
 ## Why This Annoyed Me
 
