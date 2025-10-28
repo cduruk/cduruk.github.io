@@ -103,13 +103,13 @@ and without
 
 OK, fine, but how does it look when you re-run the tests over and over again. Here's me running the above test 50 times:
 
-| Metric               | Without `/` | With `/` | Overhead  |
-| -------------------- | ----------- | -------- | --------- |
-| Time to First Byte   | 89ms        | 34ms     | +55ms     |
-| Total Time           | **67ms**    | **53ms** | **+14ms** |
-| **Performance Cost** |             |          | **+27%**  |
+| Metric               | With `/` | Without `/` | Overhead  |
+| -------------------- | -------- | ----------- | --------- |
+| Time to First Byte   | 50ms     | 65ms        | +15ms     |
+| Total Time           | **66ms** | **81ms**    | **+14ms** |
+| **Performance Cost** |          |             | **+20%**  |
 
-That's right: missing a single character made my site **27% slower**! Unacceptable!!
+That's right: missing a single character made my site **20% slower**! Unacceptable!!
 
 ## The Real-World Cascade
 
