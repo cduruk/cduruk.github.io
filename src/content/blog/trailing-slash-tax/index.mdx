@@ -18,6 +18,14 @@ The font flicker was the clue. Fonts don't flicker unless the browser is making 
 
 Sure enough, every URL without a trailing slash was triggering a 301 redirect. That single missing character was costing me up to **60% in page load performance** during some test runs. I fixed it and wanted to share how.
 
+Here's what the font flicker looks like in action:
+
+**With redirect (font flicker):**
+![Font flash when page redirects](./flash.gif)
+
+**Without redirect (smooth):**
+![No flash when page loads directly](./no-flash.gif)
+
 ## The Problem
 
 GitHub Pages seems to treat directories and files differently:
@@ -58,12 +66,6 @@ The first request gets a `301 Moved Permanently` response, forcing the browser t
 ## The Performance Impact
 
 Let's measure the actual cost. I (and Claude) created a curl timing format to track each phase of the request and ran a few tests.
-
-<Callout variant="theorem">
-  $$
-    \text{Total Latency} = \text{DNS} + \text{TCP} + \text{TLS} + \text{Redirect} + \text{TTFB}
-  $$
-</Callout>
 
 ### Detailed Timing Breakdown
 
@@ -273,7 +275,7 @@ Very annoyingly, when I ran the tests first, it was around 40 milliseconds diffe
 
 ## The Full Test Script
 
-Here's the complete script I used to test trailing slash behavior. It tests both URLs, shows the HTTP headers, provides detailed timing breakdowns, and runs 50 iterations for statistical accuracy:
+Here's the complete script I wrote with some help from Claude to test trailing slash behavior. It tests both URLs, shows the HTTP headers, provides detailed timing breakdowns, and runs 50 iterations for statistical accuracy:
 
 ```bash
 #!/bin/bash
