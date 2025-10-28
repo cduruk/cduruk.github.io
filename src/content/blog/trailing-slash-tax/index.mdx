@@ -21,11 +21,13 @@ Sure enough, every URL without a trailing slash was triggering a 301 redirect. T
 Here's what the font flicker looks like in action:
 
 **With redirect:**
+
 <video autoplay loop muted playsinline width="800">
   <source src="/videos/flash.mp4" type="video/mp4" />
 </video>
 
 **Without redirect:**
+
 <video autoplay loop muted playsinline width="800">
   <source src="/videos/no-flash.mp4" type="video/mp4" />
 </video>
@@ -75,7 +77,6 @@ The first request gets a `301 Moved Permanently` response, forcing the browser t
 
 Let's measure the actual cost. Here's a pathological but still a real request, without a trailing slash.
 
-
 ```
     time_namelookup:  0.001993s
        time_connect:  0.008183s
@@ -116,32 +117,19 @@ That's right: missing a single character made my site **27% slower**! Unacceptab
 
 ## The Real-World Cascade
 
-Let's get even more technical. Here's what happens when a user clicks a link to your blog post. This is an actual request, though admittedly a bit of a pathological case.
+Let's get even more technical. Here's what happens when a user clicks a link to your blog post. Again, here's a pathological but albeit real set of requests.
 
-### Without Trailing Slash
-
-```
-1. DNS lookup: github.com → 2ms
-2. TCP handshake → 50ms
-3. TLS handshake → 17ms
-4. Request: GET /posts/article
-5. Response: 301 Redirect → 20ms
-6. Follow redirect
-7. Request: GET /posts/article/ → 35ms
-8. Response: 200 OK
-Total: ~124ms
-```
-
-### With Trailing Slash
-
-```
-1. DNS lookup: github.com → 2ms
-2. TCP handshake → 8ms
-3. TLS handshake → 14ms
-4. Request: GET /posts/article/
-5. Response: 200 OK → 34ms
-Total: ~58ms
-```
+| Step | Action               | Without `/`                                 | Duration   | With `/`                                    | Duration  |
+| ---- | -------------------- | ------------------------------------------- | ---------- | ------------------------------------------- | --------- |
+| 1    | DNS lookup           | github.com                                  | 2ms        | github.com                                  | 2ms       |
+| 2    | TCP handshake        |                                             | 50ms       |                                             | 8ms       |
+| 3    | TLS handshake        |                                             | 17ms       |                                             | 14ms      |
+| 4    | Request              | GET /posts/article                          |            | GET /posts/article/                         |           |
+| 5    | Response             | 301 Redirect                                | 20ms       | <span style="color: #28a745;">200 OK</span> | 34ms      |
+| 6    | Follow redirect      |                                             |            | —                                           | —         |
+| 7    | Request (redirected) | GET /posts/article/                         | 35ms       | —                                           | —         |
+| 8    | Response             | <span style="color: #28a745;">200 OK</span> |            | —                                           | —         |
+|      | **Total**            |                                             | **~124ms** |                                             | **~58ms** |
 
 The redirect forces a **full round trip** through the network stack before you can even start downloading the page.
 
@@ -247,7 +235,7 @@ it('should have trailing slashes on all internal /posts/ links', async () => {
 })
 ```
 
-This test runs on every commit and catches any hardcoded links in my MDX files that are missing trailing slashes. It's already saved me multiple times from accidentally introducing redirects, including on this post. Oops! 
+This test runs on every commit and catches any hardcoded links in my MDX files that are missing trailing slashes. It's already saved me multiple times from accidentally introducing redirects, including on this post. Oops!
 
 ## Why This Annoyed Me
 
@@ -274,15 +262,11 @@ Here's the complete script I wrote with some help from Claude to test trailing s
 ```bash
 #!/bin/bash
 
-# Script to test trailing slash redirect behavior and performance impact
-# Usage: ./test-trailing-slash.sh <url-without-trailing-slash>
-# Example: ./test-trailing-slash.sh https://example.com/page
-
 set -e
 
 if [ $# -eq 0 ]; then
     echo "Usage: $0 <url-without-trailing-slash>"
-    echo "Example: $0 https://example.com/page"
+    echo "Example: $0 https://justoffbyone.com/about"
     exit 1
 fi
 
@@ -329,7 +313,6 @@ curl -L -w "@$TIMING_FORMAT" -o /dev/null -s "$URL_WITH_SLASH"
 echo ""
 echo ""
 
-# Multiple runs for averaging
 echo "Performance comparison (50 runs each):"
 echo "==========================================================="
 echo ""
@@ -364,9 +347,6 @@ echo ""
 
 # Cleanup
 rm "$TIMING_FORMAT"
-
-echo "TIP: Run this from multiple geographic locations to see CDN impact"
-echo "TIP: Use WebPageTest.org for visual waterfall comparison"
 ```
 
 Save this as `test-trailing-slash.sh`, make it executable with `chmod +x test-trailing-slash.sh`, and run it with your URL as an argument.
