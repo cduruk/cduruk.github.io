@@ -24,7 +24,7 @@ GitHub Pages (and many static site generators) treat directories and files diffe
 - `/posts/my-article` → 301 redirect → `/posts/my-article/`
 - `/posts/my-article/` → 200 OK (direct response)
 
-That redirect isn't free. Let me show you the cost.
+This isn't new—[Marc Gauthier documented the same issue back in 2016](https://marcgg.com/blog/2016/03/14/github-pages-jekyll/) with Jekyll. But the redirect cost is real, and I wanted to measure it.
 
 ## The Evidence
 
@@ -146,24 +146,9 @@ The redirect forces a **full round trip** through the network stack before you c
 
 ## Testing Your Own Site
 
-I created a script to test any URL for trailing slash behavior. You can use it to test your own sites:
+I created a script to test any URL for trailing slash behavior. The full script is available in [this repository](test-trailing-slash.sh) and includes HTTP header inspection, detailed timing breakdowns, and multi-run averaging.
 
-```bash
-# Download and run
-./test-trailing-slash.sh https://your-site.com/page
-
-# Output includes:
-# - HTTP headers for both URLs
-# - Detailed timing breakdown
-# - 5-run average comparison
-# - Percentage overhead calculation
-```
-
-The script is available in [this repository](test-trailing-slash.sh) and works with any site (not just GitHub Pages).
-
-### The Testing Code
-
-Here's the core of the testing script that measures the performance difference:
+Here's the core logic that measures the performance difference:
 
 ```bash
 #!/bin/bash
