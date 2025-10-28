@@ -27,16 +27,17 @@ Off by One is Can Duruk's home on the internet for long-form essays about engine
 
 ## Repository tour
 
-| Area | Highlights |
-| ---- | ---------- |
-| `src/consts.ts` | Site-wide metadata: title, description, nav links, social accounts, and lucide icon mapping for quick updates. |
-| `src/content/` | MDX content grouped into blog posts, authors, and projects. Schemas in `src/content.config.ts` enforce frontmatter shape. |
-| `src/lib/data-utils.ts` | Helper functions that load collections, sort posts/subposts, compute reading time, and assemble TOCs. |
-| `src/components/` | Astro building blocks for layout (header, footer, breadcrumbs) and long-form affordances (callouts, TOC). |
-| `src/components/ui/` | React islands, OG image templates, and shared UI primitives powered by class-variance-authority. |
-| `src/pages/` | File-based routes for the homepage, archives, post detail pages, About, and subscription flows. |
-| `public/` | Static assets bundled with the site: favicons, fonts, OG fallbacks, showcase imagery. |
-| `scripts/` | TypeScript automation for scaffolding posts, generating OG assets, and keeping favicon/logo variants current. |
+| Area                    | Highlights                                                                                                                |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| `src/consts.ts`         | Site-wide metadata: title, description, nav links, social accounts, and lucide icon mapping for quick updates.            |
+| `src/content/`          | MDX content grouped into blog posts, authors, and projects. Schemas in `src/content.config.ts` enforce frontmatter shape. |
+| `src/lib/data-utils.ts` | Helper functions that load collections, sort posts/subposts, compute reading time, and assemble TOCs.                     |
+| `src/lib/utils.ts`      | Shared utilities including `ensureTrailingSlash()` for consistent internal link formatting and SEO optimization.          |
+| `src/components/`       | Astro building blocks for layout (header, footer, breadcrumbs) and long-form affordances (callouts, TOC).                 |
+| `src/components/ui/`    | React islands, OG image templates, and shared UI primitives powered by class-variance-authority.                          |
+| `src/pages/`            | File-based routes for the homepage, archives, post detail pages, About, and subscription flows.                           |
+| `public/`               | Static assets bundled with the site: favicons, fonts, OG fallbacks, showcase imagery.                                     |
+| `scripts/`              | TypeScript automation for scaffolding posts, generating OG assets, and keeping favicon/logo variants current.             |
 
 ## Local development workflow
 
@@ -62,7 +63,15 @@ Off by One is Can Duruk's home on the internet for long-form essays about engine
 
    The build output lives in `dist/`; Astro will surface frontmatter or MDX errors directly in the console.
 
-4. Optional but recommended: run targeted scripts when touching associated areas, for example `npm run lint` or `npm run check`.
+4. Run tests to verify utility functions and ensure code quality:
+
+   ```bash
+   npm test          # Watch mode for development
+   npm run test:run  # Single run for CI/CD
+   npm run test:ui   # Interactive UI mode
+   ```
+
+5. Optional but recommended: run targeted scripts when touching associated areas, for example `npm run lint` or `npm run check`.
 
 ## Publishing new writing
 
@@ -83,6 +92,31 @@ Off by One is Can Duruk's home on the internet for long-form essays about engine
    ```
 
 5. Commit the generated assets stored in `public/og/` so deployments stay in sync.
+
+## URL conventions and trailing slashes
+
+All internal links throughout the site use **trailing slashes** for consistency and SEO optimization. This prevents unnecessary redirects and ensures canonical URLs are properly recognized by search engines.
+
+### How it works
+
+The `ensureTrailingSlash()` utility function in `src/lib/utils.ts` automatically:
+
+- Adds trailing slashes to internal paths: `/posts` → `/posts/`
+- Preserves hash fragments correctly: `/posts#top` → `/posts/#top`
+- Leaves file extensions unchanged: `/rss.xml` stays `/rss.xml`
+- Ignores external URLs and anchor-only links
+
+### Where it's applied
+
+- **Link component** (`src/components/Link.astro`) - Automatically normalizes all internal links
+- **Navigation constants** (`src/consts.ts`) - All nav and social links use trailing slashes
+- **Breadcrumbs** - Dynamic breadcrumb paths in all page templates
+- **Pagination** - Post listing pagination links
+- **Component links** - BlogCard, PostNavigation, TOCSidebar, SubpostsSidebar, AuthorCard
+
+### Testing
+
+The trailing slash logic is covered by 29 parameterized tests in `src/lib/utils.test.ts`. Run `npm test` to verify behavior when modifying URL-related code.
 
 ## Content and code conventions
 

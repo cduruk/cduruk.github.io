@@ -5,7 +5,7 @@ import {
   MoreHorizontalIcon,
 } from 'lucide-react'
 
-import { cn } from '@/lib/utils'
+import { cn, ensureTrailingSlash } from '@/lib/utils'
 import { Button, buttonVariants } from '@/components/ui/button'
 
 function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
@@ -132,8 +132,8 @@ const PaginationComponent: React.FC<PaginationProps> = ({
   const pages = Array.from({ length: totalPages }, (_, i) => i + 1)
 
   const getPageUrl = (page: number) => {
-    if (page === 1) return baseUrl
-    return `${baseUrl}${page}`
+    if (page === 1) return ensureTrailingSlash(baseUrl)
+    return ensureTrailingSlash(`${baseUrl}${page}`)
   }
 
   return (

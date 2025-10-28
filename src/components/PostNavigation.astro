@@ -1,7 +1,7 @@
 ---
 import Link from '@/components/Link.astro'
 import { buttonVariants } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
+import { cn, ensureTrailingSlash } from '@/lib/utils'
 import { Icon } from 'astro-icon/components'
 
 const { newerPost, olderPost, parentPost } = Astro.props
@@ -15,7 +15,9 @@ const isSubpost = !!parentPost
   )}
 >
   <Link
-    href={olderPost ? `/posts/${olderPost.id}#post-title` : '#'}
+    href={olderPost
+      ? ensureTrailingSlash(`/posts/${olderPost.id}#post-title`)
+      : '#'}
     class={cn(
       buttonVariants({ variant: 'outline' }),
       'rounded-lg group flex items-center justify-start size-full',
@@ -43,7 +45,11 @@ const isSubpost = !!parentPost
   {
     isSubpost && (
       <Link
-        href={parentPost ? `/posts/${parentPost.id}#post-title` : '#'}
+        href={
+          parentPost
+            ? ensureTrailingSlash(`/posts/${parentPost.id}#post-title`)
+            : '#'
+        }
         class={cn(
           buttonVariants({ variant: 'outline' }),
           'group flex size-full items-center justify-center rounded-lg',
@@ -67,7 +73,9 @@ const isSubpost = !!parentPost
   }
 
   <Link
-    href={newerPost ? `/posts/${newerPost.id}#post-title` : '#'}
+    href={newerPost
+      ? ensureTrailingSlash(`/posts/${newerPost.id}#post-title`)
+      : '#'}
     class={cn(
       buttonVariants({ variant: 'outline' }),
       'rounded-lg group flex items-center justify-end size-full',

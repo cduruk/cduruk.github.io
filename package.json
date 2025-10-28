@@ -12,6 +12,9 @@
     "new-post": "tsx scripts/new-post.ts",
     "generate-og-images": "tsx scripts/generate-og-images.ts",
     "prettier": "prettier --write **/*.{ts,tsx,css,astro,md} --ignore-path .gitignore",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:run": "vitest run",
     "postinstall": "patch-package"
   },
   "dependencies": {
@@ -56,7 +59,8 @@
     "prettier-plugin-tailwindcss": "^0.6.11",
     "satori": "^0.18.3",
     "sharp": "^0.34.4",
-    "tsx": "^4.20.6"
+    "tsx": "^4.20.6",
+    "vitest": "^4.0.4"
   },
   "prettier": {
     "semi": false,

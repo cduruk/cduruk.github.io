@@ -35,3 +35,36 @@ export function getHeadingMargin(depth: number): string {
   }
   return margins[depth] || ''
 }
+
+/**
+ * Ensures that internal links always have a trailing slash.
+ * Preserves hash fragments and doesn't add trailing slash before hash.
+ *
+ * @param href - The URL to normalize
+ * @returns The URL with a trailing slash (if internal and no hash at the end)
+ *
+ * @example
+ * ensureTrailingSlash('/posts') // => '/posts/'
+ * ensureTrailingSlash('/posts/my-post') // => '/posts/my-post/'
+ * ensureTrailingSlash('/posts#top') // => '/posts/#top'
+ * ensureTrailingSlash('/posts/') // => '/posts/'
+ * ensureTrailingSlash('/rss.xml') // => '/rss.xml' (keeps file extensions as is)
+ */
+export function ensureTrailingSlash(href: string): string {
+  // Don't modify empty strings, external URLs, or anchor-only links
+  if (!href || href.startsWith('http') || href.startsWith('#')) {
+    return href
+  }
+
+  // Split the URL into path and hash
+  const [path, hash] = href.split('#')
+
+  // Don't add trailing slash to files with extensions (like .xml, .pdf, etc.)
+  // or if the path already has a trailing slash
+  if (path.endsWith('/') || /\.[a-z]+$/i.test(path)) {
+    return href
+  }
+
+  // Add trailing slash to the path, then reattach hash if present
+  return hash ? `${path}/#${hash}` : `${path}/`
+}

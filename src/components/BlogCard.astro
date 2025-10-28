@@ -8,7 +8,7 @@ import {
   isSubpost,
   parseAuthors,
 } from '@/lib/data-utils'
-import { formatDate } from '@/lib/utils'
+import { ensureTrailingSlash, formatDate } from '@/lib/utils'
 import { Icon } from 'astro-icon/components'
 import { Image } from 'astro:assets'
 import type { CollectionEntry } from 'astro:content'
@@ -23,10 +23,11 @@ const formattedDate = formatDate(entry.data.date)
 const readTime = await getCombinedReadingTime(entry.id)
 const authors = await parseAuthors(entry.data.authors ?? [])
 const subpostCount = !isSubpost(entry.id) ? await getSubpostCount(entry.id) : 0
-const entryHref =
+const entryHref = ensureTrailingSlash(
   entry.collection === 'blog'
     ? `/posts/${entry.id}`
-    : `/${entry.collection}/${entry.id}`
+    : `/${entry.collection}/${entry.id}`,
+)
 ---
 
 <div

@@ -23,7 +23,10 @@ const FAVICON_SIZES = [
 ]
 
 // Generate a single favicon at a specific size
-async function generateFaviconSize(size: number, outputPath: string): Promise<void> {
+async function generateFaviconSize(
+  size: number,
+  outputPath: string,
+): Promise<void> {
   console.log(`  Generating ${size}x${size} favicon...`)
 
   // Create React element using the TSX component with size prop
@@ -100,10 +103,7 @@ async function main(): Promise<void> {
     try {
       await generateFaviconSize(size, outputPath)
     } catch (error) {
-      console.error(
-        `  ✗ Failed to generate ${name}:`,
-        (error as Error).message,
-      )
+      console.error(`  ✗ Failed to generate ${name}:`, (error as Error).message)
     }
   }
 

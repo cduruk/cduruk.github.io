@@ -5,15 +5,18 @@ This directory contains TypeScript scripts for managing blog posts and generatin
 ## Scripts Overview
 
 ### Content Management
+
 - **[new-post.ts](./new-post.ts)**: Interactive CLI for creating new blog posts with auto-generated OG images
 
 ### Asset Generation
+
 - **[generate-favicon.ts](./generate-favicon.ts)**: Generates all favicon sizes (16x16, 32x32, 96x96, 180x180, 192x192, 512x512) and favicon.ico
 - **[generate-logo.ts](./generate-logo.ts)**: Generates the site logo (logo.svg) used in the header
 - **[generate-default-og.ts](./generate-default-og.ts)**: Generates the default fallback OG image (1200x630.png)
 - **[generate-og-images.ts](./generate-og-images.ts)**: Generates Open Graph images for blog posts and static pages
 
 All asset generation scripts use:
+
 - **Satori**: Converts React/TSX components to SVG
 - **Resvg**: Converts SVG to PNG (for raster images)
 - **Sharp**: Optimizes PNG images
@@ -90,6 +93,7 @@ npx tsx scripts/generate-default-og.ts
 ## What It Generates
 
 Creates `public/static/1200x630.png` - a 1200x630 PNG image featuring:
+
 - Large centered "-1" logo (200x200 red box)
 - "Off by One" title
 - "by Can Duruk" subtitle
@@ -178,7 +182,7 @@ date: 2025-10-27
 tags: ['tag1', 'tag2']
 ogImage: './og-image.png'
 authors: ['cduruk']
-draft: true  # Only if you selected draft mode
+draft: true # Only if you selected draft mode
 ---
 
 import Callout from '@/components/Callout.astro'
@@ -197,10 +201,12 @@ This directory also contains a script to automatically generate Open Graph (soci
 ## How It Works
 
 The script ([generate-og-images.ts](./generate-og-images.ts)):
+
 - Scans all blog posts in `src/content/blog/` and generates `og-image.png` files for any posts that don't already have one
 - Generates OG images for static pages (e.g., About, Subscribe) defined in the `getStaticPages()` function
 
 It uses:
+
 - **Satori**: Converts React/TSX components to SVG
 - **Resvg**: Converts SVG to PNG
 - **Sharp**: Optimizes the final PNG
@@ -277,6 +283,7 @@ Static page OG images are always regenerated on each build to ensure they stay u
 The OG image template is a React component defined in **[src/components/ui/hero-template.tsx](../src/components/ui/hero-template.tsx)**. This file is separate from the generation script to make customization easier.
 
 Since it's a real TSX file, you can:
+
 - Use JSX syntax for layout
 - Add TypeScript types for props
 - Use React patterns you're familiar with
@@ -293,6 +300,7 @@ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
 ### Changing Layout
 
 The template uses a React-like component structure. You can modify:
+
 - Font sizes
 - Spacing (padding, gap)
 - Layout (flexbox properties)
@@ -303,16 +311,20 @@ The template uses a React-like component structure. You can modify:
 Currently uses Fira Sans font. To use a different font:
 
 1. Install the font package:
+
    ```bash
    npm install --save-dev @fontsource/your-font
    ```
 
 2. Update the fonts array in the generation scripts:
+
    ```js
    fonts: [
      {
        name: 'Your Font',
-       data: await readFile(join(__dirname, '../node_modules/@fontsource/your-font/files/...')),
+       data: await readFile(
+         join(__dirname, '../node_modules/@fontsource/your-font/files/...'),
+       ),
        weight: 400,
        style: 'normal',
      },
@@ -356,6 +368,7 @@ The OG image will be created at `public/static/og/contact.png` and automatically
 ### Current Static Pages
 
 The following static pages currently have OG images generated:
+
 - **About** (`/static/og/about.png`)
 - **Subscribe** (`/static/og/subscribe.png`)
 
@@ -388,6 +401,7 @@ ogImage: './og-image.png'
 Then run `npm run generate-og-images` to generate the image.
 
 **Note:** The `ogImage` field is separate from the `image` field:
+
 - `ogImage`: Used for Open Graph/social media previews only
 - `image`: Used for page banners and listing thumbnails
 

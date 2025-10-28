@@ -205,7 +205,8 @@ function getStaticPages(): StaticPage[] {
     {
       name: 'about',
       title: 'About',
-      description: 'My name is Can Duruk. I am the former CTO and co-founder of Felt.',
+      description:
+        'My name is Can Duruk. I am the former CTO and co-founder of Felt.',
       outputPath: join(OG_DIR, 'about.png'),
     },
     {
@@ -297,7 +298,9 @@ async function main(): Promise<void> {
   if (postsWithoutOgImage.length === 0) {
     console.log('  ✨ All posts already have OG images!')
   } else {
-    console.log(`  Found ${postsWithoutOgImage.length} posts without OG images:\n`)
+    console.log(
+      `  Found ${postsWithoutOgImage.length} posts without OG images:\n`,
+    )
 
     for (const post of postsWithoutOgImage) {
       try {
