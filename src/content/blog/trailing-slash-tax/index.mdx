@@ -73,7 +73,7 @@ The first request gets a `301 Moved Permanently` response, forcing the browser t
 
 ## The Performance Impact
 
-Let's measure the actual cost. Here's a pathological but still a real request, without a trailing slash.
+Let's measure the actual cost. Here's a pathological but still a real set of requests, with a trailing slash:
 
 ```
     time_namelookup:  0.001993s
@@ -87,7 +87,7 @@ Let's measure the actual cost. Here's a pathological but still a real request, w
            num_redirects:  0
 ```
 
-And here, with:
+and without
 
 ```
     time_namelookup:  0.002011s
@@ -100,6 +100,7 @@ And here, with:
          time_total:  0.101227s
            num_redirects:  1
 ```
+
 
 ### The Results (50-Run Average)
 
