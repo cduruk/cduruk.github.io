@@ -94,4 +94,9 @@
     content: '# ';
     @apply text-primary;
   }
+
+  .year-heading::before {
+    content: '## ';
+    @apply text-primary;
+  }
 }
