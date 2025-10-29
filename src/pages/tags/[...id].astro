@@ -44,18 +44,19 @@ const { tag, posts } = Astro.props
     <div class="prose mb-8">
       <h1>{tag}</h1>
       <p class="mt-0">
-        A collection of {posts.length} {posts.length === 1 ? 'post' : 'posts'} tagged with {tag}.
+        A collection of {posts.length}
+        {posts.length === 1 ? 'post' : 'posts'} tagged with {tag}.
       </p>
     </div>
 
     <ul class="flex flex-col gap-y-4">
-    {
-      posts.map((post) => (
-        <li>
-          <BlogCard entry={post} />
-        </li>
-      ))
-    }
+      {
+        posts.map((post) => (
+          <li>
+            <BlogCard entry={post} />
+          </li>
+        ))
+      }
     </ul>
   </section>
 </Layout>

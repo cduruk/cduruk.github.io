@@ -218,7 +218,8 @@ function getStaticPages(): StaticPage[] {
     {
       name: 'tags',
       title: 'Tags',
-      description: 'Browse posts by topic. Each tag shows how many posts are tagged with it.',
+      description:
+        'Browse posts by topic. Each tag shows how many posts are tagged with it.',
       outputPath: join(OG_DIR, 'tags.png'),
     },
   ]
