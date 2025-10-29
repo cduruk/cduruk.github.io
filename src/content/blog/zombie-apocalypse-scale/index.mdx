@@ -1,0 +1,86 @@
+---
+title: 'The Zombie Apocalypse Scale'
+description: 'A thought experiment: measure how much of a "tech company" you are by how long you could run if all employees turned into zombies overnight'
+date: 2020-02-04
+tags: ['tech-industry', 'automation', 'business', 'thought-experiment', 'margins']
+ogImage: './og-image.png'
+authors: ['cduruk']
+draft: false
+---
+
+import { Image } from 'astro:assets';
+import Callout from '../../../components/Callout.astro';
+
+import headerImage from './header.jpg';
+import image1 from './image1.gif';
+import image2 from './image2.jpg';
+import image3 from './image3.gif';
+import image4 from './image4.gif';
+
+<Callout variant="note">
+This post was originally published on [Margins](https://www.readmargins.com) in February 2020.
+</Callout>
+
+<Image src={headerImage} alt="Featured image" />
+
+Hi. **Can** here, today with a special.
+
+Have we had a "Is WeWork a tech company?" kind of conversation lately? Haha, I am sorry, we have, and we keep having it, and I tire myself writing about these words, so I can't even imagine how boring it must be to read it.
+
+But I think, finally, I have come up with a framework to answer that question once and for all. In fact, I've done one better. **I came up with a scale** that you can use at any company to figure if they are a tech company or not.
+
+I actually had another piece lined up to write for this week (Financialization is the root of all evil), but when I came up with this idea during the outlining stage, I couldn't stop thinking about it. I knew I had something valuable in my hands when I told my co-host **Ranjan** about it and he responded with a shocked face. I could see the giddy excitement in that 👀 emoji he sent.
+
+Here's the idea: Instead of looking for a binary outcome for this question, let's agree that tech-companiness is a spectrum. There are probably some discrete stops, but let's ignore that for now. <sup>[1]</sup> And then, let's establish a quantifiable metric, something that we can compare companies across.
+
+## The Zombie Apocalypse Scale
+
+I call this scale the **Zombie Apocalypse Scale**. It is a measure of how many days a company could run for it all its employees were turned to zombies overnight. The more days you can operate without any humans the more of a tech company you are. Among many other things, I am obviously assuming here that most zombies would not be able to perform any duties. <sup>[2][3]</sup>
+
+<Image src={image1} alt="Zombie gif" />
+
+Allow me to run through some examples.
+
+Let's go Alphabetical. **Google**, maybe except for YouTube moderation, could work for a good couple weeks before things start to break. I'm not sure how much headroom in terms of storage they'd have, but my educated guess is things would run for a while before your Google searches stopped working. It could be weeks! This is very cool and scary at the same time.
+
+**Facebook** is trickier. I think the site and the apps would be up, but considering how much of the site is still human moderated, it'd not be long before it got overrun by spam and trolls. **Reddit** would be an extreme example of this and definitely **Twitter** too. They both would instantly turn into cesspools, even more so than they are today. Certain apps like Facebook Messenger could continue running for a while, but my guess it's also quite heavily moderated day to this day as well.
+
+<Image src={image2} alt="Content image" />
+
+## The Most Human Businesses of All
+
+Let's look at the companies on the other side of the spectrum. If Borg is a pure tech company, that requires no humans, what's on the other side? You need a firm that exists solely as a function of its humans. One that is so low-tech that it has to ship around those meat bags around the globe by the thousands.
+
+You can see where I am going with this. The least-tech companies on this spectrum would be the consulting firms, like McKinsey. As amusing as it'd be to watch a horde of young MBA grads turn to zombies overnight, I imagine most clients (but surely not all) wouldn't be excited to work zombies. This has interesting implications.
+
+<Image src={image3} alt="Zombie gif" />
+
+Obviously, people do argue that the extreme hands-on and human-labor intensive nature of these firms' business makes them [*ripe for disruption*](https://www.cbinsights.com/research/disrupting-management-consulting/). And you see the firms try to hedge their bets by slowly building digital arms. Yet, on my scale, they score as low as you can go. They might have all the Lenovos in the world, but it's still less of a tech job than bricklaying these days. McKinsey is a *pure human* business. No zombies allowed.
+
+You can also see the weird tension a scale like this introduces for capital-t tech companies. If the idealized tech company is a [*computer plugged into the internet*](https://carta.com/blog/how-to-hire/) raking in cash, how do you make the argument that your human capital is your most precious resource? It's evident that these capital-t tech firms care about their employees. Or rather, they know they couldn't exist without their employees' labor.
+
+We've seen this play out many times, where a company like Google, which has weathered most criticisms, comes to its knees when a few of their engineers threatened to quit over their work in China. Those pesky humans not just cost money, like a [*lot of money*](https://www.wired.com/story/what-tech-companies-pay-employees-2019/), but they create a lot of problems for the management!
+
+In that sense, the ideal software engineer is not one who solves the business goals in the best (fastest, cheapest, most robust, whatever) way possible. The platonic ideal of a software engineer is one that automates her or himself out of a job.
+
+## Engineer, Automate Thyself
+
+**What is your revenue/employee when your denominator is zero?**
+
+This is not a new idea, by any means. All software engineers I know get this feeling in their gut every once in a while. You write a ton of code to solve a business problem, and people start making money off of it. And if you've written your code right (so did your coworkers), you can just rest back and [*watch the dollars roll in*](https://www.theatlantic.com/technology/archive/2018/10/agents-of-automation/568795/). They may not necessarily roll into your bank account per se, and things do break here and there. And competitors come up, and landscape shifts etc etc. But at an ideal software company, the rest phase between bursts of code wrangling gets longer over time. This is not being lazy, this is being a good programmer! "Work hard, not smart" is for losers. "Don't work" is where the real money is at.
+
+<Image src={image4} alt="Automation gif" />
+
+Look, all in all, I am very well aware of the dangers of building a world where the entire means of production have become a bunch of machines, and the proceeds go to those that own them. Excuse the Marxist phrasing, but in a world where billionaires, from [Benioff](https://www.nytimes.com/2019/10/15/opinion/sunday/marc-benioff-salesforce-capitalism.html) to [Dalio](https://www.linkedin.com/pulse/why-how-capitalism-needs-reformed-parts-1-2-ray-dalio/), complain about capitalism being broken, inequality eating away at the global world order, it's hard to argue we should do more inequality-forward things like centralizing profits.
+
+Yet, I think the zombie apocalypse test does provide a good way to think of what makes a company a tech company. It is fun, and that's definitely its primary value, but it's thought-provoking too. Since I brought this up to Ranjan, we've been going through companies in various industries in our Slack (a company that scores pretty high), arguing how long they could run without humans.
+
+And, to all my coworkers who might now be wondering if I am longing for a zombie apocalypse to replace all of us with machines: I am not. But, I mean, would it be *that* bad?
+
+---
+
+<sup>[1]</sup> I know a spectrum versus a binary answer sounds like avoiding the question entirely. But I am also not convinced the question itself is really meaningful. It lends itself well to arguing over semantics and taking sides, but it doesn't really allow anyone to make better decisions. If anything, as we've seen with so many times now, it causes people to make worse ones.
+
+<sup>[2]</sup> I don't know what it is about tech people and wanting to coin these laws and tests and everything. It must be the overwhelming desire to codify the entire world into these rigid rules. I worry about myself sometimes.
+
+<sup>[3]</sup> For the sake of argument, I am including the contractors here. It's also worth noting that Google now has [more contractors than full time employees](https://www.nytimes.com/2019/05/28/technology/google-temp-workers.html), edging itself even closer to the Borg end of the spectrum.
