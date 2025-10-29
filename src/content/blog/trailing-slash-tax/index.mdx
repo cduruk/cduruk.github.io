@@ -43,9 +43,13 @@ GitHub Pages seems to treat directories and files differently:
 - `/posts/my-article` → 301 redirect → `/posts/my-article/`
 - `/posts/my-article/` → 200 OK (direct response)
 
-This isn't new. Everyone has hates / loves trailing slashes. It's one of those weird quirks of working on the web. And of course, it's a thing on Github Pages you need to know about too. Others documented the [same issue back in 2016](https://marcgg.com/blog/2016/03/14/github-pages-jekyll/) with Jekyll. So, how do we [put some numbers](/posts/interactive-hiring-pipeline-calculator/) on this issue? `curl` to the rescue!
+This isn't new. Everyone has hates / loves trailing slashes. It's one of those weird quirks of working on the web. And as this website you are reading is an [Astro](https://astro.build/) site that is hosted on Github Pages [statically](https://docs.astro.build/en/guides/deploy/github/), so we are beholden to the Github's configurations more so than what is possible with Astro or Node.JS.
 
-This is my [post](/posts/measuring-engineering-productivity/) on `curl` without a trailing slash (truncatated for effect).
+## Measuring the Impact
+
+So, how do we [put some numbers](/posts/interactive-hiring-pipeline-calculator/) on this issue, as is my thing? Of course `curl` would jump to the rescue!
+
+So, here this [post](/posts/measuring-engineering-productivity/) on `curl` without a trailing slash (truncatated for effect).
 
 ```bash
 $ curl -I https://justoffbyone.com/posts/measuring-engineering-productivity
@@ -71,9 +75,9 @@ content-length: 70127
 
 The first request gets a `301 Moved Permanently` response, forcing the browser to make a second request. The second request goes straight to the content. Getting closer!
 
-## Measuring the Impact
+## Really Measuring the Impact
 
-So how do we actually measure this and see where we spend the time? The real secret is the `-w` option on `curl` which allows you to define an [output format](https://daniel.haxx.se/blog/2023/08/01/curl-write-out-to-files/) with your desired data. Perfect for blog posts!
+So how do we _actually_ measure this and see where we spend the time? The real secret is the `-w` option on `curl` which allows you to define an [output format](https://daniel.haxx.se/blog/2023/08/01/curl-write-out-to-files/) with your desired data. Perfect for blog posts!
 
 With my good friend Claude, we put this together:
 
@@ -184,7 +188,7 @@ Unfortunately, you can't really fix this via Astro only, as far as I can tell. T
 
 **For Astro**
 
-```javascript
+```typescript
 // astro.config.ts
 export default defineConfig({
   trailingSlash: 'always',
