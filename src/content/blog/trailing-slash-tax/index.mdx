@@ -71,9 +71,45 @@ content-length: 70127
 
 The first request gets a `301 Moved Permanently` response, forcing the browser to make a second request. The second request goes straight to the content. Getting closer!
 
+## Measuring the Impact
+
+So how do we actually measure this and see where we spend the time? The real secret is the `-w` option on `curl`.
+
+With my good friend Claude, we put this together: 
+
+```bash
+
+# Define a format...
+TIMING_FORMAT=$(mktemp)
+cat > "$TIMING_FORMAT" << 'EOF'
+{
+  "dns_lookup": %{time_namelookup},
+  "tcp_connection": %{time_connect},
+  "tls_handshake": %{time_appconnect},
+  "time_redirect": %{time_redirect},
+  "time_to_first_byte": %{time_starttransfer},
+  "total_time": %{time_total},
+  "num_redirects": %{num_redirects}
+}
+EOF
+
+# Various setup things...
+
+for i in {1..50}; do
+    time_without=$(curl -L -w "%{time_total}" -o /dev/null -s "$URL_WITHOUT_SLASH")
+    times_without+=($time_without)
+
+    time_with=$(curl -L -w "%{time_total}" -o /dev/null -s "$URL_WITH_SLASH")
+    times_with+=($time_with)
+done
+
+```
+
+The `-L` flag tells curl to follow redirects, and the aforementioned `-w` flag outputs timing information. By running multiple iterations, we get a more accurate average that accounts for network variability.
+
 ## The Performance Impact
 
-Let's measure the actual cost. Here's a pathological but still a real set of requests, with a trailing slash:
+Let's look at the actual results. Here's a pathological but still a real set of requests, with a trailing slash:
 
 ```
     time_namelookup:  0.001993s
@@ -113,7 +149,7 @@ That's right: missing a single character made my site **20% slower**! Unacceptab
 
 ## The Real-World Cascade
 
-Let's get even more technical. Here's what happens when a user clicks a link to your blog post. Again, here's a pathological but albeit real set of requests.
+Let's get even more technical. Here's what happens when a user clicks a link to your blog post. Again, here's a pathological albeit a real set of requests.
 
 Without a trailing slash:
 
@@ -141,42 +177,6 @@ Total: ~58ms
 ```
 
 The redirect forces a **full round trip** through the network stack before you can even start downloading the page.
-
-## Testing Your Own Site
-
-I ran my tests via a script Claude and I created to test for trailing slash behavior. The full script is available down below and includes HTTP header inspection, detailed timing breakdowns, and multi-run averaging.
-
-Here's the core logic that measures the performance difference:
-
-```bash
-
-# Define a format...
-TIMING_FORMAT=$(mktemp)
-cat > "$TIMING_FORMAT" << 'EOF'
-{
-  "dns_lookup": %{time_namelookup},
-  "tcp_connection": %{time_connect},
-  "tls_handshake": %{time_appconnect},
-  "time_redirect": %{time_redirect},
-  "time_to_first_byte": %{time_starttransfer},
-  "total_time": %{time_total},
-  "num_redirects": %{num_redirects}
-}
-EOF
-
-# Various setup things...
-
-for i in {1..50}; do
-    time_without=$(curl -L -w "%{time_total}" -o /dev/null -s "$URL_WITHOUT_SLASH")
-    times_without+=($time_without)
-
-    time_with=$(curl -L -w "%{time_total}" -o /dev/null -s "$URL_WITH_SLASH")
-    times_with+=($time_with)
-done
-
-```
-
-The `-L` flag tells curl to follow redirects, and the `-w` flag outputs timing information. By running multiple iterations, we get a more accurate average that accounts for network variability.
 
 ## Let's Fix It
 
@@ -262,7 +262,7 @@ Very annoyingly, when I ran the tests first, it was around 40 milliseconds diffe
 
 ## The Full Test Script
 
-Here's the complete script I wrote with some help from Claude to test trailing slash behavior. It tests both URLs, shows the HTTP headers, provides detailed timing breakdowns, and runs 50 iterations for statistical accuracy:
+Earlier I showed you the core measurement logic. Here's the complete script that puts it all together—it tests both URLs, shows the HTTP headers, provides detailed timing breakdowns, and runs 50 iterations for statistical accuracy:
 
 ```bash
 #!/bin/bash
