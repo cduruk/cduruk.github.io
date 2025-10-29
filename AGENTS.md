@@ -6,6 +6,36 @@
 - Prefer fenced code blocks with explicit language identifiers when adding examples.
 - Run available package scripts (e.g., `npm run build`, `npm run lint`) before claiming tests have passed.
 
+## Git Workflow
+
+**Always work on a new branch and create a PR:**
+
+1. **Create a new branch** at the start of any non-trivial work:
+   ```bash
+   git checkout -b descriptive-branch-name
+   ```
+
+2. **Make commits** as you complete discrete pieces of work:
+   - Write clear, descriptive commit messages
+   - Include the Claude Code co-author footer
+   - Break work into logical commits (e.g., separate commits for import, grammar fixes, link updates)
+
+3. **Push branch and create PR** when work is complete:
+   ```bash
+   git push -u origin branch-name
+   gh pr create --title "..." --body "..."
+   ```
+   - Write a comprehensive PR description summarizing all changes
+   - Include context about what was done and why
+   - List key changes as bullet points
+
+4. **Wait for user approval** before merging:
+   - Do not merge PRs automatically
+   - When user requests merge, use: `gh pr merge <number> --rebase --delete-branch`
+   - Repository may require rebase merges (not squash or merge commits)
+
+**Exception:** Small documentation updates or typo fixes may be committed directly to `main` at your discretion.
+
 ## Blog Post Creation
 
 - Always use `npm run new-post` rather than manually creating post directories.
