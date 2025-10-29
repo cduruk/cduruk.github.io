@@ -56,6 +56,36 @@ When importing blog posts from external sites (e.g., Margins, Substack):
 5. **Generate OG image**: Run `npm run generate-og-images` after creating the post
 6. **Add reference links**: Link to relevant Wikipedia articles, source materials, and referenced content
 
+### YAML Frontmatter Validation
+
+**Always validate YAML frontmatter for proper quote escaping:**
+
+When frontmatter fields contain apostrophes or contractions (e.g., "don't", "can't", "you'll"):
+- **Use double quotes** for the entire string value (preferred for readability)
+- **Or double the apostrophe** if using single quotes (`''` becomes the escape sequence)
+
+**Examples:**
+```yaml
+# ✅ Correct - use double quotes
+description: "Why you don't want to make this mistake"
+
+# ✅ Also correct - but harder to read
+description: 'Why you don''t want to make this mistake'
+
+# ❌ Incorrect - will break YAML parsing
+description: 'Why you don't want to make this mistake'
+```
+
+**Why this matters:**
+- Invalid YAML causes MDX files to fail parsing during Astro build
+- The error prevents the entire post from loading
+- Particularly important for `title` and `description` fields
+
+**When to check:**
+- When importing posts with user-written descriptions
+- When titles or descriptions contain possessives or contractions
+- Before running the build process
+
 ### Meta Descriptions & SEO
 
 - Meta descriptions must be between **110-160 characters** for optimal SEO
