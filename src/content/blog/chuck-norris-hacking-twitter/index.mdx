@@ -1,0 +1,89 @@
+---
+title: 'Chuck Norris and Hacking Twitter'
+description: 'The 2020 Twitter hack exposed systemic security failures—and why companies need stricter regulations for protecting prominent accounts'
+date: 2020-08-02
+tags: ['security', 'twitter', 'social-media', 'data-privacy', 'margins']
+ogImage: './og-image.png'
+authors: ['cduruk']
+draft: false
+---
+
+import { Image } from 'astro:assets';
+import Callout from '../../../components/Callout.astro';
+
+import chuckNorris from './chuck-norris.jpg';
+import image1 from './image1.jpg';
+import image2 from './image2.jpg';
+import image3 from './image3.png';
+
+<Callout variant="note">
+This post was originally published on [Margins](https://www.readmargins.com) in August 2020.
+</Callout>
+
+<Image src={chuckNorris} alt="Chuck Norris" />
+
+Hi. This is Can. Today, we talk about the Twitter hack of the month.
+
+## Let's Be Serious
+
+I sometimes joke on Twitter, of all places, that Twitter is not a serious company. It is a company, and a multi-billion dollar public one, but it's really not serious about being a company. There's a CEO, except he's also the CEO of a much bigger company and he's generally more preoccupied with anything but being a CEO, like, I don't know, donating all his money, walking 2 hours to work every day, possibly moving to an African country, doing a 10-day silent retreat, etc etc. It's gotta be a good life.
+
+So, of course, I wasn't super shocked when Twitter got hacked again. It's one of those headlines that come up so often that I generally skip over, like Musk or Trump tweeting something under the influence but, apparently, this time was different. I say apparently because it happened when I was actually on Twitter hiatus myself. Since I am generally quite active on Twitter, a few people texted me to get my takes, but I refused to give in. It was a good change of pace, hearing about some news after the dust has settled.
+
+Anyway, the hack itself is underwhelming in its effect. An enterprising Florida teen finds a way to get access to Twitter's internal tools by social engineering, sells access to those tools to a couple of other kids, who then go on to try to run a bitcoin scam, which is on-brand with I know of bitcoin in general. <sup>[1]</sup>
+
+The details are still emerging but it seems like they've made only around $100K or so. As far as making money from Twitter goes, you'd be better off getting a job there. Not only you'd avoid getting investigated by every three-letter agency under the sun, but also you'd make a lot more money and still keep your precious access to the internal tools at Twitter. It's not like anyone really gives a damn about it over there, apparently?
+
+But seriously, this is so bad:
+
+> The controls were so porous that at one point in 2017 and 2018 some contractors made a kind of game out of creating bogus help-desk inquiries that allowed them to peek into celebrity accounts, including Beyonce's, to track the stars' personal data including their approximate locations gleaned from their devices' IP addresses, two of the former employees said.
+
+I mean, there are mistakes and there's the undeniable, morbid curiosity that's part of the human condition. Still, if your employees have turned invading your user's privacy into a game, you have more significant problems than just a bunch of rogue actors. This is a systemic issue that has gone unnoticed for way too long.
+
+## Enter God View
+
+<Image src={image1} alt="Uber God View reference" />
+
+When I joined [Uber](https://www.uber.com) in late 2014, the company was hard at work at limiting access to internal data. It's not an easy task, to put it lightly, to change the culture and organizational habits of a fast-moving organization. The company had to go from one where you could invoke [God View](https://www.theverge.com/2016/12/29/14104374/uber-god-view-settlement-fine) as a parlor trick to another where you practically had no access to any individual's data, save for a few select teams who did have access but their activity was strictly audited post-hoc.
+
+I was, in fact, one of the few people at Uber who had such access as I worked in the security team, and more specifically, on the identity platform. I did not need permission, for example, to look up a user by their email, but even then my access was tightly monitored. At the end of every week, my manager would get an email detailing my use of such invasive tools, and quite a few times, I had to describe why I looked up a certain user, or why I was using a different tool so many times. In all cases, my use was only related to the test users I've created <sup>[2]</sup> but still, it kept me on my toes knowing that someone was looking over my shoulder.
+
+One of my worst at Uber was when we had to let go of a coworker who apparently tried to access, simply, the "profile" page of a celebrity. His access tripped up an internal system, the person was asked if they did what the logs showed they did, they confirmed and that was it. There was no reason for that person to be accessing a celebrity's page, which could potentially show the home address and the last few trips. The person had claimed they just wanted to see if the tool worked as declared and that they just closed the page immediately but we had no guarantees that they didn't take a photo of the page, or they wouldn't tell anyone about what they saw. And most fundamentally, it showed a lack of good judgment and restraint.
+
+<Image src={image2} alt="Security access controls" />
+
+In some ways, this is why the latest Twitter hack is so frustrating. [Reuters reported](https://www.reuters.com/article/us-twitter-cyber-insiders-insight/how-twitter-employees-provided-fuel-for-the-digital-fire-idUSKCN24M2N8) that more than a thousand people, including many at contractors like Cognizant, had access to similar impersonation tools used by the hackers as late as early 2020. This is not an acceptable level of security for a company at Twitter's size and prominence at this late in the game.
+
+## Chuck Norris
+
+Again, I understand this stuff takes a while to build. I have never gotten to the bottom of this rumor, but it's a funny one. The story goes that in the early days of Facebook, one of the ways employees could "impersonate", or "take over" user accounts was typing in a slightly altered version of the words "Chuck Norris" while they were on the company network. It is jarring to think that a random Facebook employee going through your messages and photos, but I'll say this: I get it. This sort of impersonation tool is quite common, where you can log in as someone else to debug something. I've built and used such tools myself.
+
+And, this was in 2010 when Facebook was relatively young. Few people at the time thought that they'd one day become the world's fifth-biggest company, and a lot of people treated both the internet in general and Facebook specifically differently. A Facebook engineer going through your photos and messages would have been annoying, but anyone could hardly launch a couple of nukes by accident.
+
+Facebook is leaps and bounds bigger than Twitter, as Zuckerberg likes to point out often, but there's more to a company's size than its influence. A friend of Margins likes to say Twitter has the biggest mindshare versus market share quotient in the world. It is quite sobering in many ways, how bad this Twitter hack could have gotten. It feels as though the hackers got inside a bank's vault and ended up just tagging a few graffitis on the wall. We got lucky that they didn't, for example, they didn't tweet some battle cry in Korean from Trump's account or a market-moving one from Musk's. It's a creative and depressing exercise to imagine the ways you could move markets or wreak havoc by a single tweet.
+
+## It's Only Cheating If You Get Caught
+
+The other way to look at this attack is also to consider whether this stuff happens all the time, and this time the hackers got caught because they were so stupid about it. It seems extremely plausible to me that there are more tons more sophisticated attackers who have gotten this level access through social engineering one of the many thousands of people at Twitter (or contractors, but what's the difference) and have benefited from it one way or another.
+
+In other words, I'm not convinced Twitter has the sophistication to detect this sort of irregularity, which ironically happens quite regularly. I want to say that there are people at Twitter who are passionate about keeping millions of people's account safe. Still, I am unclear how they can't even detect that there are people logging into accounts of people like Joe Biden from unauthorized devices, or that access to such accounts (or tools that allow such access) are sold on the open web. Something seems deeply broken, and I am not sure if it'll ever get better. I'm open to being convinced otherwise. Has anything changed over there since 2009?
+
+But then, I'm just a lone blogger here and we should consider whether we, as a society, should be OK with this sort of thing happening over and over again. I often argue that data is a liability, that companies accrue risks that are both unaccounted for and often externalized to us, as they collect data richer in both quality and quantity. What happened with this Twitter hack is not about data per se (assuming the hackers did not download people's direct messages), as it is about identity. However, the externalization of the risks is still a valid concern. We, the users of these online services, are the ones getting the short end of the stick here.
+
+## One Way Forward
+
+There are ways to get better at this without having to keep fighting fires. One way is to link them to quantitative metrics such as the number of users or the potential reach of a post. We don't need to impose strict regulations on a messaging board with a couple of thousand users, but things change at a certain size. A verified account for a prominent user on a social network with tens of millions of users is practically both that person's passport and his or her press office combined. No one would allow a fresh-faced Stanford grad or an underpaid contractor to keep either of those secured. Social media companies of a certain size and reach could be required to verify they have proper processes in place, like basic background checks for their security teams and multi-factor authentication. Prominent users could and should demand such compliance, and it could be required for accounts for people holding office and executives of public companies.
+
+There is also room for qualitative criteria here. Just like certain types of data like financial and medical are protected, we should consider extending similar protections to location data. And companies that store such data as part of their regular business, even for short a period, would be responsible for building the proper internal controls (and work with partners that have them). And as I oftensay (even before I started writing Margins), companies should err on the side of storing this kind of data only temporarily, versus the status quo of keeping everything in a database, hoping that it'll be useful later.
+
+<Image src={image3} alt="Jack Dorsey Twitter bio showing Bitcoin" />
+
+As much as I hate Twitter, I also still love it. It is not a serious company, and it is one that succeeds despite the best attempts of its leadership team to undermine it, and it's here to stay. But the fact that it's here to stay doesn't mean the company and the regulatory environment it exists in should stay as is. In this month's episode of Hacking Twitter, we got off easy. There's only more reason to suspect that things will get worse, with more things moving online, especially at the accelerated pace they are with the pandemic. It's important to act sooner than later. We just can't rely on Jack Dorsey, or Chuck Norris for that matter, for doing the right thing for much longer.
+
+## Notes
+
+<sup>[1]</sup> It still blows my mind that Jack Dorsey's Twitter bio is nothing more than an advertisement (endorsement?) for Bitcoin. There's no better way to make your Bitcoin scam look real when the CEO of Twitter is doing half the work for you.
+
+<sup>[2]</sup> Except in one case. One time, one of the highest ranking executives had some trouble logging in using the new app my team was building and I had to look up his profile to debug something. I knew accessing certain class of users would trigger something automatically, but I was surprised how fast people acted on it.
+
+<sup>[3]</sup> [Hatching Twitter](https://en.wikipedia.org/wiki/Hatching_Twitter) is a good book!
