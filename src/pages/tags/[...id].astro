@@ -40,7 +40,15 @@ const { tag, posts } = Astro.props
     ]}
   />
 
-  <ul class="flex flex-col gap-y-4">
+  <section>
+    <div class="prose mb-8">
+      <h1>{tag}</h1>
+      <p class="mt-0">
+        A collection of {posts.length} {posts.length === 1 ? 'post' : 'posts'} tagged with {tag}.
+      </p>
+    </div>
+
+    <ul class="flex flex-col gap-y-4">
     {
       posts.map((post) => (
         <li>
@@ -48,5 +56,6 @@ const { tag, posts } = Astro.props
         </li>
       ))
     }
-  </ul>
+    </ul>
+  </section>
 </Layout>
