@@ -5,6 +5,8 @@ import PageHead from '@/components/PageHead.astro'
 import ProjectCard from '@/components/ProjectCard.astro'
 import Layout from '@/layouts/Layout.astro'
 import { getAllProjects } from '@/lib/data-utils'
+import { Image } from 'astro:assets'
+import profileImage from '@/assets/profile.jpg'
 
 const projects = await getAllProjects()
 ---
@@ -17,6 +19,15 @@ const projects = await getAllProjects()
     <div class="min-w-full">
       <div class="prose mb-8">
         <h1>About</h1>
+        <Image
+          src={profileImage}
+          alt="Can Duruk"
+          class="rounded-lg w-full object-cover my-6"
+          style="aspect-ratio: 16/9; max-height: 500px;"
+          widths={[800, 1200, 1600]}
+          sizes="(max-width: 768px) 100vw, 800px"
+          quality={80}
+        />
         <p class="mt-0">
           My name is Can Duruk. I am the former CTO and co-founder of <Link
             href="https://felt.com"
