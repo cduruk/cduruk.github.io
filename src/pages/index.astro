@@ -5,11 +5,12 @@ import PageHead from '@/components/PageHead.astro'
 import { buttonVariants } from '@/components/ui/button'
 import { SITE } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
-import { getRecentPosts } from '@/lib/data-utils'
+import { getRecentPosts, getFeaturedPosts } from '@/lib/data-utils'
 import { Image } from 'astro:assets'
 import logo from '../../public/static/logo.svg'
 
 const blog = await getRecentPosts(SITE.featuredPostCount)
+const featuredPosts = await getFeaturedPosts()
 ---
 
 <Layout class="max-w-3xl">
@@ -28,7 +29,7 @@ const blog = await getRecentPosts(SITE.featuredPostCount)
       </div>
     </div>
     <div class="p-6 pt-0">
-      <p class="text-muted-foreground mb-2 text-sm">
+      <p class="text-muted-foreground mb-2 text-[15px]">
         Off By One is where Can Duruk writes about engineering, management, and
         engineering management. He is the former CTO of <Link
           href="https://felt.com"
@@ -42,6 +43,25 @@ const blog = await getRecentPosts(SITE.featuredPostCount)
           underline>Uber</Link
         >.
       </p>
+      {
+        featuredPosts.length > 0 && (
+          <div class="mt-4">
+            <p class="mb-2 text-[15px] font-medium">Start here:</p>
+            <ul class="flex flex-col gap-1 text-[15px]">
+              {featuredPosts.map((post) => (
+                <li>
+                  <Link
+                    href={`/posts/${post.id}`}
+                    class="text-foreground hover:text-primary transition-colors before:content-['#_'] before:text-primary"
+                  >
+                    {post.data.title}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
     </div>
   </section>
   <section class="flex flex-col gap-y-4">

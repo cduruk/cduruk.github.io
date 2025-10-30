@@ -113,6 +113,11 @@ export async function getPostsByTag(
   return posts.filter((post) => post.data.tags?.includes(tag))
 }
 
+export async function getFeaturedPosts(): Promise<CollectionEntry<'blog'>[]> {
+  const posts = await getAllPosts()
+  return posts.filter((post) => post.data.featured === true)
+}
+
 export async function getRecentPosts(
   count: number,
 ): Promise<CollectionEntry<'blog'>[]> {
