@@ -7,7 +7,7 @@ export const SITE: Site = {
   href: 'https://justoffbyone.com',
   author: 'cduruk',
   locale: 'en-US',
-  featuredPostCount: 3,
+  featuredPostCount: 5,
   postsPerPage: 10,
 }
 
