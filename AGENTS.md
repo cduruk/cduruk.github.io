@@ -116,6 +116,8 @@ description: 'Why you don't want to make this mistake'
 - Don't edit the generation scripts in `scripts/` unless changing the generation process itself.
 - OG images are auto-generated during build via `npm run build`.
 - Manual generation is available via `npm run generate-og-images`.
+  - Pass `--slug slug-one,slug-two` to regenerate specific posts (combine with `--all-posts` to overwrite existing assets).
+  - Use `--tasks static` or `--no-static` to control whether static page OGs are rebuilt.
 
 ## Color Scheme
 
