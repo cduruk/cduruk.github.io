@@ -92,8 +92,17 @@ Off by One is Can Duruk's home on the internet for long-form essays about engine
 4. If a post needs bespoke OG imagery, edit the matching template under `src/components/ui/og/` and run:
 
    ```bash
+   # Default: fill in any missing blog or static page assets
    npm run generate-og-images
+
+   # Force-regenerate a specific post and skip static pages
+   npm run generate-og-images -- --slug my-post --all-posts --no-static
+
+   # Run just the static page task
+   npm run generate-og-images -- --tasks static
    ```
+
+   The CLI accepts multiple slugs (comma separated or repeated `--slug` flags) and `--tasks posts,static` to pick the work queue explicitly.
 
 5. Commit the generated assets stored in `public/og/` so deployments stay in sync.
 

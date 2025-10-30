@@ -18,7 +18,7 @@ interface Frontmatter {
   [key: string]: string
 }
 
-interface BlogPost {
+export interface BlogPost {
   slug: string
   dir: string
   hasOgImage: boolean
@@ -32,6 +32,211 @@ interface StaticPage {
   title: string
   description?: string
   outputPath: string
+}
+
+export interface CliOptions {
+  slugs: string[]
+  includePosts: boolean
+  includeStatic: boolean
+  onlyMissing: boolean
+  help: boolean
+}
+
+function parseList(value: string): string[] {
+  return value
+    .split(',')
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0)
+}
+
+function normalizeSlugInput(value: string | undefined): string[] {
+  if (!value) {
+    return []
+  }
+
+  return parseList(value)
+}
+
+function takeValue(
+  valueFromSame: string | undefined,
+  args: string[],
+  index: number,
+): { consumed: number; value?: string } {
+  if (valueFromSame !== undefined) {
+    return { consumed: 0, value: valueFromSame }
+  }
+
+  const next = args[index + 1]
+
+  if (next && !next.startsWith('--')) {
+    return { consumed: 1, value: next }
+  }
+
+  return { consumed: 0 }
+}
+
+export function parseCliArgs(args: string[]): CliOptions {
+  const options: CliOptions = {
+    slugs: [],
+    includePosts: true,
+    includeStatic: true,
+    onlyMissing: true,
+    help: false,
+  }
+
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index]
+
+    if (!arg.startsWith('--')) {
+      continue
+    }
+
+    let [rawKey, valueFromSame] = arg.slice(2).split('=', 2)
+
+    if (!rawKey) {
+      continue
+    }
+
+    if (rawKey === 'h') {
+      rawKey = 'help'
+    }
+
+    if (rawKey === 'help') {
+      options.help = true
+      continue
+    }
+
+    if (rawKey.startsWith('no-')) {
+      const normalizedKey = rawKey.slice(3)
+
+      if (normalizedKey === 'static') {
+        options.includeStatic = false
+      } else if (normalizedKey === 'posts') {
+        options.includePosts = false
+      }
+
+      continue
+    }
+
+    const { consumed, value } = takeValue(valueFromSame, args, index)
+    index += consumed
+
+    switch (rawKey) {
+      case 'slug':
+      case 'slugs': {
+        const slugs = normalizeSlugInput(value)
+
+        if (slugs.length === 0) {
+          throw new Error('The --slug flag requires at least one slug value.')
+        }
+
+        const existing = new Set(options.slugs)
+
+        for (const slug of slugs) {
+          if (!existing.has(slug)) {
+            options.slugs.push(slug)
+            existing.add(slug)
+          }
+        }
+
+        break
+      }
+      case 'tasks':
+      case 'task': {
+        if (!value) {
+          throw new Error('The --tasks flag requires a comma-separated value.')
+        }
+
+        const normalized = parseList(value)
+
+        if (normalized.length === 0) {
+          throw new Error('Provide at least one task: posts, static, or both.')
+        }
+
+        let posts = false
+        let statics = false
+
+        for (const task of normalized) {
+          if (task === 'posts' || task === 'post') {
+            posts = true
+          } else if (task === 'static' || task === 'statics') {
+            statics = true
+          } else {
+            throw new Error(`Unknown task "${task}". Use "posts" or "static".`)
+          }
+        }
+
+        options.includePosts = posts
+        options.includeStatic = statics
+        break
+      }
+      case 'posts-only': {
+        options.includePosts = true
+        options.includeStatic = false
+        break
+      }
+      case 'static-only': {
+        options.includePosts = false
+        options.includeStatic = true
+        break
+      }
+      case 'include-static': {
+        options.includeStatic = true
+        break
+      }
+      case 'include-posts': {
+        options.includePosts = true
+        break
+      }
+      case 'all-posts':
+      case 'force': {
+        options.onlyMissing = false
+        break
+      }
+      case 'missing-only': {
+        options.onlyMissing = true
+        break
+      }
+      default:
+        break
+    }
+  }
+
+  return options
+}
+
+export function filterPostsForGeneration(
+  posts: BlogPost[],
+  options: CliOptions,
+): BlogPost[] {
+  if (options.slugs.length > 0) {
+    const slugSet = new Set(options.slugs)
+    const selected = posts.filter((post) => slugSet.has(post.slug))
+
+    const missing = options.slugs.filter(
+      (slug) => !selected.some((post) => post.slug === slug),
+    )
+
+    if (missing.length > 0) {
+      throw new Error(
+        `Unknown blog post slug${missing.length > 1 ? 's' : ''}: ${missing.join(', ')}`,
+      )
+    }
+
+    return selected
+  }
+
+  return posts.filter((post) => {
+    if (post.draft === 'true') {
+      return false
+    }
+
+    if (options.onlyMissing) {
+      return !post.hasOgImage
+    }
+
+    return true
+  })
 }
 
 // Simple frontmatter parser
@@ -291,48 +496,73 @@ async function generateStaticPageImage(page: StaticPage): Promise<void> {
   console.log(`  ✓ Generated OG image: /static/og/${page.name}.png`)
 }
 
-// Main function
-async function main(): Promise<void> {
+function printUsage(): void {
+  console.log(`Usage: npm run generate-og-images -- [options]
+
+Options:
+  --slug slug-one,slug-two   Generate OG images for specific blog post slugs
+  --tasks posts,static       Choose which tasks to run (posts, static)
+  --posts-only               Shorthand for "--tasks posts"
+  --static-only              Shorthand for "--tasks static"
+  --no-posts                 Skip blog post generation
+  --no-static                Skip static page generation
+  --all-posts | --force      Regenerate posts even if an OG image exists
+  --missing-only             Revert to the default missing-only behaviour
+  --help                     Show this message
+`)
+}
+
+export async function runCli(options: CliOptions): Promise<void> {
   console.log('🎨 Generating OG images...\n')
 
-  // Generate blog post images
-  console.log('📝 Blog posts:')
-  const posts = await getBlogPosts()
-  const postsWithoutOgImage = posts.filter(
-    (p) => !p.hasOgImage && p.draft !== 'true',
-  )
+  const shouldGeneratePosts = options.includePosts || options.slugs.length > 0
 
-  if (postsWithoutOgImage.length === 0) {
-    console.log('  ✨ All posts already have OG images!')
-  } else {
-    console.log(
-      `  Found ${postsWithoutOgImage.length} posts without OG images:\n`,
-    )
+  if (shouldGeneratePosts) {
+    console.log('📝 Blog posts:')
+    const posts = await getBlogPosts()
+    const postsToGenerate = filterPostsForGeneration(posts, options)
 
-    for (const post of postsWithoutOgImage) {
-      try {
-        await generateImage(post)
-      } catch (error) {
-        console.error(
-          `  ✗ Failed to generate OG image for ${post.slug}:`,
-          (error as Error).message,
+    if (postsToGenerate.length === 0) {
+      if (options.slugs.length > 0) {
+        console.log('  ✨ No matching posts found for the provided slugs.')
+      } else if (options.onlyMissing) {
+        console.log('  ✨ All posts already have OG images!')
+      } else {
+        console.log('  ✨ No posts matched the generation criteria.')
+      }
+    } else {
+      if (options.onlyMissing && options.slugs.length === 0) {
+        console.log(
+          `  Found ${postsToGenerate.length} posts without OG images:\n`,
         )
+      }
+
+      for (const post of postsToGenerate) {
+        try {
+          await generateImage(post)
+        } catch (error) {
+          console.error(
+            `  ✗ Failed to generate OG image for ${post.slug}:`,
+            (error as Error).message,
+          )
+        }
       }
     }
   }
 
-  // Generate static page images
-  console.log('\n📄 Static pages:')
-  const staticPages = getStaticPages()
+  if (options.includeStatic) {
+    console.log(shouldGeneratePosts ? '\n📄 Static pages:' : '📄 Static pages:')
+    const staticPages = getStaticPages()
 
-  for (const page of staticPages) {
-    try {
-      await generateStaticPageImage(page)
-    } catch (error) {
-      console.error(
-        `  ✗ Failed to generate OG image for ${page.name}:`,
-        (error as Error).message,
-      )
+    for (const page of staticPages) {
+      try {
+        await generateStaticPageImage(page)
+      } catch (error) {
+        console.error(
+          `  ✗ Failed to generate OG image for ${page.name}:`,
+          (error as Error).message,
+        )
+      }
     }
   }
 
@@ -341,5 +571,17 @@ async function main(): Promise<void> {
 
 // Only run main if this file is being executed directly (not imported)
 if (fileURLToPath(import.meta.url) === process.argv[1]) {
-  main().catch(console.error)
+  const options = parseCliArgs(process.argv.slice(2))
+
+  if (options.help) {
+    printUsage()
+  } else if (!options.includePosts && !options.includeStatic && options.slugs.length === 0) {
+    console.error('Nothing to do. Specify --slug or enable posts/static tasks.')
+    process.exitCode = 1
+  } else {
+    runCli(options).catch((error) => {
+      console.error(error instanceof Error ? error.message : error)
+      process.exitCode = 1
+    })
+  }
 }
