@@ -9,18 +9,156 @@ const __dirname = dirname(__filename)
 
 const BLOG_DIR = join(__dirname, '../src/content/blog')
 const DEFAULT_AUTHOR = 'cduruk'
+const isInteractive = Boolean(process.stdin.isTTY && process.stdout.isTTY)
 
-// Create readline interface
-const rl = readline.createInterface({
-  input: process.stdin,
-  output: process.stdout,
-})
+let rl: readline.Interface | undefined
+
+// Lazily create readline interface
+function getReadline(): readline.Interface {
+  if (!rl) {
+    rl = readline.createInterface({
+      input: process.stdin,
+      output: process.stdout,
+    })
+  }
+
+  return rl
+}
+
+function closeReadline(): void {
+  if (rl) {
+    rl.close()
+    rl = undefined
+  }
+}
 
 // Promisified question function
 function question(prompt: string): Promise<string> {
-  return new Promise((resolve) => {
-    rl.question(prompt, resolve)
+  return new Promise((resolve, reject) => {
+    if (!isInteractive) {
+      reject(
+        new Error(
+          'Cannot prompt for input in non-interactive mode. Please provide required values via CLI flags.',
+        ),
+      )
+      return
+    }
+
+    getReadline().question(prompt, resolve)
   })
+}
+
+interface CliOptions {
+  title?: string
+  description?: string
+  tags?: string
+  author?: string
+  draft?: boolean
+  date?: string
+  slug?: string
+  help?: boolean
+}
+
+function parseArgs(args: string[]): CliOptions {
+  const result: CliOptions = {}
+
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index]
+
+    if (!arg.startsWith('--')) {
+      continue
+    }
+
+    const [rawKey, valueFromSame] = arg.slice(2).split('=', 2)
+
+    if (!rawKey) {
+      continue
+    }
+
+    if (rawKey === 'help' || rawKey === 'h') {
+      result.help = true
+      continue
+    }
+
+    if (rawKey.startsWith('no-')) {
+      const normalizedKey = rawKey.slice(3)
+
+      if (normalizedKey === 'draft') {
+        result.draft = false
+      }
+
+      continue
+    }
+
+    let value = valueFromSame
+
+    if (value === undefined && index + 1 < args.length && !args[index + 1].startsWith('--')) {
+      value = args[index + 1]
+      index += 1
+    }
+
+    switch (rawKey) {
+      case 'title':
+        result.title = value ?? ''
+        break
+      case 'description':
+        result.description = value ?? ''
+        break
+      case 'tags':
+        result.tags = value ?? ''
+        break
+      case 'author':
+        result.author = value ?? ''
+        break
+      case 'date':
+        result.date = value ?? ''
+        break
+      case 'slug':
+        result.slug = value ?? ''
+        break
+      case 'draft':
+        if (value === undefined) {
+          result.draft = true
+        } else {
+          result.draft = !['false', '0', 'no'].includes(value.toLowerCase())
+        }
+        break
+      default:
+        break
+    }
+  }
+
+  return result
+}
+
+function printUsage(): void {
+  console.log(`Usage: npm run new-post -- [options]
+
+Options:
+  --title "Post title"           Required when running non-interactively
+  --description "Description"     Required when running non-interactively
+  --tags "tag-one,tag-two"        Optional comma-separated tags
+  --author "username"             Optional author override (default: ${DEFAULT_AUTHOR})
+  --draft | --no-draft            Mark post as draft (defaults to no)
+  --date YYYY-MM-DD              Override the creation date
+  --slug custom-slug             Provide a custom slug
+  --help                         Show this message
+`)
+}
+
+function parseTags(input?: string): string[] {
+  if (!input) {
+    return []
+  }
+
+  return input
+    .split(',')
+    .map((tag) => tag.trim())
+    .filter((tag) => tag.length > 0)
+}
+
+function escapeYamlString(value: string): string {
+  return value.replace(/"/g, '\\"')
 }
 
 // Generate slug from title
@@ -49,16 +187,18 @@ function generateFrontmatter(data: {
 }): string {
   const lines: string[] = ['---']
 
-  lines.push(`title: '${data.title}'`)
-  lines.push(`description: '${data.description}'`)
+  lines.push(`title: "${escapeYamlString(data.title)}"`)
+  lines.push(`description: "${escapeYamlString(data.description)}"`)
   lines.push(`date: ${data.date}`)
 
   if (data.tags && data.tags.length > 0) {
-    lines.push(`tags: [${data.tags.map((tag) => `'${tag}'`).join(', ')}]`)
+    lines.push(
+      `tags: [${data.tags.map((tag) => `"${escapeYamlString(tag)}"`).join(', ')}]`,
+    )
   }
 
   lines.push(`ogImage: './og-image.png'`)
-  lines.push(`authors: ['${data.author}']`)
+  lines.push(`authors: ["${escapeYamlString(data.author)}"]`)
 
   if (data.draft) {
     lines.push(`draft: true`)
@@ -102,60 +242,103 @@ async function directoryExists(slug: string): Promise<boolean> {
 
 // Main function
 async function main(): Promise<void> {
+  const args = parseArgs(process.argv.slice(2))
+
+  if (args.help) {
+    printUsage()
+    return
+  }
+
   console.log('📝 Create New Blog Post\n')
 
   // Get title (required)
-  let title = ''
-  while (!title.trim()) {
-    title = await question('Post title: ')
-    if (!title.trim()) {
+  let title = (args.title ?? '').trim()
+  while (!title) {
+    try {
+      title = (await question('Post title: ')).trim()
+    } catch (error) {
+      console.error('❌ Title is required. Provide it with --title when running non-interactively.')
+      process.exit(1)
+    }
+
+    if (!title) {
       console.log('⚠️  Title is required!\n')
     }
   }
 
   // Generate and confirm slug
-  const slug = generateSlug(title)
-  console.log(`Generated slug: ${slug}\n`)
+  const slugSource = args.slug && args.slug.trim().length > 0 ? args.slug : title
+  const slug = generateSlug(slugSource)
+
+  if (args.slug && args.slug.trim().length > 0) {
+    console.log(`Using provided slug: ${slug}\n`)
+  } else {
+    console.log(`Generated slug: ${slug}\n`)
+  }
 
   // Check if post already exists
   if (await directoryExists(slug)) {
     console.log(`❌ A post with slug "${slug}" already exists!`)
-    rl.close()
+    closeReadline()
     return
   }
 
   // Get description (required)
-  let description = ''
-  while (!description.trim()) {
-    description = await question('Description: ')
-    if (!description.trim()) {
+  let description = (args.description ?? '').trim()
+  while (!description) {
+    try {
+      description = (await question('Description: ')).trim()
+    } catch (error) {
+      console.error(
+        '❌ Description is required. Provide it with --description when running non-interactively.',
+      )
+      process.exit(1)
+    }
+
+    if (!description) {
       console.log('⚠️  Description is required!\n')
     }
   }
 
   // Get tags (optional)
-  const tagsInput = await question(
-    'Tags (comma-separated, or press enter to skip): ',
-  )
-  const tags = tagsInput
-    .split(',')
-    .map((tag) => tag.trim())
-    .filter((tag) => tag.length > 0)
+  let tags: string[]
+
+  if (args.tags !== undefined) {
+    tags = parseTags(args.tags)
+  } else if (isInteractive) {
+    const tagsInput = await question(
+      'Tags (comma-separated, or press enter to skip): ',
+    )
+    tags = parseTags(tagsInput)
+  } else {
+    tags = []
+  }
 
   // Get draft status (optional)
-  const draftInput = await question('Create as draft? (y/N): ')
-  const draft =
-    draftInput.toLowerCase() === 'y' || draftInput.toLowerCase() === 'yes'
+  let draft = args.draft
 
-  rl.close()
+  if (draft === undefined) {
+    if (isInteractive) {
+      const draftInput = await question('Create as draft? (y/N): ')
+      draft =
+        draftInput.toLowerCase() === 'y' || draftInput.toLowerCase() === 'yes'
+    } else {
+      draft = false
+    }
+  }
+
+  closeReadline()
+
+  const date = args.date && args.date.trim().length > 0 ? args.date : formatDate(new Date())
+  const author = args.author && args.author.trim().length > 0 ? args.author : DEFAULT_AUTHOR
 
   // Generate content
   const content = generatePostContent({
     title,
     description,
-    date: formatDate(new Date()),
+    date,
     tags: tags.length > 0 ? tags : undefined,
-    author: DEFAULT_AUTHOR,
+    author,
     draft,
   })
 

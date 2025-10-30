@@ -40,7 +40,8 @@
 
 - Always use `npm run new-post` rather than manually creating post directories.
 - This ensures proper directory structure, frontmatter formatting, and auto-generates OG images.
-- The script will prompt for title, description, tags, and draft status.
+- The script supports both interactive prompts and CLI flags (`npm run new-post -- --title "..." --description "..." --tags foo,bar`).
+- Provide required fields via flags when running non-interactively; otherwise the script will prompt for missing values.
 
 ### Importing Posts from External Sources
 

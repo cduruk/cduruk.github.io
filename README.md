@@ -75,10 +75,14 @@ Off by One is Can Duruk's home on the internet for long-form essays about engine
 
 ## Publishing new writing
 
-1. Scaffold the post and its OG assets using the interactive generator:
+1. Scaffold the post and its OG assets using the generator. It now supports both interactive prompts and direct CLI flags for automation workflows:
 
    ```bash
+   # Interactive
    npm run new-post
+
+   # Non-interactive example
+   npm run new-post -- --title "My Post" --description "Teaser" --tags engineering,process --draft --author cduruk
    ```
 
 2. Drafts are created under `src/content/blog/`. Iterate locally with the dev server until you're ready to ship, then set `draft: false` in the frontmatter.
