@@ -3,10 +3,12 @@ import BlogCard from '@/components/BlogCard.astro'
 import Link from '@/components/Link.astro'
 import PageHead from '@/components/PageHead.astro'
 import { buttonVariants } from '@/components/ui/button'
+import { badgeVariants } from '@/components/ui/badge'
 import { SITE } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
 import { getRecentPosts, getFeaturedPosts } from '@/lib/data-utils'
 import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
 import logo from '../../public/static/logo.svg'
 
 const blog = await getRecentPosts(SITE.featuredPostCount)
@@ -30,8 +32,13 @@ const featuredPosts = await getFeaturedPosts()
     </div>
     <div class="p-6 pt-0">
       <p class="text-muted-foreground mb-2 text-[15px]">
-        Off By One is where Can Duruk writes about engineering, management, and
-        engineering management. He is the former CTO of <Link
+        Off By One is where Can Duruk writes about engineering, management, and <Link
+          href="/tags/engineering-management"
+          class={badgeVariants({ variant: 'muted' }) + ' inline-flex items-center gap-1 align-baseline'}
+        >
+          <Icon name="lucide:hash" class="size-3" />
+          engineering management</Link
+        >. He is the former CTO of <Link
           href="https://felt.com"
           class="text-foreground"
           external
@@ -41,6 +48,24 @@ const featuredPosts = await getFeaturedPosts()
           class="text-foreground"
           external
           underline>Uber</Link
+        >. He also writes about the <Link
+          href="/tags/tech-industry"
+          class={badgeVariants({ variant: 'muted' }) + ' inline-flex items-center gap-1 align-baseline'}
+        >
+          <Icon name="lucide:hash" class="size-3" />
+          tech industry</Link
+        > and <Link
+          href="/tags/social-media"
+          class={badgeVariants({ variant: 'muted' }) + ' inline-flex items-center gap-1 align-baseline'}
+        >
+          <Icon name="lucide:hash" class="size-3" />
+          many</Link
+        > <Link
+          href="/tags/margins"
+          class={badgeVariants({ variant: 'muted' }) + ' inline-flex items-center gap-1 align-baseline'}
+        >
+          <Icon name="lucide:hash" class="size-3" />
+          others</Link
         >.
       </p>
       {
