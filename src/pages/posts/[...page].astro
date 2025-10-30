@@ -28,7 +28,9 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
   <Breadcrumbs
     items={[
       { label: 'Posts', href: '/posts/', icon: 'lucide:library-big' },
-      { label: `Page ${page.currentPage}`, icon: 'lucide:book-copy' },
+      ...(page.lastPage > 1
+        ? [{ label: `Page ${page.currentPage}`, icon: 'lucide:book-copy' }]
+        : []),
     ]}
   />
 
@@ -55,10 +57,14 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
     }
   </div>
 
-  <PaginationComponent
-    currentPage={page.currentPage}
-    totalPages={page.lastPage}
-    baseUrl="/posts/"
-    client:load
-  />
+  {
+    page.lastPage > 1 && (
+      <PaginationComponent
+        currentPage={page.currentPage}
+        totalPages={page.lastPage}
+        baseUrl="/posts/"
+        client:load
+      />
+    )
+  }
 </Layout>
