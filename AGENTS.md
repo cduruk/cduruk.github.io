@@ -42,6 +42,7 @@
 - This ensures proper directory structure, frontmatter formatting, and auto-generates OG images.
 - The script supports both interactive prompts and CLI flags (`npm run new-post -- --title "..." --description "..." --tags foo,bar`).
 - Provide required fields via flags when running non-interactively; otherwise the script will prompt for missing values.
+- **Use existing tags whenever possible** - check existing posts in `src/content/blog/` before creating new tags. Common tags include: `business`, `margins`, `tech-industry`, `social-media`, `security`, `engineering-management`, `hiring`, `programming`.
 
 ### Importing Posts from External Sources
 
