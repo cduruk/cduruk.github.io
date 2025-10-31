@@ -15,7 +15,7 @@ Engineers love to measure things: latency, throughput, error rates. But try to m
 
 I get it. I've seen enough terrible systems to understand the resistance. Most systems fail, thanks to [Goodhart's Law](https://en.wikipedia.org/wiki/Goodhart%27s_law). Measure the lines of code written, and people jack up verbosity. Measure the number of PRs, and people start dividing up their PRs.
 
-Yet, it all feels like you have to measure _something_. Every manager knows that some people are more productive than others. Clearly, there's a way to ascertain productivity. And even a given individual has their ebss and flows. How do you know if someone's doing better than yesterday or if they are falling off a cliff?
+Yet, it all feels like you have to measure _something_. Every manager knows that some people are more productive than others. Clearly, there's a way to ascertain productivity. And even a given individual has their ebbs and flows. How do you know if someone's doing better than yesterday or if they are falling off a cliff?
 
 ## Why Measure Things?
 
@@ -120,7 +120,7 @@ Over time, we developed a [sophisticated system](https://felt.com/blog/how-felt-
 
 However, to make sure things actually worked as designed (and because we started having bugs), I required our engineers to verify their PRs in production and produce a proof of that verification.
 
-Again, we automated almost all of this—after each deploy, the toolong would create a new Slack message in a designated room and tag the person (in Slack) whose PR just got deployed. All the engineers had to do was verify their PR (by posting a message under that thread on how they verified it) and add a `✅` emoji.
+Again, we automated almost all of this—after each deploy, the tooling would create a new Slack message in a designated room and tag the person (in Slack) whose PR just got deployed. All the engineers had to do was verify their PR (by posting a message under that thread on how they verified it) and add a `✅` emoji.
 
 Similar to the PR notifications, this system wasn't used as evidence as much as it created a culture of high cadence. It became very obvious how many deploys were going out and whose PRs were in them, which became motivating for most people.
 
