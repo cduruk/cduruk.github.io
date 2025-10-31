@@ -6,13 +6,14 @@ import { buttonVariants } from '@/components/ui/button'
 import { badgeVariants } from '@/components/ui/badge'
 import { SITE } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
-import { getRecentPosts, getFeaturedPosts } from '@/lib/data-utils'
+import { getRecentPosts, getFeaturedPosts, getAllTags } from '@/lib/data-utils'
 import { Image } from 'astro:assets'
 import { Icon } from 'astro-icon/components'
 import logo from '../../public/static/logo.svg'
 
 const blog = await getRecentPosts(SITE.featuredPostCount)
 const featuredPosts = await getFeaturedPosts()
+const allTags = await getAllTags()
 ---
 
 <Layout class="max-w-3xl">
@@ -50,25 +51,29 @@ const featuredPosts = await getFeaturedPosts()
           class={badgeVariants({ variant: 'muted' }) + ' inline-flex items-center gap-1 align-baseline font-semibold'}
         >
           <Icon name="lucide:hash" class="size-3" />
-          engineering management</Link
+          engineering management
+          <span class="text-muted-foreground ml-1.5">({allTags.get('engineering-management') || 0})</span></Link
         >, <Link
           href="/tags/tech-industry"
           class={badgeVariants({ variant: 'muted' }) + ' inline-flex items-center gap-1 align-baseline font-semibold'}
         >
           <Icon name="lucide:hash" class="size-3" />
-          tech industry</Link
+          tech industry
+          <span class="text-muted-foreground ml-1.5">({allTags.get('tech-industry') || 0})</span></Link
         >, and <Link
           href="/tags/social-media"
           class={badgeVariants({ variant: 'muted' }) + ' inline-flex items-center gap-1 align-baseline font-semibold'}
         >
           <Icon name="lucide:hash" class="size-3" />
-          other</Link
+          other
+          <span class="text-muted-foreground ml-1.5">({allTags.get('social-media') || 0})</span></Link
         > <Link
           href="/tags/margins"
           class={badgeVariants({ variant: 'muted' }) + ' inline-flex items-center gap-1 align-baseline font-semibold'}
         >
           <Icon name="lucide:hash" class="size-3" />
-          topics</Link
+          topics
+          <span class="text-muted-foreground ml-1.5">({allTags.get('margins') || 0})</span></Link
         >.
       </p>
       {
