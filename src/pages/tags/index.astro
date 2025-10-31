@@ -1,13 +1,35 @@
 ---
+import BlogCard from '@/components/BlogCard.astro'
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import Link from '@/components/Link.astro'
 import PageHead from '@/components/PageHead.astro'
 import { badgeVariants } from '@/components/ui/badge'
 import Layout from '@/layouts/Layout.astro'
-import { getSortedTags } from '@/lib/data-utils'
+import { getPostsByTag, getSortedTags } from '@/lib/data-utils'
 import { Icon } from 'astro-icon/components'
 
-const sortedTags = await getSortedTags()
+const allTags = await getSortedTags()
+
+// Custom ordering for display
+const tagOrder = [
+  'engineering-management',
+  'hiring',
+  'tech-industry',
+  'business',
+  'security',
+  'social-media',
+  'programming',
+  'margins',
+]
+
+const sortedTags = [
+  ...allTags
+    .filter(({ tag }) => tagOrder.includes(tag))
+    .sort((a, b) => {
+      return tagOrder.indexOf(a.tag) - tagOrder.indexOf(b.tag)
+    }),
+  ...allTags.filter(({ tag }) => !tagOrder.includes(tag)),
+]
 ---
 
 <Layout class="max-w-3xl">
@@ -22,7 +44,7 @@ const sortedTags = await getSortedTags()
       </p>
     </div>
 
-    <div class="flex flex-wrap gap-2">
+    <div class="mb-12 flex flex-wrap gap-2">
       {
         sortedTags.map(({ tag, count }) => (
           <Link
@@ -34,6 +56,28 @@ const sortedTags = await getSortedTags()
             <span class="text-muted-foreground ml-1.5">({count})</span>
           </Link>
         ))
+      }
+    </div>
+
+    <div class="flex flex-col gap-y-8">
+      {
+        await Promise.all(
+          sortedTags.map(async ({ tag }) => {
+            const posts = await getPostsByTag(tag)
+            return (
+              <section class="flex flex-col gap-y-4">
+                <h2 class="year-heading text-2xl font-medium">{tag}</h2>
+                <ul class="flex flex-col gap-4">
+                  {posts.map((post) => (
+                    <li>
+                      <BlogCard entry={post} />
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )
+          }),
+        )
       }
     </div>
   </section>
