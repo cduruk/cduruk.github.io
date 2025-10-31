@@ -33,9 +33,9 @@ If the auditors like what you've put into the spreadsheet, you get a Type 1 cert
 
 OK, this is a funny billboard.
 
-So, where does Vanta fit in all this? They make and fill in the spreadsheet for you.[^1] As "the compliance automation platform", they sit between your company, "the service organization," and the auditors. Auditors look at the spreadsheet created by Vanta and give you a pass/fail score.[^2]
+So, where does Vanta fit in all this? They make and fill in the spreadsheet for you.<sup>[1]</sup> As "the compliance automation platform", they sit between your company, "the service organization," and the auditors. Auditors look at the spreadsheet created by Vanta and give you a pass/fail score.<sup>[2]</sup>
 
-The "tech" angle behind all this is connecting to all your systems like AWS and Github and verifying things are locked down. Vanta also syncs up with your HR systems like Google or Workday to make sure people follow their training schedule, accept their policies, and pass their criminal checks. It's a big value add for Type 1, and a true lifesaver for Type 2.[^3]
+The "tech" angle behind all this is connecting to all your systems like AWS and Github and verifying things are locked down. Vanta also syncs up with your HR systems like Google or Workday to make sure people follow their training schedule, accept their policies, and pass their criminal checks. It's a big value add for Type 1, and a true lifesaver for Type 2.<sup>[3]</sup>
 
 Now, in a pure business sense, Vanta should be good for the world. If they are lubricating the wheels of commerce by making sure even small companies can [cross the enterprise chasm](https://www.youtube.com/watch?v=6MSYAndGwMg), it's fair for them to get a cut of the marginal transactions they are enabling. After all, that's why most SaaS companies exist. We all make the world a better place, in our small ways.
 
@@ -55,7 +55,7 @@ That's an excellent [title](https://fly.io/blog/soc2-the-screenshots-will-contin
 
 Second, the entire process is incredibly janky. A shocking amount of the SOC2 process is built on [screenshots](https://fly.io/blog/soc2-the-screenshots-will-continue-until-security-improves/). If that sounds extremely insecure, you are correct. You take screenshots of your tools. You take screenshots of your JIRA tickets. Whatever you need to "prove," you take a screenshot and upload it to Vanta as evidence. The word "evidence" belies a forensic approach, but it's a lot more TSA checkpoint than actual detective work. There's no chain of custody, authentication, or anything. The entire system largely hinges on your auditor's trust in your screenshots.
 
-Third, the network effects. The entire thing spreads [like a virus](https://x.com/alon/status/1752823377323327899) in the system, in two ways. First, it's via the technical dependencies embedded in the SOC2 process. Even the smallest of SaaS companies run on other SaaS companies' products[^4]. In order to get your auditors' approval for SOC2, you end up having to validate all your vendors' security practices. You can already see where this is going. That, of course, also requires you to get their SOC2 certificate. Turtles all the way down!
+Third, the network effects. The entire thing spreads [like a virus](https://x.com/alon/status/1752823377323327899) in the system, in two ways. First, it's via the technical dependencies embedded in the SOC2 process. Even the smallest of SaaS companies run on other SaaS companies' products<sup>[4]</sup>. In order to get your auditors' approval for SOC2, you end up having to validate all your vendors' security practices. You can already see where this is going. That, of course, also requires you to get their SOC2 certificate. Turtles all the way down!
 
 ![XKCD comic about dependency](./xkcd-dependencies.png)
 
@@ -87,18 +87,20 @@ What many won't tell you is that the real secret to SOC2 is less about using the
 
 The irony is thick. Small companies used to sell the dream of being a cowboy: pushing to production, fixing problems directly, moving fast. Then we built tools to help small companies act like big companies so they could sell to big companies. Now those same small companies spend their precious early days filling out compliance spreadsheets instead of finding product-market fit. Where did the fun go?
 
-It is now time to replace SOC2 with something better[^5]; something continuous, programmatic, and discrete. A compliance scheme that monitors security in real-time, just like we monitor our apps. One that updates automatically when you fix a vulnerability, not six months later when the auditors check back in. The good thing is Vanta now has both quite a bit of leverage and expertise on both sides of this market. They have the integrations, the customer base, and now $150 million in fresh capital. They should use [their powers](https://x.com/christinacaci/status/1948439197897163077) (and new coffers) for good. Enterprises won't like giving up their familiar PDFs, but someone has to drag them into the 21st century.
+It is now time to replace SOC2 with something better<sup>[5]</sup>; something continuous, programmatic, and discrete. A compliance scheme that monitors security in real-time, just like we monitor our apps. One that updates automatically when you fix a vulnerability, not six months later when the auditors check back in. The good thing is Vanta now has both quite a bit of leverage and expertise on both sides of this market. They have the integrations, the customer base, and now $150 million in fresh capital. They should use [their powers](https://x.com/christinacaci/status/1948439197897163077) (and new coffers) for good. Enterprises won't like giving up their familiar PDFs, but someone has to drag them into the 21st century.
 
 The same ingenuity that created this compliance-industrial complex can tear it down. We've already transformed how we build and deliver software—from waterfall to agile, from shrink-wrap to SaaS, from annual releases to continuous deployment. We monitor our systems in real-time instead of waiting for post-mortems. We scan for vulnerabilities continuously instead of scheduling yearly pen tests. Hell, we even moved from PDF manuals to living documentation.
 
 So why are we still treating compliance like it's 1995? Imagine getting dinged for a security issue you fixed three months ago, just because the auditors haven't caught up. Or passing your SOC2 while harboring vulnerabilities that appeared yesterday. It's time to ship the future of trust, not just automate the past. All that's missing is our collective will to stop paying the tax so I can go back to pushing code to prod.
 
-[^1]: Unsurprisingly, a hand-woven [spreadsheet](https://review.firstround.com/vantas-path-to-product-market-fit/) was also the first version of Vanta.
+---
 
-[^2]: In reality, it's a lot more of an interactive process with a whole lot of back and forth convincing your auditors. On one hand, it's a lot more human than I imply. On the other, it's really about who you know.
+<sup>[1]</sup> Unsurprisingly, a hand-woven [spreadsheet](https://review.firstround.com/vantas-path-to-product-market-fit/) was also the first version of Vanta.
 
-[^3]: I have used a Vanta competitor, Drata, but they were largely the same. I did get a two-week demo of Vanta as well.
+<sup>[2]</sup> In reality, it's a lot more of an interactive process with a whole lot of back and forth convincing your auditors. On one hand, it's a lot more human than I imply. On the other, it's really about who you know.
 
-[^4]: I have mixed thoughts about it. It's always good to have a bunch of people who can bootstrap your business, but it can definitely hide the real challenges. Not even going into the circular trading nature of increasing ARR, however.
+<sup>[3]</sup> I have used a Vanta competitor, Drata, but they were largely the same. I did get a two-week demo of Vanta as well.
 
-[^5]: Beat you to [it](https://xkcd.com/927/).
+<sup>[4]</sup> I have mixed thoughts about it. It's always good to have a bunch of people who can bootstrap your business, but it can definitely hide the real challenges. Not even going into the circular trading nature of increasing ARR, however.
+
+<sup>[5]</sup> Beat you to [it](https://xkcd.com/927/).
