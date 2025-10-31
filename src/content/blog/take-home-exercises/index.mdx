@@ -1,0 +1,77 @@
+---
+title: "Take-Home Exercises"
+date: 2025-10-31
+description: "Why take-home exercises are broken and what we should do about them"
+tags: ["hiring", "engineering", "tech-industry"]
+---
+
+import Callout from '@/components/Callout.astro';
+
+Take-home exercises get a bad rap but in my experience they are one of the most valuable tools in a hiring manager's toolkit. However, you need to do them right; you need to be true to your reasons on why you do them, be clear what you are trying to assess and be open with your expectations.
+
+The key thing I always conveyed to the candidates is that the goal is to assess both their ability and motivation. The ability part is easy (or easier); we need to know if they can solve basic tech problems. The motivation part is more subtle but equally important. 
+
+People interviews for tons of reasons; sometimes they are depressed and want to talk to someone. Sometimes they want to kick the tires to see if they can get a raise. And often, they are looking for a new type of challenge, feel like they can do more than they are currently doing at their job. I wanted to hire those kind of people. In Turkish we have a saying; you want people who are willing to "put their hands under the rock" to lift it up, versus talking about doing the work.
+
+So, here's how I built take-home exercises at my various jobs. There are 3 important things in a good take home exercise:
+
+1. Make sure they are aligned with your company's values. 
+2. Make sure the scope is limited 
+3. Follow the process
+
+## Value Alignment
+
+The goal of a take-home exercise is not to just see if the candidate can code, but see what the output looks and feels like. If fit and finish is important to you, you should let the candidate know in advance *and* use that as a criteria.
+
+This matters more than you think. One of our take-home challenges was primarily a data munging exercise. One candidate took the time not just work with the data but also build a visualization. We didn't ask them to do it, but they wanted to. Not only it initiative, but also the visualization was so tastefully done that we know we could rely on their taste.
+
+## Limited Scope
+
+My goal for all the challenges is that they can be solved "in an afternoon". For some candidates, this means a couple hours, and for some others, a few days. Either is fine, though former is slightly better.
+
+The temptation here is to make the exercise large. Resist it. A good exercise is limited in scope but has a lot of incidental complexity. In my experience, it's better to have a task that requires them to do one hard thing and then do the scaffolding around it as separate commits.
+
+This also helps answer the "I want to be paid for this" question. I was surprised how this was almost never an issue; out of hundreds of candidates, only 2 people demanded payment. We rejected both, and one of them did the exercise anyway.
+
+It's good to help frame why I don't offer payment. The problem isn't really the money, it's the administrative headache plus the expectations. We openly told candidates the work would be representative of the work but it'd not be something we'd use ever (and it was clear from the exercise). 
+
+Moreover, I told candidates that we considered this part of our due diligence. The goal is assessing both the ability *and* the motivation of the interviewer. Again, you need to find your own wording here but I was pleasantly surprised how many people immediately grokked when I openly shared them why we had the take-home exercises in the first place for this reason.
+
+## Process
+
+This is the simplest part. I fount it best to make a sharable Notion page that included an overview, detailed instructions, delivery instructions, FAQs, and the rest. Here's a very basic sample:
+
+### Example 
+<Callout variant="example">
+- Overview: We want you to build a simple "Carnival Spin Wheel" in JS.
+- Detailed Instructions:
+	- When the page loads, the user should see a color carnival spin wheel
+	- They should be able to spin the wheel and win a prize. Each prize should have a dollar value.
+	- There should be a counter that shows the total prize value earned.
+	- The user should have 3 spins.
+- Judging Criteria:
+	- You'll be judged on how your wheel works as well as the code quality.
+	- We use React and Typescript but you are welcome to use any client-side technology
+- Delivery Instructions
+	- Please create a repo and share it with @cduruk
+	- Make sure your repo has detailed running instructions for Mac.
+</Callout>
+
+We created a copy of this Notion page for each candidate and shared it with them only. I did this more for my own bookkeeping than some operational security concern about the questions leaking. One disgruntled candidate did share the post on a forum after we rejected them, and it hasn't been a huge problem.
+
+I told people we operated on a honor code — we gave people 1 week to finish the exercise and not spend more than an afternoon. I told them I'd check in after a week if I didn't hear back. This worked really well; interested candidates solved it in a few days and many people either never returned the exercise or kindly withdrew after I checked in.
+
+## Assessment
+
+This is generally the easy part, as long as you know what kind of person you are looking for. For me, the good candidates not just solved the problem but shared our values. We wanted folks who had good taste and wrote good code, where good was defined as "easy to change". 
+
+For front-end focused roles, this meant a working prototype that handles all the edge cases such as people actively messing with the UI, double clicks and such. For backend folks, the most valuable signal was always the simplicity of the code; fewer layers of indirection and followed common patterns.
+
+I don't claim to have all the answers here but some other criteria that seemed to work for me:
+
+1. Simpler code almost always meant better outcomes.
+2. Show your personality, especially for front-end exercises.
+3. Great candidates often wrote tests, especially for backend take-homes.
+4. Fewer dependencies meant better code.
+5. Always test your own instructions (we did fix them occasionally but always felt wrong)
+6. There are diminishing returns; good candidates knew where to stop. See #1.
